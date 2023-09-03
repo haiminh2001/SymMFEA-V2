@@ -1,4 +1,5 @@
 #include <Eigen/Dense>
+#include <vector>
 using Eigen::MatrixXf;
 
 
@@ -8,6 +9,6 @@ class Node{
         int arity;
         int index;
         Node(int arity, int index);
-        virtual float eval(MatrixXf X) = 0;
+        virtual MatrixXf eval(std::vector <MatrixXf> X) = 0;
 
 };
