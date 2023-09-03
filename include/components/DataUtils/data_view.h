@@ -1,0 +1,4 @@
+#ifndef SYMMFEA_DATA_VIEW_H
+#define SYMMFEA_DATA_VIEW_H
+
+#endif //SYMMFEA_DATA_VIEW_H

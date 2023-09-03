@@ -7,6 +7,7 @@ include_directories(source)
 include_directories(include)
 include_directories(include/components)
 include_directories(include/components/functions)
+include_directories(include/components/DataUtils)
 include_directories(include/evolution)
 include_directories(include/evolution/algorithms)
 include_directories(include/evolution/population)
@@ -26,4 +27,8 @@ add_executable(SymMFEA
         source/components/functions/operand.cpp
         include/evolution/population/population.h
         include/evolution/population/individual.h
-        source/evolution/population/individual.cpp)
+        source/evolution/population/individual.cpp
+        include/components/DataUtils/data_pool.h
+        include/components/DataUtils/data_view.h
+        source/components/DataUtils/data_pool.cpp
+        source/components/DataUtils/data_view.cpp)
