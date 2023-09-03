@@ -1,6 +1,9 @@
 #include "product.h"
-#include <vector>
-ArrayXXf Product::eval(std::vector <ArrayXXf> X){
-    assert (X.size() == 2);
-    return X[0] * X[1];
+
+ArrayXf Product::eval(std::stack <ArrayXf>& X){
+    auto x1 = X.top();
+    X.pop();
+    auto x2 = X.top();
+    X.pop();
+    return x1 * x2;
 }

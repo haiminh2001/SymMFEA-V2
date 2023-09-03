@@ -5,7 +5,7 @@
 
 class Product : public Node{
 public:
-    ArrayXXf eval(std::vector <ArrayXXf> X) override;
+    ArrayXf eval(std::stack <ArrayXf>& X) override;
     explicit Product(int index) : Node(2, index){};
 };
 

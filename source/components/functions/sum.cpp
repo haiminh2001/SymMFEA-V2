@@ -1,13 +1,16 @@
 #include <vector>
 #include "sum.h"
 
-using Eigen::ArrayXXf;
 
-ArrayXXf Sum::eval(std::vector <ArrayXXf> X){
-    ArrayXXf result = X[0];
-    auto num_operands = X.size();
-    for (int i = 1; i < num_operands; ++i){
-        result = result + X[i];
+ArrayXf Sum::eval(std::stack <ArrayXf>& X){
+    ArrayXf result = X.top();
+    X.pop();
+
+    auto num_operands = this->arity - 1;
+    while (num_operands > 0){
+        result = result + X.top();
+        X.pop();
+        num_operands--;
     }
     return result;
-};
+}

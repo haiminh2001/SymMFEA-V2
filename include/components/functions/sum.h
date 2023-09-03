@@ -6,8 +6,8 @@
 
 class Sum : public Node{
 public:
-    ArrayXXf eval(std::vector <ArrayXXf> X) override;
-    Sum(int arity, int index) : Node(arity, index) {}
+    ArrayXf eval(std::stack <ArrayXf>& X) override;
+    explicit Sum(int arity) : Node(arity) {}
 };
 
 #endif

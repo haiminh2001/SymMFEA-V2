@@ -6,7 +6,8 @@
 #include <Eigen/Dense>
 #include <stack>
 #include <memory>
-using Eigen::ArrayXXf;
+
+using Eigen::ArrayXf;
 
 class Tree{
 private:
@@ -14,7 +15,7 @@ private:
     std::vector < Node* > nodes;
 public:
     explicit Tree(std::vector<Node*> nodes);
-    ArrayXXf eval(std::vector <ArrayXXf> X);
+    ArrayXf eval(const ArrayXXf& X);
 };
 
 #endif

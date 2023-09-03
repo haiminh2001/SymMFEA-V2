@@ -2,23 +2,32 @@
 #include <utility>
 #include <vector>
 #include <stack>
+#include <iostream>
 
-
-using Eigen::ArrayXXf;
 
 Tree::Tree(std::vector<Node*> nodes){
     this->nodes = std::move(nodes);
 }
-ArrayXXf Tree::eval(std::vector <ArrayXXf> X){
+ArrayXf Tree::eval(const ArrayXXf& X){
     auto length = this->nodes.size();
-    std::stack <ArrayXXf> Stack;
+    std::stack <ArrayXf> Stack;
 
     for (int i = 0; i < length; ++i){
         auto node = this->nodes[i];
 
+        ArrayXf val;
+
         if (node->is_leaf()){
-            
+            val = node->eval(X);
         }
+        else{
+            val = node->eval(Stack);
+        }
+
+        Stack.push(val);
     }
-    return X[0];
+
+    assert(Stack.size() == 1);
+    return Stack.top();
+
 }

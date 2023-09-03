@@ -3,7 +3,9 @@
 
 
 #include <Eigen/Dense>
-#include <vector>
+#include <stack>
+
+using Eigen::ArrayXf;
 using Eigen::ArrayXXf;
 
 
@@ -13,7 +15,14 @@ public:
     int arity;
     int index;
     Node(int arity, int index);
-    virtual ArrayXXf eval(std::vector <ArrayXXf> X) = 0;
+    explicit Node(int arity);
+
+    //if not leaf
+    virtual ArrayXf eval(std::stack <ArrayXf>& X) = 0;
+
+    //if leaf
+    ArrayXf eval(ArrayXXf X);
+
     bool is_leaf() const;
 };
 
