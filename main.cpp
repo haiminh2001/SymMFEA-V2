@@ -1,3 +1,5 @@
+
+#include "tree.h"
 #include "product.h"
 #include <iostream>
 #include <Eigen/Dense>
@@ -11,6 +13,9 @@ int main(){
     m(0,1) = 3;
     m(1,1) = 4;
     Product node = Product(2);
-    ArrayXXf n = node.eval(std::vector <ArrayXXf> {m, m} );
-    std::cout << n << std::endl;
+    Tree t = Tree(std::vector< Node* > { &node });
+
+
+    ArrayXXf n = t.eval(std::vector <ArrayXXf> {m, m} );
+    std::cout <<n<< std::endl;
 }

@@ -15,4 +15,6 @@ add_executable(SymMFEA
         include/components/functions/node.h
         main.cpp
         include/components/functions/product.h
-        source/components/functions/product.cpp)
+        source/components/functions/product.cpp
+        include/components/tree.h
+        source/components/tree.cpp)
