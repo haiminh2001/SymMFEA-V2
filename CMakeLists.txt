@@ -3,6 +3,8 @@ project(SymMFEA)
 
 set(CMAKE_CXX_STANDARD 14)
 
+find_package(Eigen3 REQUIRED)
+
 include_directories(source)
 include_directories(include)
 include_directories(include/components)
@@ -31,4 +33,6 @@ add_executable(SymMFEA
         include/components/DataUtils/data_pool.h
         include/components/DataUtils/data_view.h
         source/components/DataUtils/data_pool.cpp
-        source/components/DataUtils/data_view.cpp)
+        source/components/DataUtils/data_view.cpp
+        source/components/DataUtils/utils.cpp
+        include/components/DataUtils/utils.h)

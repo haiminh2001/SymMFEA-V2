@@ -33,6 +33,6 @@ int main(){
 //    std::cout<<"m:" <<m<< std::endl;
 //    std::cout<<"n:" <<n<< std::endl;
 
-
+    DataPool dp = DataPool(m, y, 0.5);
 
 }
