@@ -7,6 +7,10 @@ include_directories(source)
 include_directories(include)
 include_directories(include/components)
 include_directories(include/components/functions)
+include_directories(include/evolution)
+include_directories(include/evolution/algorithms)
+include_directories(include/evolution/population)
+include_directories(include/evolution/reproducer)
 
 add_executable(SymMFEA
         source/components/functions/sum.cpp
@@ -19,4 +23,7 @@ add_executable(SymMFEA
         include/components/tree.h
         source/components/tree.cpp
         include/components/functions/operand.h
-        source/components/functions/operand.cpp)
+        source/components/functions/operand.cpp
+        include/evolution/population/population.h
+        include/evolution/population/individual.h
+        source/evolution/population/individual.cpp)

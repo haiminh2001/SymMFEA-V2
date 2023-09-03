@@ -2,7 +2,6 @@
 #include <utility>
 #include <vector>
 #include <stack>
-#include <iostream>
 
 
 Tree::Tree(std::vector<Node*> nodes){

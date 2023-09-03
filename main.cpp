@@ -2,6 +2,7 @@
 #include "tree.h"
 #include "product.h"
 #include "operand.h"
+#include "individual.h"
 #include "sum.h"
 #include <iostream>
 #include <Eigen/Dense>
@@ -23,8 +24,9 @@ int main(){
 
 
     Tree t = Tree(std::vector< Node* > {&o1, &o2, &node, &o1, &sum});
-
-    ArrayXf n = t.eval(m);
+    Individual i = Individual(&t, 0);
+    ArrayXf n = i.eval(m);
     std::cout<<"m:" <<m<< std::endl;
     std::cout<<"n:" <<n<< std::endl;
+
 }

@@ -21,7 +21,7 @@ public:
     virtual ArrayXf eval(std::stack <ArrayXf>& X) = 0;
 
     //if leaf
-    ArrayXf eval(ArrayXXf X);
+    ArrayXf eval(ArrayXXf X) const;
 
     bool is_leaf() const;
 };

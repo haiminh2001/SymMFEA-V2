@@ -14,7 +14,7 @@ bool Node::is_leaf() const{
     return this->arity == 0;
 }
 
-ArrayXf Node::eval(ArrayXXf X){
+ArrayXf Node::eval(ArrayXXf X) const{
     assert (this->index >= 0);
     return X.col(this->index);
 }
