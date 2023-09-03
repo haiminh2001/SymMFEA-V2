@@ -1,0 +1,3 @@
+/mnt/d/Workspace/SymMFEA/cmake-build-debug/CMakeFiles/SymMFEA.dir
+/mnt/d/Workspace/SymMFEA/cmake-build-debug/CMakeFiles/edit_cache.dir
+/mnt/d/Workspace/SymMFEA/cmake-build-debug/CMakeFiles/rebuild_cache.dir
