@@ -1,9 +1,0 @@
-# ninja log v5
-16	827	1693662975497002600	CMakeFiles/SymMFEA.dir/include/components/functions/node.cpp.o	a82a123085ae5619
-798	1058	1693663038639563000	SymMFEA	eed158236a00ef5a
-14	1643	1693662976320767600	CMakeFiles/SymMFEA.dir/include/components/functions/add.cpp.o	af6e2e023b853752
-17	794	1693663038373914800	CMakeFiles/SymMFEA.dir/main.cpp.o	8fb924c7b8bfd5df
-23	1392	1693663753627885000	CMakeFiles/SymMFEA.dir/main.cpp.o	83a03512170faf4
-17	2357	1693663754592760600	CMakeFiles/SymMFEA.dir/include/components/functions/add.cpp.o	9bd27d0bf5f5cf18
-8	783	1693663776781514500	CMakeFiles/SymMFEA.dir/include/components/functions/node.cpp.o	5e23dfb47d96bd8e
-791	1046	1693663777050070400	SymMFEA	eed158236a00ef5a
