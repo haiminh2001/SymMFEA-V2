@@ -1,7 +1,8 @@
+
 #include "node.h"
 
-class Sum : public Node{
+class Product : public Node{
     public:
         ArrayXXf eval(std::vector <ArrayXXf> X) override;
-        Sum(int arity, int index) : Node(arity, index) {}
+        Product(int index) : Node(2, index) {}
 };

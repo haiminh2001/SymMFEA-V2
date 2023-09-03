@@ -1,6 +1,6 @@
 #include <Eigen/Dense>
 #include <vector>
-using Eigen::MatrixXf;
+using Eigen::ArrayXXf;
 
 
 class Node{
@@ -9,6 +9,6 @@ class Node{
         int arity;
         int index;
         Node(int arity, int index);
-        virtual MatrixXf eval(std::vector <MatrixXf> X) = 0;
+        virtual ArrayXXf eval(std::vector <ArrayXXf> X) = 0;
 
 };

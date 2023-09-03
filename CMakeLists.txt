@@ -13,4 +13,6 @@ add_executable(SymMFEA
         source/components/functions/node.cpp
         include/components/functions/sum.h
         include/components/functions/node.h
-        main.cpp)
+        main.cpp
+        include/components/functions/product.h
+        source/components/functions/product.cpp)
