@@ -21,21 +21,22 @@ int main(){
     ArrayXf y(3);
     y << 1, 5 ,9;
 
-//    Product node = Product(2);
-//    Sum sum = Sum(2);
-//    Operand o1 = Operand(0);
-//    Operand o2 = Operand(1);
-//
-//
-//    Tree t = Tree(std::vector< Node* > {&o1, &o2, &node, &o1, &sum});
+    Product node = Product();
+    Sum sum = Sum(3);
+    Operand o1 = Operand(0);
+    Operand o2 = Operand(1);
+
+
+    Tree t = Tree(std::vector< Node* > {&o1, &o1, &o2, &node, &o1,  &sum});
+    t.visualize();
 //    Individual i = Individual(&t, 0);
 //    ArrayXf n = i.eval(m);
 //    std::cout<<"m:" <<m<< std::endl;
 //    std::cout<<"n:" <<n<< std::endl;
 
-    DataPool dp = DataPool(m, y, 0.5);
-    DataView dv = DataView(&dp, 1);
-    std::cout<<dp.X_train<<std::endl;
-    std::cout<<dv.X_train()<<std::endl;
+//    DataPool dp = DataPool(m, y, 0.5);
+//    DataView dv = DataView(&dp, 1);
+//    std::cout<<dp.X_train<<std::endl;
+//    std::cout<<dv.X_train()<<std::endl;
 
 }

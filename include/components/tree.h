@@ -15,7 +15,14 @@ private:
     std::vector < Node* > nodes;
 public:
     explicit Tree(std::vector<Node*> nodes);
+
     ArrayXf eval(const ArrayXXf& X);
+
+    void updateNodeMetadata();
+
+    int length();
+
+    void visualize();
 };
 
 #endif

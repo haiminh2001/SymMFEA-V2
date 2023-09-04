@@ -7,7 +7,8 @@
 class Sum : public Node{
 public:
     ArrayXf eval(std::stack <ArrayXf>& X) override;
-    explicit Sum(int arity) : Node(arity) {}
+
+    explicit Sum(int arity);
 };
 
 #endif

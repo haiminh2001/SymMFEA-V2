@@ -7,3 +7,8 @@ ArrayXf Product::eval(std::stack <ArrayXf>& X){
     X.pop();
     return x1 * x2;
 }
+
+
+Product::Product() : Node(2) {
+    this->symbol = "*";
+}

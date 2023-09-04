@@ -35,4 +35,9 @@ add_executable(SymMFEA
         source/components/DataUtils/data_pool.cpp
         source/components/DataUtils/data_view.cpp
         source/components/DataUtils/utils.cpp
-        include/components/DataUtils/utils.h)
+        include/components/DataUtils/utils.h
+        include/evolution/algorithms/GA.h
+        source/evolution/algorithms/GA.cpp)
+
+target_link_libraries(SymMFEA PUBLIC /usr/local/lib/libgraph.so)
+

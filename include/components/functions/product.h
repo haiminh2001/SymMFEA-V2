@@ -5,8 +5,10 @@
 
 class Product : public Node{
 public:
+    explicit Product();
+
     ArrayXf eval(std::stack <ArrayXf>& X) override;
-    explicit Product(int index) : Node(2, index){};
+
 };
 
 #endif

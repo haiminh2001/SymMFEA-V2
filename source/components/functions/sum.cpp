@@ -14,3 +14,7 @@ ArrayXf Sum::eval(std::stack <ArrayXf>& X){
     }
     return result;
 }
+
+Sum::Sum(int arity) : Node(arity) {
+    this->symbol = "+";
+}
