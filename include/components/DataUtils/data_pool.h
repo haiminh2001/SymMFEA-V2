@@ -14,4 +14,7 @@ public:
     ArrayXXf X_val;
     ArrayXf y_train;
     ArrayXf y_val;
+
+    long num_train();
+    long num_val();
 };

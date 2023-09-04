@@ -18,3 +18,11 @@ DataPool::DataPool(ArrayXXf& X, ArrayXf& y, float test_size=0.2){
     this->y_train = y(train_indices);
     this->y_val = y(val_indices);
 }
+
+long DataPool::num_train() {
+    return this->X_train.rows();
+}
+
+long DataPool::num_val() {
+    return this->X_val.rows();
+}

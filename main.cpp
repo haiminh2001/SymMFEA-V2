@@ -7,7 +7,7 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>
-#include "data_pool.h"
+#include "data_view.h"
 
 
 using Eigen::ArrayXXf;
@@ -34,5 +34,8 @@ int main(){
 //    std::cout<<"n:" <<n<< std::endl;
 
     DataPool dp = DataPool(m, y, 0.5);
+    DataView dv = DataView(&dp, 1);
+    std::cout<<dp.X_train<<std::endl;
+    std::cout<<dv.X_train()<<std::endl;
 
 }
