@@ -23,8 +23,8 @@ add_executable(SymMFEA
         main.cpp
         include/components/functions/product.h
         source/components/functions/product.cpp
-        include/components/tree.h
-        source/components/tree.cpp
+        include/components/tree/tree.h
+        source/components/tree/tree.cpp
         include/components/functions/operand.h
         source/components/functions/operand.cpp
         include/evolution/population/population.h
@@ -37,7 +37,11 @@ add_executable(SymMFEA
         source/components/DataUtils/utils.cpp
         include/components/DataUtils/utils.h
         include/evolution/algorithms/GA.h
-        source/evolution/algorithms/GA.cpp)
+        source/evolution/algorithms/GA.cpp
+        include/evolution/reproducer/crossover.h
+        include/components/tree/tree_handler.h
+        source/components/tree/tree_handler.cpp
+        include/components/primitive.h
+        source/components/primitive.cpp)
 
-target_link_libraries(SymMFEA PUBLIC /usr/local/lib/libgraph.so)
 

@@ -1,7 +1,7 @@
 #ifndef SYMMFEA_INDIVIDUAL_H
 #define SYMMFEA_INDIVIDUAL_H
 #include <vector>
-#include "tree.h"
+#include "components/tree/tree.h"
 class Individual{
 public:
     int skill_factor;
