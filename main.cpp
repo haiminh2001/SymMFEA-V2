@@ -9,6 +9,7 @@
 #include <vector>
 #include "data_view.h"
 #include "primitive.h"
+#include "components/tree/tree_handler.h"
 using namespace std;
 
 using Eigen::ArrayXXf;
@@ -27,11 +28,13 @@ int main(){
 //    Operand o1 = Operand(0);
 //    Operand o2 = Operand(1);
 //
-//
+// //
 //    Tree t = Tree(std::vector< Node* > {&o1, &o1, &o2, &node, &o1,  &sum});
 //    t.visualize();
+    // cout<<"hello world abcd ef";
 
-    cout<<Primitive().getFunction(1)(0, 2)->arity;
+    auto t = create_tree(5, 20);
+    t.visualize();
 //    Individual i = Individual(&t, 0);
 //    ArrayXf n = i.eval(m);
 //    std::cout<<"m:" <<m<< std::endl;

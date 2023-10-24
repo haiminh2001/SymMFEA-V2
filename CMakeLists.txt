@@ -39,9 +39,14 @@ add_executable(SymMFEA
         include/evolution/algorithms/GA.h
         source/evolution/algorithms/GA.cpp
         include/evolution/reproducer/crossover.h
+        include/utils/random_utils.h
+        source/utils/random_utils.cpp
         include/components/tree/tree_handler.h
         source/components/tree/tree_handler.cpp
         include/components/primitive.h
-        source/components/primitive.cpp)
+        source/components/primitive.cpp
+        include/components/functions/tanh.h
+        source/components/functions/tanh.cpp
+)
 
 

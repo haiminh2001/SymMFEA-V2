@@ -35,7 +35,7 @@ public:
     //if leaf
     ArrayXf eval(ArrayXXf X) const;
 
-    bool is_leaf() const;
+    bool is_leaf();
 };
 
 #endif

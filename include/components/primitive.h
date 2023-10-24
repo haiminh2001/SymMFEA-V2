@@ -11,8 +11,15 @@ class Primitive{
 public:
     std::vector < std::tuple<NodeFactory, int> > functionList;
     Primitive();
-
+    Primitive(int max_index);
+    Node* sampleNode(int arity_min, int arity_max);
     NodeFactory getFunction(int arity);
+
+private:
+    int max_index;
+    std::vector< int > possibleArities;
+    void addNodeFactory(NodeFactory nf, int arity);
+    void removeDuplicatePossibleArites();
 };
 
 #endif //SYMMFEA_PRIMITIVE_H

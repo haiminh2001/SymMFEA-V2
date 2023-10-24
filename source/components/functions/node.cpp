@@ -10,7 +10,7 @@ Node::Node(int arity){
     this->index = -1;
 }
 
-bool Node::is_leaf() const{
+bool Node::is_leaf(){
     return this->arity == 0;
 }
 
