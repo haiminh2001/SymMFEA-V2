@@ -3,19 +3,7 @@
 #include "vector"
 #include "tuple"
 #include "components/tree/tree.h"
-#include "iostream"
 
-// struct IntWrapper{
-//     int value = -1;
-//     void setValue(int val){
-//         this->value = (int) val;
-//     }
-//     IntWrapper() = default;
-//     explicit IntWrapper(int val){
-//         this->value = (int) val;
-//     }
-// };
-//
 
 void fill_postfix(int cur_idx,
                   int &cur_postfix_idx,
@@ -39,9 +27,9 @@ void fill_postfix(int cur_idx,
     }
 }
 
-Tree create_tree(int max_length = 50, int max_depth = 50)
+Tree create_tree(int max_index, int max_length = 50, int max_depth = 50)
 {
-    Primitive primitives = Primitive();
+    Primitive primitives = Primitive(max_index = max_index);
     std::vector<Node *> nodes;
 
     int a_max = max_length - 1;
@@ -56,7 +44,8 @@ Tree create_tree(int max_length = 50, int max_depth = 50)
     for (int i = 0; i < max_length; i++)
     {
 
-        if (num_open_nodes == 0) break;
+        if (num_open_nodes == 0)
+            break;
 
         auto &cur_info = ls_nodes[i];
         auto cur_node = std::get<0>(cur_info);
@@ -66,7 +55,7 @@ Tree create_tree(int max_length = 50, int max_depth = 50)
 
             auto cur_node_depth = std::get<1>(cur_info) + 1;
 
-            int cur_num_nodes = static_cast<int> (ls_nodes.size());
+            int cur_num_nodes = static_cast<int>(ls_nodes.size());
             std::get<2>(cur_info) = cur_num_nodes;
 
             for (int j = 0; j < cur_node->arity; ++j)
@@ -76,7 +65,6 @@ Tree create_tree(int max_length = 50, int max_depth = 50)
                     cur_a_max = std::min(a_max, max_length - i - 1 - num_open_nodes);
                 else
                     cur_a_max = 0;
-
 
                 if (num_open_nodes < 1)
                     cur_a_min = 0;
@@ -101,12 +89,6 @@ Tree create_tree(int max_length = 50, int max_depth = 50)
     int num_nodes = (int)ls_nodes.size();
     std::vector<Node *> postfix(num_nodes, nullptr);
 
-    for (auto node : ls_nodes)
-    {
-        auto a = std::get<0>(node);
-        std::cout << a->symbol << " " << a->arity << "\n";
-    }
-    std::cout.flush();
     fill_postfix(0, num_nodes, ls_nodes, postfix);
 
     Tree tree = Tree(postfix);

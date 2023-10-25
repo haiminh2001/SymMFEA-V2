@@ -2,6 +2,7 @@
 
 ArrayXf Tanh::eval(std::stack <ArrayXf>& X){
     auto x = X.top();
+    X.pop();
     return x.array().tanh();
 }
 

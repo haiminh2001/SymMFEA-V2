@@ -72,11 +72,7 @@ void printSubTree(unsigned long x, unsigned long y, std::vector <Node*> nodes,
 
     auto node = nodes[index];
 
-
-
-
     outputFile<< "\tnode" << index << " [label=\"" << node->symbol.c_str() << "\"];" << std::endl;
-
 
     unsigned long cur_index = index - 1;
 

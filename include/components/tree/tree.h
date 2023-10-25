@@ -9,14 +9,16 @@
 
 using Eigen::ArrayXf;
 
-class Tree{
-private:
-    //list of pointers of the nodes
-    std::vector < Node* > nodes;
-public:
-    explicit Tree(std::vector<Node*> nodes);
+class Tree
+{
 
-    ArrayXf eval(const ArrayXXf& X);
+public:
+    // list of pointers of the nodes
+    std::vector<Node *> nodes;
+
+    explicit Tree(std::vector<Node *> nodes);
+
+    ArrayXf eval(const ArrayXXf &X);
 
     void updateNodeMetadata();
 

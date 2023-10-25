@@ -14,35 +14,30 @@ using namespace std;
 
 using Eigen::ArrayXXf;
 
-int main(){
+int main()
+{
 
-//    ArrayXXf m(3,2);
-//    m << 1,2,
-//        3, 4,
-//        5, 6;
-//    ArrayXf y(3);
-//    y << 1, 5 ,9;
-//
-//    Product node = Product();
-//    Sum sum = Sum(3);
-//    Operand o1 = Operand(0);
-//    Operand o2 = Operand(1);
-//
-// //
-//    Tree t = Tree(std::vector< Node* > {&o1, &o1, &o2, &node, &o1,  &sum});
-//    t.visualize();
-    // cout<<"hello world abcd ef";
+    ArrayXXf m(3, 2);
+    m << 1, 2,
+        3, 4,
+        5, 6;
+    ArrayXf y(3);
+    y << 1, 5, 9;
 
-    auto t = create_tree(5, 20);
-    t.visualize();
-//    Individual i = Individual(&t, 0);
-//    ArrayXf n = i.eval(m);
-//    std::cout<<"m:" <<m<< std::endl;
-//    std::cout<<"n:" <<n<< std::endl;
+    auto t = create_tree(1, 5, 20);
+    // t.visualize();
 
-//    DataPool dp = DataPool(m, y, 0.5);
-//    DataView dv = DataView(&dp, 1);
-//    std::cout<<dp.X_train<<std::endl;
-//    std::cout<<dv.X_train()<<std::endl;
+    for (auto node : t.nodes){
+        cout<<node->symbol<<" "<<node->arity<<"\n";
+    }
 
+    Individual i = Individual(&t, 0);
+    ArrayXf n = i.eval(m);
+    std::cout << "m:" << m << std::endl;
+    std::cout << "n:" << n << std::endl;
+
+    // DataPool dp = DataPool(m, y, 0.5);
+    // DataView dv = DataView(&dp, 1);
+    // std::cout << dp.X_train << std::endl;
+    // std::cout << dv.X_train() << std::endl;
 }
