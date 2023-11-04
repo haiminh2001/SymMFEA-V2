@@ -1,5 +1,5 @@
 #include <vector>
-#include "sum.h"
+#include "components/functions/sum.h"
 
 
 ArrayXf Sum::eval(std::stack <ArrayXf>& X){

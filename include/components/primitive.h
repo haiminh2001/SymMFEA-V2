@@ -1,6 +1,6 @@
 #ifndef SYMMFEA_PRIMITIVE_H
 #define SYMMFEA_PRIMITIVE_H
-#include "node.h"
+#include "components/functions/node.h"
 #include "vector"
 #include <tuple>
 

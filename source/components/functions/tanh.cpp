@@ -1,4 +1,4 @@
-#include "tanh.h"
+#include "components/functions/tanh.h"
 
 ArrayXf Tanh::eval(std::stack <ArrayXf>& X){
     auto x = X.top();

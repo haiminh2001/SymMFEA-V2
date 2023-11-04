@@ -1,6 +1,6 @@
-#include "data_view.h"
-#include "utils.h"
 #include <cmath>
+#include "components/DataUtils/data_view.h"
+#include "components/DataUtils/utils.h"
 
 DataView::DataView(DataPool* dataPool, float sample = 1.0){
     this->dataPool = dataPool;

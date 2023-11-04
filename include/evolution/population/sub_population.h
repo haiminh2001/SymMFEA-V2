@@ -2,10 +2,11 @@
 #define SYMMFEA_POPULATION_H
 #include "individual.h"
 #include <vector>
-class Population{
+class SubPopulation{
 public:
     int skill_factor;
     std::vector <Individual> individuals;
-    Population(int num_individual);
+    SubPopulation(int num_individual);
 };
 #endif //SYMMFEA_POPULATION_H
+  

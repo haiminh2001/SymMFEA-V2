@@ -1,6 +1,4 @@
-#include "individual.h"
-
-
+#include "evolution/population/individual.h"
 
 Individual::Individual(Tree* genes, int skill_factor){
     this->genes = genes;

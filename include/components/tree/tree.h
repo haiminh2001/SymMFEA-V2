@@ -1,7 +1,7 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include "node.h"
+#include "components/functions/node.h"
 #include <vector>
 #include <Eigen/Dense>
 #include <stack>

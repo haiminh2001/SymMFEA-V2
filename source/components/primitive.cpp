@@ -1,10 +1,11 @@
-#include "primitive.h"
-#include "operand.h"
-#include "sum.h"
-#include "product.h"
-#include "tanh.h"
+
 #include <map>
 #include "utils/random_utils.h"
+#include "components/primitive.h"
+#include "components/functions/sum.h"
+#include "components/functions/product.h"
+#include "components/functions/tanh.h"
+#include "components/functions/operand.h"
 
 Node *createOperand(int index = -1, int arity = -1)
 {

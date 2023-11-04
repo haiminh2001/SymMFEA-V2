@@ -1,7 +1,7 @@
-#include "data_pool.h"
 #include "Eigen/Core"
 #include <cmath>
-#include "utils.h"
+#include "components/DataUtils/utils.h"
+#include "components/DataUtils/data_pool.h"
 
 
 DataPool::DataPool(ArrayXXf& X, ArrayXf& y, float test_size=0.2){

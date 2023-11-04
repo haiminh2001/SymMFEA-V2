@@ -1,4 +1,4 @@
-#include "product.h"
+#include "components/functions/product.h"
 
 ArrayXf Product::eval(std::stack <ArrayXf>& X){
     auto x1 = X.top();

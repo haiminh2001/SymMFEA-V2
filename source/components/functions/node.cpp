@@ -1,4 +1,4 @@
-#include "node.h"
+#include "components/functions/node.h"
 
 Node::Node(int arity, int index){
     this->arity = arity;

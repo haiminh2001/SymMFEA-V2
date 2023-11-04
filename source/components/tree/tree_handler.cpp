@@ -1,9 +1,8 @@
-#include "components/tree/tree_handler.h"
-#include "primitive.h"
 #include "vector"
 #include "tuple"
 #include "components/tree/tree.h"
-
+#include "components/tree/tree_handler.h"
+#include "components/primitive.h"
 
 void fill_postfix(int cur_idx,
                   int &cur_postfix_idx,

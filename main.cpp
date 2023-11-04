@@ -1,15 +1,13 @@
 
-#include "components/tree/tree.h"
-#include "product.h"
-#include "operand.h"
-#include "individual.h"
-#include "sum.h"
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>
-#include "data_view.h"
-#include "primitive.h"
+#include "components/DataUtils/data_view.h"
+#include "components/primitive.h"
 #include "components/tree/tree_handler.h"
+#include "components/tree/tree.h"
+#include "evolution/population/individual.h"
+
 using namespace std;
 
 using Eigen::ArrayXXf;
