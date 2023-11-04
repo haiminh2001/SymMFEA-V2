@@ -9,39 +9,6 @@ include_directories(source)
 include_directories(include)
 
 
-add_executable(SymMFEA
-        main.cpp
-        source/components/functions/sum.cpp
-        source/components/functions/node.cpp
-        include/components/functions/sum.h
-        include/components/functions/node.h
-        
-        include/components/functions/product.h
-        source/components/functions/product.cpp
-        include/components/tree/tree.h
-        source/components/tree/tree.cpp
-        include/components/functions/operand.h
-        source/components/functions/operand.cpp
-        include/evolution/population/population.h
-        include/evolution/population/individual.h
-        source/evolution/population/individual.cpp
-        include/components/DataUtils/data_pool.h
-        include/components/DataUtils/data_view.h
-        source/components/DataUtils/data_pool.cpp
-        source/components/DataUtils/data_view.cpp
-        source/components/DataUtils/utils.cpp
-        include/components/DataUtils/utils.h
-        include/evolution/algorithms/GA.h
-        source/evolution/algorithms/GA.cpp
-        include/evolution/reproducer/crossover.h
-        include/utils/random_utils.h
-        source/utils/random_utils.cpp
-        include/components/tree/tree_handler.h
-        source/components/tree/tree_handler.cpp
-        include/components/primitive.h
-        source/components/primitive.cpp
-        include/components/functions/tanh.h
-        source/components/functions/tanh.cpp
-)
-
+file(GLOB_RECURSE APP_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "include/*.h" "source/*.cpp")
+add_executable(SymMFEA main.cpp ${APP_SOURCES})
 
