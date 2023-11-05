@@ -4,6 +4,6 @@
 
 #include "tree.h"
 
-Tree create_tree(int max_index, int max_length, int max_depth);
+Tree* create_tree(int max_index, int max_length, int max_depth);
 
 #endif //SYMMFEA_TREE_HANDLER_H

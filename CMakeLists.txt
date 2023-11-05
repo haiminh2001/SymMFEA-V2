@@ -9,6 +9,6 @@ include_directories(source)
 include_directories(include)
 
 
-file(GLOB_RECURSE APP_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "include/*.h" "source/*.cpp")
+file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "include/*.h" "source/*.cpp" )
 add_executable(SymMFEA main.cpp ${APP_SOURCES})
 

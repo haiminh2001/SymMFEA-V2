@@ -7,6 +7,7 @@
 #include "components/tree/tree_handler.h"
 #include "components/tree/tree.h"
 #include "evolution/population/individual.h"
+#include "evolution/population/sub_population.h"
 
 using namespace std;
 
@@ -15,26 +16,30 @@ using Eigen::ArrayXXf;
 int main()
 {
 
-    ArrayXXf m(3, 2);
-    m << 1, 2,
+    ArrayXXf input(3, 2);
+    input << 1, 2,
         3, 4,
         5, 6;
     ArrayXf y(3);
     y << 1, 5, 9;
 
-    auto t = create_tree(1, 5, 20);
-    // t.visualize();
+    auto s = SubPopulation(5, 0);
 
-    for (auto node : t.nodes){
-        cout<<node->symbol<<" "<<node->arity<<"\n";
+    auto i = s.individuals[0];
+
+    auto tree = i.genes;
+
+    for (auto node : tree->nodes){
+        cout<<node->symbol<<" "<<node->arity<<endl;
     }
 
-    Individual i = Individual(&t, 0);
-    ArrayXf n = i.eval(m);
-    std::cout << "m:" << m << std::endl;
-    std::cout << "n:" << n << std::endl;
+    ArrayXf output = i.eval(input);
+    std::cout << "input:" << std::endl
+              << input << std::endl;
+    std::cout << "output:" << std::endl
+              << output << std::endl;
 
-    // DataPool dp = DataPool(m, y, 0.5);
+    // DataPool dp = DataPool(input, y, 0.5);
     // DataView dv = DataView(&dp, 1);
     // std::cout << dp.X_train << std::endl;
     // std::cout << dv.X_train() << std::endl;
