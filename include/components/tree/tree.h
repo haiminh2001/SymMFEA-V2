@@ -1,11 +1,12 @@
 #ifndef TREE_H
 #define TREE_H
-
-#include "components/functions/node.h"
 #include <vector>
 #include <Eigen/Dense>
 #include <stack>
 #include <memory>
+#include <tuple>
+
+#include "components/functions/node.h"
 
 using Eigen::ArrayXf;
 
@@ -24,7 +25,11 @@ public:
 
     int length();
 
+    int depth();
+
     void visualize();
+
+    std::tuple<std::vector<Node>, std::tuple<std::vector<Node>, std::vector<Node>>> split_tree(int split_point);
 };
 
 #endif

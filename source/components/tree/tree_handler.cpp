@@ -94,3 +94,13 @@ Tree* create_tree(int max_index, int max_length = 50, int max_depth = 50)
     
     return tree;
 }
+
+std::tuple<int, int> get_possible_range(Tree tree, int point, int max_depth, int max_length){
+    int tar_depth = tree.nodes[point]->depth;
+    int tar_level = tree.depth() - tar_depth;
+    max_depth = max_depth - tar_level;
+    int tar_length  = tree.nodes[point]->length;
+    int tar_remain_length = tree.length() - tar_length;
+    max_length = max_length - tar_remain_length;
+    return std::make_tuple(max_length, max_depth);
+}

@@ -8,6 +8,7 @@
 #include "components/tree/tree.h"
 #include "evolution/population/individual.h"
 #include "evolution/population/sub_population.h"
+#include "components/functions/node.h"
 
 using namespace std;
 
@@ -32,6 +33,8 @@ int main()
     for (auto node : tree->nodes){
         cout<<node->symbol<<" "<<node->arity<<endl;
     }
+
+    
 
     ArrayXf output = i.eval(input);
     std::cout << "input:" << std::endl

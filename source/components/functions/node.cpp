@@ -18,3 +18,11 @@ ArrayXf Node::eval(ArrayXXf X) const{
     assert (this->index >= 0);
     return X.col(this->index);
 }
+
+template <typename Derived>
+Node* Node::copy(Node* original_node){
+    auto copy_node = new Derived(static_cast<const Derived&>(original_node));
+    copy_node->arity = original_node->arity;
+    copy_node->index = original_node->index;
+    return copy_node
+}

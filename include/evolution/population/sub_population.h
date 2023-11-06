@@ -1,12 +1,12 @@
 #ifndef SYMMFEA_POPULATION_H
 #define SYMMFEA_POPULATION_H
-#include "individual.h"
+#include "evolution/population/individual.h"
 #include <vector>
-class SubPopulation{
+class SubPopulation
+{
 public:
     int skill_factor;
-    std::vector <Individual> individuals;
+    std::vector<Individual> individuals;
     SubPopulation(int num_individual, int skill_factor);
 };
-#endif //SYMMFEA_POPULATION_H
-  
+#endif // SYMMFEA_POPULATION_H

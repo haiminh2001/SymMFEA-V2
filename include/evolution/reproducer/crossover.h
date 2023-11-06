@@ -1,8 +1,13 @@
-//
-// Created by root on 9/4/23.
-//
-
 #ifndef SYMMFEA_CROSSOVER_H
 #define SYMMFEA_CROSSOVER_H
-
-#endif //SYMMFEA_CROSSOVER_H
+#include "evolution/population/individual.h"
+#include <vector>
+class Crossover
+{
+public:
+    Crossover(int max_length, int max_depth);
+    int max_length;
+    int max_depth;
+    virtual std::vector<Individual> call(Individual pa, Individual pb);
+};
+#endif // SYMMFEA_CROSSOVER_H

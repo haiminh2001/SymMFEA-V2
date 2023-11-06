@@ -26,6 +26,7 @@ public:
     int id = -1;
 
     Node(int arity, int index);
+    
 
     explicit Node(int arity);
 
@@ -36,6 +37,11 @@ public:
     ArrayXf eval(ArrayXXf X) const;
 
     bool is_leaf();
+
+    template <typename Derived>
+    Node* copy(Node* original_node); 
+
+    
 };
 
 #endif
