@@ -6,7 +6,7 @@
 class Product : public Node{
 public:
     explicit Product();
-
+    Node * clone() override;
     ArrayXf eval(std::stack <ArrayXf>& X) override;
 
 };

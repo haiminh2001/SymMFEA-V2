@@ -9,6 +9,9 @@ public:
     ArrayXf eval(std::stack <ArrayXf>& X) override;
 
     explicit Sum(int arity);
+
+Node * clone() override;
+    
 };
 
 #endif

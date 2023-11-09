@@ -9,6 +9,7 @@
 #include "evolution/population/individual.h"
 #include "evolution/population/sub_population.h"
 #include "components/functions/node.h"
+#include "evolution/reproducer/crossover/subtree.h"
 
 using namespace std;
 
@@ -26,17 +27,17 @@ int main()
 
     auto s = SubPopulation(5, 0);
 
-    auto i = s.individuals[0];
+    auto i1 = s.individuals[0];
+    auto i2 = s.individuals[1];
 
-    auto tree = i.genes;
+    auto crossover = SubTreeCrossover(5, 5);
+    auto c = crossover.call(i1, i2)[0];
 
-    for (auto node : tree->nodes){
-        cout<<node->symbol<<" "<<node->arity<<endl;
-    }
+    cout << i1;
+    cout << i2;
+    cout << c;
 
-    
-
-    ArrayXf output = i.eval(input);
+    ArrayXf output = i1.eval(input);
     std::cout << "input:" << std::endl
               << input << std::endl;
     std::cout << "output:" << std::endl

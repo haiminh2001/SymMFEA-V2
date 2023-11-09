@@ -3,6 +3,8 @@
 #include "evolution/reproducer/crossover.h"
 class SubTreeCrossover : Crossover
 {
+public:
+    SubTreeCrossover(int max_length, int max_depth);
     std::vector<Individual> call(Individual pa, Individual pb) override;
 };
 

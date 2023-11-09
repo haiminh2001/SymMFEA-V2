@@ -1,7 +1,6 @@
 #include <vector>
 #include "components/functions/sum.h"
 
-
 ArrayXf Sum::eval(std::stack <ArrayXf>& X){
     ArrayXf result = X.top();
     X.pop();
@@ -17,4 +16,9 @@ ArrayXf Sum::eval(std::stack <ArrayXf>& X){
 
 Sum::Sum(int arity) : Node(arity) {
     this->symbol = "+";
+}
+
+Node* Sum::clone(){
+    Sum* new_node = new Sum(this->arity);
+    return new_node;
 }

@@ -12,3 +12,7 @@ ArrayXf Product::eval(std::stack <ArrayXf>& X){
 Product::Product() : Node(2) {
     this->symbol = "*";
 }
+Node* Product::clone(){
+    Product* new_node = new Product();
+    return new_node;
+}

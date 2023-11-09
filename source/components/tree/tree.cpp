@@ -54,6 +54,7 @@ void Tree::updateNodeMetadata()
         node->id = i;
         if (node->is_leaf())
         {
+                
             continue;
         }
 
@@ -111,11 +112,22 @@ void Tree::visualize()
     std::system("dot -Tpng /tmp/tree.dot -o tree.png");
 };
 
-std::tuple<std::vector<Node>, std::tuple<std::vector<Node>, std::vector<Node>>> Tree::split_tree(int split_point)
+std::tuple<std::vector<Node *>, std::tuple<std::vector<Node *>, std::vector<Node *>>> Tree::split_tree(int split_point)
 {
-    // NOTE: test this function 
-    std::vector<Node> branch(this->nodes.begin() + split_point - this->nodes[split_point]->length, this->nodes.begin() + split_point);
-    std::vector<Node> root1(this->nodes.begin(), this->nodes.begin() + split_point - this->nodes[split_point]-> length);
-    std::vector<Node> root2(this->nodes.begin() + split_point - this->nodes[split_point]-> length + 1, this->nodes.end());
+    std::vector<Node *> branch(this->nodes.begin() + split_point - this->nodes[split_point]->length, this->nodes.begin() + split_point + 1);
+    std::vector<Node *> root1(this->nodes.begin(), this->nodes.begin() + split_point - this->nodes[split_point]->length);
+    std::vector<Node *> root2(this->nodes.begin() + split_point + 1, this->nodes.end());
     return std::make_tuple(branch, std::make_tuple(root1, root2));
+}
+
+std::ostream &operator<<(std::ostream &os, const Tree &tree)
+{
+    os << "Tree information:" << std::endl;
+    for (auto node : tree.nodes)
+    {
+        os << "  " << node->id << ": ";
+        os << *node;
+    }
+
+    return os;
 }

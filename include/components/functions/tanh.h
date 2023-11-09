@@ -6,7 +6,7 @@
 class Tanh : public Node{
 public:
     explicit Tanh();
-
+    Node * clone() override;
     ArrayXf eval(std::stack <ArrayXf>& X) override;
 
 };

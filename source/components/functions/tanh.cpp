@@ -10,3 +10,8 @@ ArrayXf Tanh::eval(std::stack <ArrayXf>& X){
 Tanh::Tanh() : Node(1) {
     this->symbol = "Tanh";
 }
+
+Node* Tanh::clone(){
+    Tanh* new_node = new Tanh();
+    return new_node;
+}

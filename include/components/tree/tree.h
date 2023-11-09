@@ -29,7 +29,9 @@ public:
 
     void visualize();
 
-    std::tuple<std::vector<Node>, std::tuple<std::vector<Node>, std::vector<Node>>> split_tree(int split_point);
+    std::tuple<std::vector<Node *>, std::tuple<std::vector<Node *>, std::vector<Node *>>> split_tree(int split_point);
+
+    friend std::ostream &operator<<(std::ostream &os, const Tree &tree);
 };
 
 #endif

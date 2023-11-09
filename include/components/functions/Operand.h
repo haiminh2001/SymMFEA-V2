@@ -6,6 +6,7 @@
 class Operand : public Node{
 public:
     explicit Operand(int index);
+    Node * clone() override;
 
 private:
     ArrayXf eval(std::stack <ArrayXf>& X) override;

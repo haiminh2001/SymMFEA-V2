@@ -9,5 +9,6 @@ public:
     Tree* genes;
     Individual(Tree* genes, int skill_factor);
     ArrayXf eval(const ArrayXXf& X) const;
+    friend std::ostream &operator<<(std::ostream &os, const Individual &individual);
 };
 #endif //SYMMFEA_INDIVIDUAL_H
