@@ -10,6 +10,8 @@
 #include "evolution/population/sub_population.h"
 #include "components/functions/node.h"
 #include "evolution/reproducer/crossover/subtree.h"
+#include "central_units/individual_infos.h"
+#include "NumCpp.hpp"
 
 using namespace std;
 
@@ -43,6 +45,7 @@ int main()
     std::cout << "output:" << std::endl
               << output << std::endl;
 
+    IndividualInfos::init(10, 10);
     // DataPool dp = DataPool(input, y, 0.5);
     // DataView dv = DataView(&dp, 1);
     // std::cout << dp.X_train << std::endl;

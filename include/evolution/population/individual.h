@@ -5,6 +5,7 @@
 class Individual{
 public:
     int skill_factor;
+    int central_id;
     std::vector <float> objectives;
     Tree* genes;
     Individual(Tree* genes, int skill_factor);
