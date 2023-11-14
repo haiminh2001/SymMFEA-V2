@@ -4,8 +4,8 @@ project(SymMFEA)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Eigen3 REQUIRED)
-find_package(NumCpp REQUIRED)
-find_package(Boost 1.71.0 COMPONENTS date_time)
+# find_package(NumCpp REQUIRED)
+# find_package(Boost 1.71.0 COMPONENTS date_time)
 
 
 

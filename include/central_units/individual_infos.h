@@ -1,10 +1,12 @@
 #ifndef SYMMFEA_INDIVIDUAL_INFOS_H
 #define SYMMFEA_INDIVIDUAL_INFOS_H
-#include "NumCpp.hpp"
+#include "Eigen/Dense"
+using Eigen::ArrayXXf;
+
 class IndividualInfos
 {
 public:
-    static nc::NdArray<float> objectives;
+    static ArrayXXf objectives;
     static void init(int max_num_individuals, int num_objectives);
 };
 

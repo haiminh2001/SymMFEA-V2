@@ -11,7 +11,8 @@
 #include "components/functions/node.h"
 #include "evolution/reproducer/crossover/subtree.h"
 #include "central_units/individual_infos.h"
-#include "NumCpp.hpp"
+#include "central_units/id_allocator.h"
+
 
 using namespace std;
 
@@ -19,13 +20,16 @@ using Eigen::ArrayXXf;
 
 int main()
 {
-
+    int max_ind = 10;
     ArrayXXf input(3, 2);
     input << 1, 2,
         3, 4,
         5, 6;
     ArrayXf y(3);
     y << 1, 5, 9;
+
+    IdAllocator::init(max_ind);
+    IndividualInfos::init(max_ind, 10);
 
     auto s = SubPopulation(5, 0);
 
@@ -45,7 +49,8 @@ int main()
     std::cout << "output:" << std::endl
               << output << std::endl;
 
-    IndividualInfos::init(10, 10);
+
+
     // DataPool dp = DataPool(input, y, 0.5);
     // DataView dv = DataView(&dp, 1);
     // std::cout << dp.X_train << std::endl;
