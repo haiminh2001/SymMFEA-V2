@@ -12,7 +12,7 @@
 #include "evolution/reproducer/crossover/subtree.h"
 #include "central_units/individual_infos.h"
 #include "central_units/id_allocator.h"
-
+#include "utils/array_utils.h"
 
 using namespace std;
 
@@ -23,8 +23,8 @@ int main()
     int max_ind = 10;
     ArrayXXf input(3, 2);
     input << 1, 2,
-        3, 4,
-        5, 6;
+        5, 6,
+        3, 4;
     ArrayXf y(3);
     y << 1, 5, 9;
 
@@ -44,15 +44,19 @@ int main()
     cout << c;
 
     ArrayXf output = i1.eval(input);
-    std::cout << "input:" << std::endl
-              << input << std::endl;
-    std::cout << "output:" << std::endl
-              << output << std::endl;
+    cout << "input:" << endl
+         << input << endl;
+    cout << "output:" << endl
+         << output << endl;
 
-
+    auto order = argsort<float>(output);
+    for (auto i : order)
+    {
+        cout << "order: " << static_cast<int>(i);
+    }
 
     // DataPool dp = DataPool(input, y, 0.5);
     // DataView dv = DataView(&dp, 1);
-    // std::cout << dp.X_train << std::endl;
-    // std::cout << dv.X_train() << std::endl;
+    // cout << dp.X_train << endl;
+    // cout << dv.X_train() << endl;
 }

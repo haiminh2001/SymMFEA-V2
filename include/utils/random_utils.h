@@ -3,6 +3,7 @@
 
 #include <random>
 
+//NOTE: may be use eigen random instead
 template <typename  T>
 T randint(T min, T max){
     std::random_device rd;
