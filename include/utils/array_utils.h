@@ -6,7 +6,7 @@
 template <typename T>
 Eigen::Array<unsigned long, Eigen::Dynamic, 1> argsort(Eigen::Array<T, Eigen::Dynamic, 1> arr)
 {
-    std::vector<unsigned long> indices(arr.size());
+    Eigen::Array<unsigned long, Eigen::Dynamic, 1> indices(arr.size());
     for (unsigned long i = 0; i < arr.size(); ++i)
     {
         indices[i] = i;
@@ -15,7 +15,7 @@ Eigen::Array<unsigned long, Eigen::Dynamic, 1> argsort(Eigen::Array<T, Eigen::Dy
     std::sort(indices.begin(), indices.end(), [&](unsigned long i, unsigned long j)
               { return arr(i) < arr(j); });
 
-    return Eigen::Map<Eigen::Array<unsigned long, Eigen::Dynamic, 1>>(indices.data(), indices.size());
+    return indices;
 }
 
 template <typename T>

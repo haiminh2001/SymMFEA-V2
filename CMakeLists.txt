@@ -18,7 +18,7 @@ file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "in
 
 add_executable(SymMFEA main.cpp ${APP_SOURCES})
 
-if(Boost_FOUND)
-      include_directories(${Boost_INCLUDE_DIRS})
-      target_link_libraries(SymMFEA ${Boost_DATE_TIME_LIBRARY} )
-endif()
+# if(Boost_FOUND)
+#       include_directories(${Boost_INCLUDE_DIRS})
+#       target_link_libraries(SymMFEA ${Boost_DATE_TIME_LIBRARY} )
+# endif()

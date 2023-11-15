@@ -14,6 +14,7 @@
 #include "central_units/id_allocator.h"
 #include "utils/array_utils.h"
 #include "evolution/ranker.h"
+#include "evolution/selector.h"
 
 using namespace std;
 
@@ -31,13 +32,13 @@ int main()
     y << 1, 5, 9, 10;
 
     IdAllocator::init(max_ind);
-    IndividualInfos::init(max_ind, 10);
+    IndividualInfos::init(10, 10);
     IndividualInfos::objectives = input;
 
-    auto s = SubPopulation(max_ind, 0);
+    auto subpop = SubPopulation(max_ind, 0);
 
-    auto i1 = s.individuals[0];
-    auto i2 = s.individuals[1];
+    auto i1 = subpop.individuals[0];
+    auto i2 = subpop.individuals[1];
 
     auto crossover = SubTreeCrossover(5, 5);
     auto c = crossover.call(i1, i2)[0];
@@ -53,9 +54,14 @@ int main()
          << output << endl;
 
     auto ranker = Ranker();
-    auto argpos = ranker.call(s);
+    auto selector = Selector(0.5);
+    auto argpos = ranker.call(subpop);
 
-    cout << "order: " << input(argpos, Eigen::all);
+    selector.call(subpop, argpos);
+
+    for(auto ind : subpop.individuals){
+        cout<<"haha "<<ind.central_id<<endl;
+    }
 
     // DataPool dp = DataPool(input, y, 0.5);
     // DataView dv = DataView(&dp, 1);

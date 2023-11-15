@@ -1,7 +1,7 @@
 #include "evolution/reproducer/crossover/subtree.h"
 #include "utils/random_utils.h"
 #include "components/tree/tree_handler.h"
-std::vector<Individual> SubTreeCrossover::call(Individual pa, Individual pb)
+std::vector<Individual> SubTreeCrossover::call(Individual &pa, Individual &pb)
 {
     std::vector<Individual> children;
     // select cut point on target tree, make sure child not deeper or longer than maximum values
