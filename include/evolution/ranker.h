@@ -3,13 +3,12 @@
 
 #include "evolution/population/sub_population.h"
 #include "central_units/individual_infos.h"
-#include "vector"
 #include "Eigen/Dense"
 
 class Ranker
 {
 public:
-    std::vector<unsigned long> call(SubPopulation subpop);
+    Eigen::Array<unsigned long, Eigen::Dynamic, 1> call(SubPopulation subpop);
 };
 
 #endif // SYMMFEA_RANKER_H
