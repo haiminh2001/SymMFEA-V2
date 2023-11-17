@@ -15,6 +15,7 @@
 #include "utils/array_utils.h"
 #include "evolution/ranker.h"
 #include "evolution/selector.h"
+#include "metrics/r2.h"
 
 using namespace std;
 
@@ -62,6 +63,17 @@ int main()
     for(auto ind : subpop.individuals){
         cout<<"haha "<<ind.central_id<<endl;
     }
+
+    ArrayXf actualData(6);
+
+    ArrayXf predictedData(6);
+
+    predictedData << 3, 8, 10, 17, 24, 27;
+    
+    actualData << 2, 8, 10, 13, 18, 20;
+
+    auto metrics = R2();
+    cout<<"hello world "<<metrics.call(actualData, predictedData);
 
     // DataPool dp = DataPool(input, y, 0.5);
     // DataView dv = DataView(&dp, 1);
