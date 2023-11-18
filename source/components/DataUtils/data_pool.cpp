@@ -1,5 +1,6 @@
 #include "Eigen/Core"
 #include <cmath>
+
 #include "components/DataUtils/utils.h"
 #include "components/DataUtils/data_pool.h"
 
@@ -26,3 +27,4 @@ long DataPool::num_train() {
 long DataPool::num_val() {
     return this->X_val.rows();
 }
+

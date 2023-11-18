@@ -2,8 +2,10 @@
 #include "central_units/individual_infos.h"
 #include "utils/array_utils.h"
 
+using namespace ArrayUtils;
+
 // return indices in desceding order (best individuals to worst)
-Eigen::Array<unsigned long, Eigen::Dynamic, 1> Ranker::call(SubPopulation& subpop)
+Eigen::Array<unsigned long, Eigen::Dynamic, 1> Ranker::call(SubPopulation &subpop)
 {
     std::vector<Eigen::Index> indices(subpop.individuals.size());
     for (Eigen::Index i = 0; i < subpop.individuals.size(); ++i)

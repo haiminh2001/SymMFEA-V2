@@ -18,7 +18,7 @@
 #include "metrics/r2.h"
 
 using namespace std;
-
+using namespace ArrayUtils;
 using Eigen::ArrayXXf;
 
 int main()
@@ -60,23 +60,19 @@ int main()
 
     selector.call(subpop, argpos);
 
-    for(auto ind : subpop.individuals){
-        cout<<"haha "<<ind.central_id<<endl;
-    }
+    string filename = "../datasets/dataset_2.csv";
+    auto data = readCSV(filename);
 
-    ArrayXf actualData(6);
+    Eigen::ArrayXf gt (data.rows());
+    gt << data(Eigen::all, data.cols() - 1);
 
-    ArrayXf predictedData(6);
+    Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 1));
 
-    predictedData << 3, 8, 10, 17, 24, 27;
+    DataPool dp = DataPool(X, gt, 0.5);
+    DataView dv = DataView(&dp, 0.8);
+
+    cout<<"haha\n";
     
-    actualData << 2, 8, 10, 13, 18, 20;
-
-    auto metrics = R2();
-    cout<<"hello world "<<metrics.call(actualData, predictedData);
-
-    // DataPool dp = DataPool(input, y, 0.5);
-    // DataView dv = DataView(&dp, 1);
-    // cout << dp.X_train << endl;
-    // cout << dv.X_train() << endl;
+    cout << dp.X_train.rows() << endl;
+    cout << dv.X_train().rows() << endl;
 }

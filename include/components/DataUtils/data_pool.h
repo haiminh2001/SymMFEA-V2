@@ -1,7 +1,6 @@
 #ifndef SYMMFEA_DATA_POOL_H
 #define SYMMFEA_DATA_POOL_H
 
-#endif //SYMMFEA_DATA_POOL_H
 #include <Eigen/Dense>
 using Eigen::ArrayXXf;
 using Eigen::ArrayXf;
@@ -17,4 +16,7 @@ public:
 
     long num_train();
     long num_val();
+
 };
+
+#endif //SYMMFEA_DATA_POOL_H

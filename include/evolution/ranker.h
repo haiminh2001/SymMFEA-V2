@@ -1,8 +1,9 @@
 #ifndef SYMMFEA_RANKER_H
 #define SYMMFEA_RANKER_H
+#include "Eigen/Dense"
+
 
 #include "evolution/population/sub_population.h"
-#include "Eigen/Dense"
 
 class Ranker
 {
