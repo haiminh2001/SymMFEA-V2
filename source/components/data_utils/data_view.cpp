@@ -1,6 +1,6 @@
 #include <cmath>
-#include "components/DataUtils/data_view.h"
-#include "components/DataUtils/utils.h"
+#include "components/data_utils/data_view.h"
+#include "components/data_utils/utils.h"
 
 DataView::DataView(DataPool* dataPool, float sample = 1.0){
     this->dataPool = dataPool;
@@ -11,6 +11,8 @@ DataView::DataView(DataPool* dataPool, float sample = 1.0){
     this->train_indices = rand_perm(train_size);
     this->val_indices = rand_perm(val_size);
 }
+
+DataView::DataView(){}
 
 ArrayXXf DataView::X_train() {
     return this->dataPool->X_train(this->train_indices, Eigen::all);

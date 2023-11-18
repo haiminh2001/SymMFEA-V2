@@ -1,7 +1,7 @@
 #include <random>
 #include <algorithm>
 #include <chrono>
-#include "components/DataUtils/utils.h"
+#include "components/data_utils/utils.h"
 
 std::vector <long> rand_perm(long size){
     std::vector<long> indices(size);
