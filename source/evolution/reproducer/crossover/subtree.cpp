@@ -11,7 +11,7 @@ std::vector<Individual> SubTreeCrossover::call(Individual &pa, Individual &pb)
     else if (pa.genes->length() == 2)
         tar_point = 1;
     else
-        tar_point = randint<int>(1, pa.genes->length() - 1);
+        tar_point = Random::randint<int>(1, pa.genes->length() - 1);
 
     auto max_sizes = get_possible_range(*pa.genes, tar_point, this->max_length, this->max_depth);
     int max_length = std::get<0>(max_sizes);
@@ -25,7 +25,7 @@ std::vector<Individual> SubTreeCrossover::call(Individual &pa, Individual &pb)
             candidates.push_back(node->id);
         }
     }
-    int src_point = randint<int>(0, (int)candidates.size() - 1);
+    int src_point = Random::randint<int>(0, (int)candidates.size() - 1);
     src_point = candidates[src_point];
 
     auto tar_tree = pa.genes->split_tree(tar_point);

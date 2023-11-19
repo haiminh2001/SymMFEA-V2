@@ -1,5 +1,6 @@
 #include <evolution/population/sub_population.h>
 #include <components/tree/tree_handler.h>
+#include "utils/random_utils.h"
 #include <vector>
 
 SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView dataview)
@@ -14,4 +15,16 @@ SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView data
         individuals.emplace_back(Individual(tree, skill_factor));
     }
     this->individuals = individuals;
+    this->num_individual = num_individual;
 }
+
+Individual SubPopulation::get_random()
+{
+    auto idx = Random::randint<int>(0, this->individuals.size() - 1);
+    return this->individuals[idx];
+}
+
+void SubPopulation::append(std::vector<Individual> offsprings)
+{
+    this->individuals.insert(this->individuals.end(), offsprings.begin(), offsprings.end());
+};

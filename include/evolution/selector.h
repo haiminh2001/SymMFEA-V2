@@ -7,11 +7,11 @@
 class Selector
 {
 private:
-    float keep_ratio;
+    float survive_ratio;
 
 public:
     void call(SubPopulation &subpop, Eigen::Array<unsigned long, Eigen::Dynamic, 1> argpos);
-    Selector(float keep_ratio);
+    Selector(float survive_ratio);
 };
 
 #endif // SYMMFEA_SELECTOR_H

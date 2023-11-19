@@ -2,7 +2,9 @@
 #include "vector"
 
 Eigen::Array<bool, Eigen::Dynamic, 1> IdAllocator::id_tracker = Eigen::Array<bool, Eigen::Dynamic, 1>();
-unsigned long IdAllocator::cur_pos = 0;
+
+unsigned long IdAllocator::OOM_POS = 0;
+unsigned long IdAllocator::cur_pos = IdAllocator::OOM_POS + 1;
 unsigned long IdAllocator::num_allocated = 0;
 unsigned long IdAllocator::max_pos = 0;
 
@@ -13,20 +15,20 @@ IdAllocator:
     max_pos = max_num_individuals;
 }
 
-int IdAllocator::allocate()
+unsigned long IdAllocator::allocate()
 {
     auto start = cur_pos;
     if (num_allocated == max_pos + 1)
-        return -1;
+        return OOM_POS;
 
     while (id_tracker(cur_pos))
     {
         ++cur_pos;
         if (cur_pos == max_pos)
-            cur_pos = 0;
+            cur_pos = OOM_POS + 1;
 
         if (cur_pos == start)
-            return -1;
+            return OOM_POS;
     }
 
     id_tracker(cur_pos) = true;

@@ -5,7 +5,7 @@
 void Selector::call(SubPopulation &subpop, Eigen::Array<unsigned long, Eigen::Dynamic, 1> argpos)
 {
     unsigned long num_orig = subpop.individuals.size();
-    unsigned long num_keep = static_cast<unsigned long>(this->keep_ratio * num_orig);
+    unsigned long num_keep = static_cast<unsigned long>(this->survive_ratio * num_orig);
     std::vector<Individual> survivor;
 
     for (unsigned long index = 0; index < num_keep; ++index)
@@ -17,7 +17,7 @@ void Selector::call(SubPopulation &subpop, Eigen::Array<unsigned long, Eigen::Dy
     subpop.individuals = survivor;
 }
 
-Selector::Selector(float keep_ratio)
+Selector::Selector(float survive_ratio)
 {
-    this->keep_ratio = keep_ratio;
+    this->survive_ratio = survive_ratio;
 }

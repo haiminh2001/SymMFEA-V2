@@ -8,5 +8,6 @@ public:
     std::vector <Individual> individuals;
     std::vector <SubPopulation> sub_populations;
     Population(int num_tasks, int num_inviduals_per_tasks, DataPool* datapool);
+    void append(std::vector<std::vector<Individual>> offsprings);
 };
 #endif //SYMMFEA_POPULATION_H

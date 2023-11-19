@@ -3,15 +3,13 @@
 
 #include <random>
 
-//NOTE: may be use eigen random instead
-template <typename  T>
-T randint(T min, T max){
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    std::uniform_int_distribution<T> dist(min, max);
-    return dist(rng);
+// NOTE: may be use eigen random instead
+namespace Random
+{
+    
+    // min and max are inclusive
+    template <typename T>
+    T randint(T min, T max);
 }
 
-
-#endif //SYMMFEA_RANDOM_UTILS_H
-
+#endif // SYMMFEA_RANDOM_UTILS_H

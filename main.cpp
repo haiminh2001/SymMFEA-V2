@@ -16,6 +16,8 @@
 #include "evolution/ranker.h"
 #include "evolution/selector.h"
 #include "metrics/r2.h"
+#include "evolution/population/population.h"
+#include "evolution/algorithms/GA.h"
 
 using namespace std;
 using namespace ArrayUtils;
@@ -23,5 +25,15 @@ using Eigen::ArrayXXf;
 
 int main()
 {
-   
+    string filename = "/mnt/d/Workspace/SymMFEA/datasets/dataset_2.csv";
+    auto data = readCSV(filename);
+    Eigen::ArrayXf gt(data.rows());
+    gt << data(Eigen::all, data.cols() - 1);
+
+    Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 1));
+
+    GA algo (500, 1, 100, 30, 5);
+
+    algo.fit(X, gt);
+    
 }

@@ -56,7 +56,7 @@ Primitive::Primitive(int max_index) : Primitive::Primitive()
 NodeFactory random_select(std::vector<NodeFactory> candidates)
 {
 
-    auto randomIndex = randint<unsigned long>(0, candidates.size() - 1);
+    auto randomIndex = Random::randint<unsigned long>(0, candidates.size() - 1);
     return candidates[randomIndex];
 }
 
@@ -77,13 +77,13 @@ NodeFactory Primitive::getFunction(int expected_arity)
 Node *Primitive::sampleNode(int arity_min, int arity_max)
 {
 
-    auto actual_arity = randint<int>(arity_min, arity_max);
+    auto actual_arity = Random::randint<int>(arity_min, arity_max);
     int arity;
     if (actual_arity < 2 && actual_arity > -1)
         arity = actual_arity;
     else if (actual_arity == 2)
     {
-        auto dynamic = randint<int>(0, 1);
+        auto dynamic = Random::randint<int>(0, 1);
         if (dynamic > 0)
             arity = -1;
         else
@@ -98,7 +98,7 @@ Node *Primitive::sampleNode(int arity_min, int arity_max)
 
     if (arity == 0)
     {
-        node_index = randint<int>(0, this->max_index);
+        node_index = Random::randint<int>(0, this->max_index);
     }
 
     return nf(node_index, actual_arity);
