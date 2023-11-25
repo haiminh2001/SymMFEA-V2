@@ -10,6 +10,7 @@ class GA
 private:
     int num_inviduals_per_tasks;
     int num_objectives;
+    int num_tasks;
     int num_generations;
     Crossover *crossover;
     Selector *selector;
@@ -17,6 +18,7 @@ private:
 
 public:
     GA(int num_inviduals_per_tasks,
+       int num_tasks,
        int num_objectives,
        int num_generations,
        int max_length,

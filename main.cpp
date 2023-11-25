@@ -32,7 +32,7 @@ int main()
 
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 1));
 
-    GA algo (500, 1, 100, 30, 5);
+    GA algo (500, 1, 2, 100, 30, 5);
 
     algo.fit(X, gt);
     

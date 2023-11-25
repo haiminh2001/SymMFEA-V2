@@ -9,5 +9,6 @@ public:
     std::vector <SubPopulation> sub_populations;
     Population(int num_tasks, int num_inviduals_per_tasks, DataPool* datapool);
     void append(std::vector<std::vector<Individual>> offsprings);
+    void evaluate();
 };
 #endif //SYMMFEA_POPULATION_H

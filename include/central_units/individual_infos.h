@@ -6,7 +6,7 @@ using Eigen::ArrayXXf;
 class IndividualInfos
 {
 public:
-    // objectives are sort in ascending order
+    // objectives are larger is better
     static ArrayXXf objectives;
     static void init(int max_num_individuals, int num_objectives);
 };

@@ -4,8 +4,10 @@
 #include "evolution/population/population.h"
 #include "components/data_utils/data_pool.h"
 #include "evolution/reproducer/crossover/subtree.h"
+#include "iostream"
 
 GA::GA(int num_inviduals_per_tasks,
+       int num_tasks,
        int num_objectives,
        int num_generations,
        int max_length,
@@ -13,6 +15,7 @@ GA::GA(int num_inviduals_per_tasks,
        float survive_ratio)
 {
     int max_num_individuals = num_inviduals_per_tasks * num_objectives * 2;
+    this->num_tasks = num_tasks;
     IdAllocator::init(max_num_individuals);
     IndividualInfos::init(max_num_individuals, num_objectives);
 
@@ -23,23 +26,28 @@ GA::GA(int num_inviduals_per_tasks,
     this->num_inviduals_per_tasks = num_inviduals_per_tasks;
     this->num_objectives = num_objectives;
     this->num_generations = num_generations;
-    
 }
 
 void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
 {
-    Population population(this->num_objectives, this->num_inviduals_per_tasks, new DataPool(X, y, 0.2));
-    for (int generation = 0; generation < this->num_generations; ++generation){
+    Population population(this->num_tasks, this->num_inviduals_per_tasks, new DataPool(X, y, 0.2));
+    for (int generation = 0; generation < this->num_generations; ++generation)
+    {
         this->exec_one_generation(generation, population);
     }
 }
 
 void GA::exec_one_generation(int generation, Population population)
 {
+    std::cout << "Generation: " << generation << std::endl;
     auto offsprings = this->crossover->call(population = population);
+
     population.append(offsprings);
 
-    for (auto subpop : population.sub_populations){
+    population.evaluate();
+
+    for (auto subpop : population.sub_populations)
+    {
         auto argpos = this->ranker->call(subpop);
         this->selector->call(subpop, argpos);
     }
