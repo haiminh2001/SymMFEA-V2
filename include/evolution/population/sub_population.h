@@ -4,6 +4,7 @@
 #include "components/data_utils/data_view.h"
 #include "metrics/metrics.h"
 #include <vector>
+#include "Eigen/Dense"
 
 class SubPopulation
 {
@@ -11,12 +12,14 @@ private:
     Metric* metric;
 public:
     int skill_factor;
-    std::vector<Individual> individuals;
+    std::vector<Individual*> individuals;
     DataView dataview;
     int num_individual;
     SubPopulation(int num_individual, int skill_factor, DataView dataview);
-    Individual get_random();
-    void append(std::vector<Individual> offsprings);
+    Individual* get_random();
+    void append(std::vector<Individual*> offsprings);
     void evaluate();
+    Individual* find_best_fitted_individual();
+    std::vector<Eigen::Index> get_central_ids();
 };
 #endif // SYMMFEA_SUB_POPULATION_H

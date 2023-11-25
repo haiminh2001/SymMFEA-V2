@@ -11,7 +11,7 @@ Population::Population(int num_tasks, int num_individuals_per_tasks, DataPool *d
     }
 }
 
-void Population::append(std::vector<std::vector<Individual>> offsprings)
+void Population::append(std::vector<std::vector<Individual*>> offsprings)
 {
     for (int i = 0; i < offsprings.size(); ++i)
     {
@@ -24,4 +24,12 @@ void Population::evaluate()
     {
         subpop.evaluate();
     }
+}
+std::vector<Individual*> Population::find_best_fitted_individual()
+{
+    std::vector <Individual*> bests;
+    for (auto subpop : this->sub_populations){
+        bests.push_back(subpop.find_best_fitted_individual());
+    }
+    return bests;
 }

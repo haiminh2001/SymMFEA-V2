@@ -4,6 +4,7 @@
 #include "evolution/reproducer/crossover.h"
 #include "evolution/selector.h"
 #include "evolution/ranker.h"
+#include "utils/progress_bar.h"
 
 class GA
 {
@@ -12,6 +13,7 @@ private:
     int num_objectives;
     int num_tasks;
     int num_generations;
+    ProgressBar *progress_bar;
     Crossover *crossover;
     Selector *selector;
     Ranker *ranker;

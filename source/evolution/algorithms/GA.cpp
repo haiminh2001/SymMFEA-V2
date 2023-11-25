@@ -4,7 +4,6 @@
 #include "evolution/population/population.h"
 #include "components/data_utils/data_pool.h"
 #include "evolution/reproducer/crossover/subtree.h"
-#include "iostream"
 
 GA::GA(int num_inviduals_per_tasks,
        int num_tasks,
@@ -26,6 +25,8 @@ GA::GA(int num_inviduals_per_tasks,
     this->num_inviduals_per_tasks = num_inviduals_per_tasks;
     this->num_objectives = num_objectives;
     this->num_generations = num_generations;
+
+    this->progress_bar = new ProgressBar(this->num_generations);
 }
 
 void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
@@ -34,12 +35,12 @@ void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
     for (int generation = 0; generation < this->num_generations; ++generation)
     {
         this->exec_one_generation(generation, population);
+        this->progress_bar->updateProgress(1, population.find_best_fitted_individual());
     }
 }
 
 void GA::exec_one_generation(int generation, Population population)
 {
-    std::cout << "Generation: " << generation << std::endl;
     auto offsprings = this->crossover->call(population = population);
 
     population.append(offsprings);

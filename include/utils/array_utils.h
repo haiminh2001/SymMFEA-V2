@@ -14,6 +14,9 @@ namespace ArrayUtils
     template <typename T>
     Eigen::Array<unsigned long, Eigen::Dynamic, 1> rank(Eigen::Array<T, Eigen::Dynamic, 1> arr);
 
+    template <typename T>
+    unsigned long argmax(Eigen::Array<T, Eigen::Dynamic, 1> arr);
+
     Eigen::ArrayXXf readCSV(const std::string &filename, bool has_header = true);
 }
 

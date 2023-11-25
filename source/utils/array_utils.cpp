@@ -1,10 +1,11 @@
 #include "utils/array_utils.h"
-
+#include <limits>
 namespace ArrayUtils
 {
 
     template Eigen::Array<unsigned long, Eigen::Dynamic, 1> rank<float>(Eigen::Array<float, Eigen::Dynamic, 1> arr);
     template Eigen::Array<unsigned long, Eigen::Dynamic, 1> argsort<long>(Eigen::Array<long, Eigen::Dynamic, 1> arr);
+    template unsigned long argmax<float>(Eigen::Array<float, Eigen::Dynamic, 1> arr);
 
     template <typename T>
     Eigen::Array<unsigned long, Eigen::Dynamic, 1> argsort(Eigen::Array<T, Eigen::Dynamic, 1> arr)
@@ -34,14 +35,15 @@ namespace ArrayUtils
 
         if (!file.is_open())
         {
-            
+
             throw std::runtime_error("Failed to open file: " + filename);
         }
 
         std::vector<std::vector<double>> data;
         std::string line;
 
-        if (has_header) std::getline(file, line);
+        if (has_header)
+            std::getline(file, line);
 
         while (std::getline(file, line))
         {
@@ -68,5 +70,24 @@ namespace ArrayUtils
         }
 
         return matrix;
+    }
+
+    template <typename T>
+    unsigned long argmax(Eigen::Array<T, Eigen::Dynamic, 1> arr)
+    {
+
+        unsigned long max_indice = 0;
+        T max_value = std::numeric_limits<T>::min();
+
+        for (unsigned long indice = 0; indice < arr.size(); indice++)
+        {
+            auto val = arr(indice);
+            if (val > max_value)
+            {
+                max_value = val;
+                max_indice = indice;
+            }
+        }
+        return max_indice;
     }
 }

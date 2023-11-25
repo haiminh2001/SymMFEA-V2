@@ -31,3 +31,7 @@ void Individual::setObjective(std::vector<float> objectives)
     this->evaluated = true;
     
 }
+
+Eigen::ArrayXf Individual::objectives(){
+    return IndividualInfos::objectives(this->central_id, Eigen::all);
+}

@@ -7,11 +7,7 @@ using namespace ArrayUtils;
 // return indices in desceding order (best individuals to worst)
 Eigen::Array<unsigned long, Eigen::Dynamic, 1> Ranker::call(SubPopulation &subpop)
 {
-    std::vector<Eigen::Index> indices(subpop.individuals.size());
-    for (Eigen::Index i = 0; i < subpop.individuals.size(); ++i)
-    {
-        indices[i] = subpop.individuals[i].central_id;
-    }
+    auto indices = subpop.get_central_ids();
     auto objectives = IndividualInfos::objectives(indices, Eigen::all);
 
     auto obj_rank = rank<float>(objectives(Eigen::all, 0));
