@@ -6,15 +6,17 @@
 #include "utils/array_utils.h"
 #include "central_units/individual_infos.h"
 
-SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView dataview)
+SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView dataview, int max_length, int max_depth, int max_index)
 {
     this->skill_factor = skill_factor;
     this->dataview = dataview;
+    this->max_length = max_length;
+    this->max_depth = max_depth;
 
     std::vector<Individual*> individuals;
     for (int i = 0; i < num_individual; i++)
     {
-        auto tree = create_tree(1, 5, 5);
+        auto tree = create_tree(max_index, max_length, max_depth);
         individuals.push_back(new Individual(tree, skill_factor));
     }
     this->individuals = individuals;

@@ -76,8 +76,19 @@ NodeFactory Primitive::getFunction(int expected_arity)
 
 Node *Primitive::sampleNode(int arity_min, int arity_max)
 {
+    auto n_arity = Random::randint<int>(0, 1);
 
-    auto actual_arity = Random::randint<int>(arity_min, arity_max);
+    int actual_arity;
+
+    if (n_arity == 1)
+    {
+        actual_arity = Random::randint<int>(arity_min, arity_max);
+    }
+    else
+    {
+        actual_arity = Random::randint<int>(arity_min, std::min(2, arity_max));
+    }
+
     int arity;
     if (actual_arity < 2 && actual_arity > -1)
         arity = actual_arity;

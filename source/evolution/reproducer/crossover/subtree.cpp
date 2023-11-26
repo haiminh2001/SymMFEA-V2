@@ -25,6 +25,9 @@ std::vector<Individual*> SubTreeCrossover::call(Individual* pa, Individual* pb)
             candidates.push_back(node->id);
         }
     }
+
+    if (candidates.size() == 0) return children;
+
     int src_point = Random::randint<int>(0, (int)candidates.size() - 1);
     src_point = candidates[src_point];
 

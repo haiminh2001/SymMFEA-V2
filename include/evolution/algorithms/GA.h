@@ -12,6 +12,8 @@ private:
     int num_inviduals_per_tasks;
     int num_objectives;
     int num_tasks;
+    int max_length;
+    int max_depth;
     int num_generations;
     ProgressBar *progress_bar;
     Crossover *crossover;

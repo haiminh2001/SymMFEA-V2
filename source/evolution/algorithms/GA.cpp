@@ -27,11 +27,14 @@ GA::GA(int num_inviduals_per_tasks,
     this->num_generations = num_generations;
 
     this->progress_bar = new ProgressBar(this->num_generations);
+
+    this->max_length = max_length;
+    this->max_depth = max_depth;
 }
 
 void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
 {
-    Population population(this->num_tasks, this->num_inviduals_per_tasks, new DataPool(X, y, 0.2));
+    Population population(this->num_tasks, this->num_inviduals_per_tasks, new DataPool(X, y, 0.2), this->max_length, this->max_depth);
     for (int generation = 0; generation < this->num_generations; ++generation)
     {
         this->exec_one_generation(generation, population);
