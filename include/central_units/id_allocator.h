@@ -5,9 +5,8 @@
 class IdAllocator
 {
 private:
-    static Eigen::Array<bool, Eigen::Dynamic, 1>  id_tracker;
+    static std::vector<bool> id_tracker;
     
-
     //0 position is reserved for OOM individuals
     static unsigned long OOM_POS;
     static unsigned long cur_pos;
@@ -17,7 +16,7 @@ private:
 public:
     static void init(int max_num_individuals);
     static unsigned long allocate();
-    static void freeze(unsigned long index);
+    static void free(unsigned long index);
 };
 
 

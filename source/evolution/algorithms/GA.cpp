@@ -13,7 +13,7 @@ GA::GA(int num_inviduals_per_tasks,
        int max_depth,
        float survive_ratio)
 {
-    int max_num_individuals = num_inviduals_per_tasks * num_objectives * 2;
+    int max_num_individuals = num_inviduals_per_tasks * num_tasks * 2;
     this->num_tasks = num_tasks;
     IdAllocator::init(max_num_individuals);
     IndividualInfos::init(max_num_individuals, num_objectives);

@@ -16,5 +16,6 @@ public:
     void setObjective(std::vector<float> objectives);
     bool evaluated;
     Eigen::ArrayXf objectives();
+    ~Individual();
 };
 #endif // SYMMFEA_INDIVIDUAL_H

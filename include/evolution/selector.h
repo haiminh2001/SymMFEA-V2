@@ -10,7 +10,7 @@ private:
     float survive_ratio;
 
 public:
-    void call(SubPopulation &subpop, Eigen::Array<unsigned long, Eigen::Dynamic, 1> argpos);
+    void call(SubPopulation *subpop, Eigen::Array<unsigned long, Eigen::Dynamic, 1> argpos);
     Selector(float survive_ratio);
 };
 

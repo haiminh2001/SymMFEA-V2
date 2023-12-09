@@ -6,15 +6,15 @@ Crossover::Crossover(int max_length, int max_depth)
     this->max_length = max_length;
 }
 
-std::vector<Individual*> Crossover::call(SubPopulation &subpop)
+std::vector<Individual*> Crossover::call(SubPopulation* subpop)
 {
     std::vector<Individual*> children;
 
-    while (children.size() < subpop.num_individual)
+    while (children.size() < subpop->num_individual)
     {
 
-        auto i1 = subpop.get_random();
-        auto i2 = subpop.get_random();
+        auto i1 = subpop->get_random();
+        auto i2 = subpop->get_random();
 
         auto c = this->call(i1, i2);
 

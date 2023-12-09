@@ -6,7 +6,7 @@
 class Population
 {
 public:
-    std::vector<SubPopulation> sub_populations;
+    std::vector<SubPopulation*> sub_populations;
     Population(int num_tasks, int num_inviduals_per_tasks, DataPool *datapool, int max_length, int max_depth);
     void append(std::vector<std::vector<Individual*>> offsprings);
     void evaluate();

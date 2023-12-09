@@ -35,3 +35,7 @@ void Individual::setObjective(std::vector<float> objectives)
 Eigen::ArrayXf Individual::objectives(){
     return IndividualInfos::objectives(this->central_id, Eigen::all);
 }
+
+Individual::~Individual(){
+    IdAllocator::free(this->central_id);
+}

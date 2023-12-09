@@ -72,3 +72,7 @@ Individual* SubPopulation::find_best_fitted_individual()
     auto best_idx = ArrayUtils::argmax <float> (objective);
     return this->individuals[best_idx];
 }
+
+void SubPopulation::setIndividuals(const std::vector<Individual*> &individuals){
+    this->individuals = individuals;
+}

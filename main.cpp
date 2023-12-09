@@ -30,7 +30,7 @@ int main()
     Eigen::ArrayXf gt(data.rows());
     gt << data(Eigen::all, data.cols() - 1);
 
-    Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 1));
+    Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
     GA algo (500, 1, 2, 100, 30, 5);
 
