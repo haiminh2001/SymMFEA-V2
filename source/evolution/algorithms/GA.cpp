@@ -16,7 +16,7 @@ GA::GA(int num_inviduals_per_tasks,
     int max_num_individuals = num_inviduals_per_tasks * num_tasks * 2;
     this->num_tasks = num_tasks;
     IdAllocator::init(max_num_individuals);
-    IndividualInfos::init(max_num_individuals, num_objectives);
+    IndividualInfos::init(max_num_individuals, num_objectives, max_length);
 
     this->crossover = new SubTreeCrossover(max_length, max_depth);
     this->selector = new Selector(survive_ratio);

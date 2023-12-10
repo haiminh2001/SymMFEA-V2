@@ -16,13 +16,18 @@ public:
 
     int index;
 
-    std::string symbol;
-
     int depth = -1;
 
     int length = -1;
 
     int id = -1;
+
+    ArrayXf weightDelta;
+    ArrayXXf inputDelta;
+
+    std::string symbol;
+
+    bool is_leaf();
 
     Node(int arity, int index);
 
@@ -32,12 +37,11 @@ public:
     virtual ArrayXf eval(std::stack<ArrayXf> &X) = 0;
 
     // if leaf
-    ArrayXf eval(ArrayXXf X) const;
+    ArrayXf eval(ArrayXXf X);
 
-    bool is_leaf();
+    std::vector<ArrayXf> backprop(ArrayXf &dY);
 
     virtual Node *clone() = 0;
-
 
     friend std::ostream &operator<<(std::ostream &os, const Node &node);
 };

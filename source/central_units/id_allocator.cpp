@@ -1,6 +1,5 @@
 #include "central_units/id_allocator.h"
 #include "vector"
-#include <stdexcept>
 #include "iostream"
 
 

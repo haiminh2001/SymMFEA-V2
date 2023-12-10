@@ -8,7 +8,9 @@ class IndividualInfos
 public:
     // objectives are larger is better and the first column is the main objective
     static ArrayXXf objectives;
-    static void init(int max_num_individuals, int num_objectives);
+    static ArrayXXf weight;
+    static ArrayXXf weightDelta;
+    static void init(int max_num_individuals, int num_objectives, int max_length);
 };
 
 
