@@ -19,11 +19,11 @@ void Population::append(std::vector<std::vector<Individual *>> offsprings)
         this->sub_populations[i]->append(offsprings[i]);
     }
 };
-void Population::evaluate()
+void Population::evaluate(Trainer* trainer)
 {
     for (auto subpop : this->sub_populations)
     {
-        subpop->evaluate();
+        subpop->evaluate(trainer);
     }
 }
 std::vector<Individual *> Population::find_best_fitted_individual()

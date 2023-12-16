@@ -36,20 +36,17 @@ void SubPopulation::append(std::vector<Individual*> offsprings)
     this->individuals.insert(this->individuals.end(), offsprings.begin(), offsprings.end());
 };
 
-void SubPopulation::evaluate()
+void SubPopulation::evaluate(Trainer* trainer)
 {
     for (auto ind : this->individuals)
         if (!ind->evaluated)
         {
             std::vector<float> objectives;
-            auto y_hat = ind->eval(this->dataview.X_val());
-            auto y_true = this->dataview.y_val();
-            auto met = this->metric->call(y_true, y_hat);
-            if (!this->metric->is_larger_better)
-            {
-                met = -met;
-            }
-            objectives.push_back(met);
+            
+            //NOTE: hard code train steps
+            auto metric = trainer->fit(ind, this->dataview, 20);
+
+            objectives.push_back(metric);
             objectives.push_back(-ind->genes->length());
             ind->setObjective(objectives);
         }

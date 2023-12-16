@@ -2,6 +2,7 @@
 #define SYMMFEA_SUB_POPULATION_H
 #include "evolution/population/individual.h"
 #include "components/data_utils/data_view.h"
+#include "components/trainer/trainer.h"
 #include "metrics/metrics.h"
 #include <vector>
 #include "Eigen/Dense"
@@ -21,7 +22,7 @@ public:
     SubPopulation(int num_individual, int skill_factor, DataView dataview, int max_length, int max_depth, int max_index);
     Individual *get_random();
     void append(std::vector<Individual *> offsprings);
-    void evaluate();
+    void evaluate(Trainer* trainer);
     Individual *find_best_fitted_individual();
     std::vector<Eigen::Index> get_central_ids();
     void setIndividuals(const std::vector<Individual *> &individuals);

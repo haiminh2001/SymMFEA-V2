@@ -5,6 +5,7 @@
 #include "evolution/selector.h"
 #include "evolution/ranker.h"
 #include "utils/progress_bar.h"
+#include "components/trainer/trainer.h"
 
 class GA
 {
@@ -19,6 +20,7 @@ private:
     Crossover *crossover;
     Selector *selector;
     Ranker *ranker;
+    Trainer* trainer;
 
 public:
     GA(int num_inviduals_per_tasks,
@@ -27,6 +29,7 @@ public:
        int num_generations,
        int max_length,
        int max_depth,
+       Trainer* trainer,
        float survive_ratio = 0.5);
     void fit(Eigen::ArrayXXf X, Eigen::ArrayXf y);
     void exec_one_generation(int generation, Population population);

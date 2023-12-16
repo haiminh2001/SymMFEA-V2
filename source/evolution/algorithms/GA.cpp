@@ -11,6 +11,7 @@ GA::GA(int num_inviduals_per_tasks,
        int num_generations,
        int max_length,
        int max_depth,
+       Trainer* trainer,
        float survive_ratio)
 {
     int max_num_individuals = num_inviduals_per_tasks * num_tasks * 2;
@@ -21,6 +22,7 @@ GA::GA(int num_inviduals_per_tasks,
     this->crossover = new SubTreeCrossover(max_length, max_depth);
     this->selector = new Selector(survive_ratio);
     this->ranker = new Ranker();
+    this->trainer = trainer;
 
     this->num_inviduals_per_tasks = num_inviduals_per_tasks;
     this->num_objectives = num_objectives;
@@ -48,7 +50,7 @@ void GA::exec_one_generation(int generation, Population population)
 
     population.append(offsprings);
 
-    population.evaluate();
+    population.evaluate(this->trainer);
 
     for (auto subpop : population.sub_populations)
     {
