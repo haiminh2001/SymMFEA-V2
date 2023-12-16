@@ -11,19 +11,17 @@ public:
     unsigned long central_id;
     bool evaluated;
     Tree *genes;
-    
 
-    Individual(Tree *genes, int skill_factor);
+    Individual(std::vector<Node *>, int skill_factor);
+    Individual(int skill_factor, int max_index, int max_length, int max_depth);
     ~Individual();
 
-
     ArrayXf eval(const ArrayXXf &X) const;
-    
+
     Eigen::ArrayXf objectives();
-    
+
     void setObjective(std::vector<float> objectives);
-    
+
     friend std::ostream &operator<<(std::ostream &os, const Individual &individual);
-    
 };
 #endif // SYMMFEA_INDIVIDUAL_H

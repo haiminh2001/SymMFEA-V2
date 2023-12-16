@@ -5,9 +5,10 @@
 
 class Sum : public Node
 {
-public:
-    ArrayXf eval(std::stack<ArrayXf> &X) override;
+private:
+    ArrayXf _eval(std::stack<ArrayXf> &X) override;
 
+public:
     explicit Sum(int arity);
 
     Node *clone() override;

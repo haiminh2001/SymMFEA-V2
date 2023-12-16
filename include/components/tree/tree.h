@@ -17,11 +17,11 @@ public:
     // list of pointers of the nodes
     std::vector<Node *> nodes;
 
-    explicit Tree(std::vector<Node *> nodes);
+    explicit Tree(std::vector<Node *> nodes, int central_id);
 
     ArrayXf eval(const ArrayXXf &X);
 
-    void updateNodeMetadata();
+    void updateNodeMetadata(int central_id);
 
     int length();
 

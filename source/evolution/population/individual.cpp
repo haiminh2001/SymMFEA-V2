@@ -1,13 +1,22 @@
 #include "evolution/population/individual.h"
 #include "central_units/id_allocator.h"
 #include "central_units/individual_infos.h"
+#include "components/tree/tree_handler.h"
 
-Individual::Individual(Tree *genes, int skill_factor)
+Individual::Individual(std::vector<Node *> nodes, int skill_factor)
 {
-    this->genes = genes;
+    
+    this->skill_factor = skill_factor;
+    this->central_id = IdAllocator::allocate();
+    this->genes = new Tree(nodes, this->central_id);
+    this->evaluated = false;
+}
+Individual::Individual(int skill_factor, int max_index, int max_length, int max_depth)
+{
     this->skill_factor = skill_factor;
     this->central_id = IdAllocator::allocate();
     this->evaluated = false;
+    this->genes = create_tree(max_index, max_length, max_depth, this->central_id);
 }
 
 ArrayXf Individual::eval(const ArrayXXf &X) const
@@ -29,13 +38,14 @@ void Individual::setObjective(std::vector<float> objectives)
     }
 
     this->evaluated = true;
-    
 }
 
-Eigen::ArrayXf Individual::objectives(){
+Eigen::ArrayXf Individual::objectives()
+{
     return IndividualInfos::objectives(this->central_id, Eigen::all);
 }
 
-Individual::~Individual(){
+Individual::~Individual()
+{
     IdAllocator::free(this->central_id);
 }

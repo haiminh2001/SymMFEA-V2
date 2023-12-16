@@ -16,8 +16,7 @@ SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView data
     std::vector<Individual*> individuals;
     for (int i = 0; i < num_individual; i++)
     {
-        auto tree = create_tree(max_index, max_length, max_depth);
-        individuals.push_back(new Individual(tree, skill_factor));
+        individuals.push_back(new Individual(skill_factor, max_index, max_length, max_depth));
     }
     this->individuals = individuals;
     this->num_individual = num_individual;

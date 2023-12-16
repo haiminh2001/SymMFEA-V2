@@ -4,10 +4,11 @@
 #include "node.h"
 
 class Product : public Node{
+private: 
+    ArrayXf _eval(std::stack <ArrayXf>& X) override;
 public:
     explicit Product();
     Node * clone() override;
-    ArrayXf eval(std::stack <ArrayXf>& X) override;
 
 };
 

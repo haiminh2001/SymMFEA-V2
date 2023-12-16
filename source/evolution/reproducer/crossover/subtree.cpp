@@ -52,7 +52,7 @@ std::vector<Individual*> SubTreeCrossover::call(Individual* pa, Individual* pb)
         child_nodes.at(i) = child_nodes[i]->clone();
     }
 
-    children.push_back(new Individual(new Tree(child_nodes), pa->skill_factor));
+    children.push_back(new Individual(child_nodes, pa->skill_factor));
 
     return children;
 }

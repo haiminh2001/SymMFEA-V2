@@ -1,10 +1,15 @@
 #include "components/functions/product.h"
 
-ArrayXf Product::eval(std::stack <ArrayXf>& X){
+ArrayXf Product::_eval(std::stack <ArrayXf>& X){
+    
     auto x1 = X.top();
     X.pop();
     auto x2 = X.top();
     X.pop();
+
+    this->inputDelta.clear();
+    this->inputDelta.push_back(this->weight() * x2);
+    this->inputDelta.push_back(this->weight() * x1);
     return x1 * x2;
 }
 

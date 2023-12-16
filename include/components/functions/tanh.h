@@ -3,11 +3,13 @@
 
 #include "node.h"
 
-class Tanh : public Node{
+class Tanh : public Node
+{
+private:
+    ArrayXf _eval(std::stack<ArrayXf> &X) override;
+
 public:
     explicit Tanh();
-    Node * clone() override;
-    ArrayXf eval(std::stack <ArrayXf>& X) override;
-
+    Node *clone() override;
 };
-#endif //SYMMFEA_TANH_H
+#endif // SYMMFEA_TANH_H

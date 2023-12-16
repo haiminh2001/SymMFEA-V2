@@ -1,12 +1,13 @@
 #include "components/functions/node.h"
+#include "central_units/individual_infos.h"
 
-std::vector<ArrayXf> matrix_vector_row_wise_production(ArrayXXf M, ArrayXf v)
+std::vector<ArrayXf> matrix_vector_row_wise_production(std::vector<ArrayXf> M, ArrayXf v)
 {
     std::vector<ArrayXf> result;
 
-    for (int i = 0; i < M.rows(); ++i)
+    for (int i = 0; i < M.size(); ++i)
     {
-        result.push_back(M.row(i) * v);
+        result.push_back(M[i] * v);
     }
     return result;
 }
@@ -28,7 +29,7 @@ bool Node::is_leaf()
     return this->arity == 0;
 }
 
-ArrayXf Node::eval(ArrayXXf X)
+ArrayXf Node::_eval(ArrayXXf X)
 {
     assert(this->index >= 0);
     assert(this->is_leaf());
@@ -51,8 +52,24 @@ std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
     }
 }
 
+template ArrayXf Node::eval<ArrayXXf>(ArrayXXf X);
+template ArrayXf Node::eval<std::stack<ArrayXf> &>(std::stack<ArrayXf> &X);
+
+template <typename T>
+ArrayXf Node::eval(T X)
+{
+    auto result = this->_eval(X);
+    this->weightDelta = result;
+    return result;
+}
+
 std::ostream &operator<<(std::ostream &os, const Node &node)
 {
     os << "Node type: " << node.symbol << " | Node arity: " << node.arity << std::endl;
     return os;
+}
+
+float Node::weight()
+{
+    return IndividualInfos::weight(this->central_id, this->id);
 }

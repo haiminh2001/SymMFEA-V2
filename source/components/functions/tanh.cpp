@@ -1,9 +1,13 @@
 #include "components/functions/tanh.h"
 
-ArrayXf Tanh::eval(std::stack <ArrayXf>& X){
+ArrayXf Tanh::_eval(std::stack <ArrayXf>& X){
     auto x = X.top();
     X.pop();
-    return x.array().tanh();
+    auto result = x.array().tanh();
+    this->inputDelta.clear();
+
+    this->inputDelta.push_back(1 - result * result);
+    return result;
 }
 
 

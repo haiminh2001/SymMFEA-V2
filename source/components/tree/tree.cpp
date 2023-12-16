@@ -19,11 +19,11 @@ ArrayXf Tree::eval(const ArrayXXf &X)
 
         if (node->is_leaf())
         {
-            val = node->eval(X);
+            val = node->eval<ArrayXXf>(X);
         }
         else
         {
-            val = node->eval(Stack);
+            val = node->eval<std::stack<ArrayXf>&>(Stack);
         }
 
         Stack.push(val);
@@ -43,7 +43,7 @@ int Tree::depth()
     return this->nodes[this->nodes.size() - 1]->depth;
 }
 
-void Tree::updateNodeMetadata()
+void Tree::updateNodeMetadata(int central_id)
 {
     auto length = this->nodes.size();
     for (int i = 0; i < length; ++i)
@@ -52,9 +52,10 @@ void Tree::updateNodeMetadata()
         node->depth = 1;
         node->length = node->arity;
         node->id = i;
+        node->central_id = central_id;
         if (node->is_leaf())
         {
-                
+
             continue;
         }
 
@@ -74,10 +75,10 @@ void Tree::updateNodeMetadata()
     assert(this->length() == this->nodes.size());
 }
 
-Tree::Tree(std::vector<Node *> nodes)
+Tree::Tree(std::vector<Node *> nodes, int central_id)
 {
     this->nodes = std::move(nodes);
-    this->updateNodeMetadata();
+    this->updateNodeMetadata(central_id);
 }
 
 void printSubTree(unsigned long x, unsigned long y, std::vector<Node *> nodes,
