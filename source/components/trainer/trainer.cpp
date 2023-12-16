@@ -1,10 +1,11 @@
 #include "components/trainer/trainer.h"
 #include <limits>
-Trainer::Trainer(Metric *metric, Loss *loss, int early_stopping)
+Trainer::Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int early_stopping)
 {
     this->metric = metric;
     this->loss = loss;
     this->early_stopping = early_stopping;
+    this->optimizer = optimizer;
 }
 
 float Trainer::fit(Individual *individual, DataView &data, int steps)
@@ -26,6 +27,8 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
         auto diff = this->loss->call(y, y_hat);
         auto deltaY = std::get<0>(diff);
         auto loss = std::get<1>(diff);
+
+        this->optimizer->backprop(individual, deltaY);
 
         y_hat = individual->eval(data.X_val());
         auto metric = this->metric->call(data.y_val(), y_hat);

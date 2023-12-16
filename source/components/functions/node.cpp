@@ -33,7 +33,6 @@ ArrayXf Node::eval(ArrayXXf X)
     assert(this->index >= 0);
     assert(this->is_leaf());
     auto result = X.col(this->index);
-    this->weightDelta = result;
     return result;
 }
 

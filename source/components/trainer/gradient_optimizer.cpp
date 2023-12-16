@@ -7,9 +7,9 @@ GradientOptimizer::GradientOptimizer(float learning_rate)
     this->learning_rate = learning_rate;
 }
 
-void GradientOptimizer::backprop(Individual &individual, ArrayXf deltaY)
+void GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
 {
-    auto tree = individual.genes;
+    auto tree = individual->genes;
 
     std::vector<ArrayXf> stack;
     auto root = tree->nodes[tree->nodes.size() - 1];
@@ -38,11 +38,11 @@ void GradientOptimizer::backprop(Individual &individual, ArrayXf deltaY)
 
     auto deltaW = this->compute_gradient(individual);
 
-    auto weight = IndividualInfos::weight.row(individual.central_id);
+    auto weight = IndividualInfos::weight.row(individual->central_id);
     weight -= deltaW * this->learning_rate;
 }
 
-ArrayXf GradientOptimizer::compute_gradient(Individual &individual)
+ArrayXf GradientOptimizer::compute_gradient(Individual* individual)
 {
-    return IndividualInfos::weightDelta.row(individual.central_id);
+    return IndividualInfos::weightDelta.row(individual->central_id);
 }
