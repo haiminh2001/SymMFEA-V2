@@ -44,5 +44,5 @@ void GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
 
 ArrayXf GradientOptimizer::compute_gradient(Individual* individual)
 {
-    return IndividualInfos::weightDelta.row(individual->central_id);
+    return IndividualInfos::weightDelta.row(individual->central_id).log();
 }

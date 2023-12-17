@@ -1,5 +1,6 @@
 #include "components/functions/node.h"
 #include "central_units/individual_infos.h"
+#include "central_units/individual_infos.h"
 
 std::vector<ArrayXf> matrix_vector_row_wise_production(std::vector<ArrayXf> M, ArrayXf v)
 {
@@ -40,6 +41,9 @@ ArrayXf Node::_eval(ArrayXXf X)
 std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
 {
     auto delta = (this->weightDelta * dY).mean();
+
+    IndividualInfos::weightDelta(this->central_id, this->id) = delta;
+
     if (this->is_leaf())
         return std::vector<ArrayXf>();
     else
