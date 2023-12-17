@@ -6,9 +6,10 @@ GradientOptimizer::GradientOptimizer(float learning_rate)
 {
     this->learning_rate = learning_rate;
 }
-
-void GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
+/// return if deltaW is nan or not
+bool GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
 {
+    
     auto tree = individual->genes;
 
     std::vector<ArrayXf> stack;
@@ -18,7 +19,7 @@ void GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
     auto signal = root->backprop(deltaY);
 
     if (tree->length() == 1)
-        return;
+        return false;
 
     stack.insert(stack.end(), signal.begin(), signal.end());
     for (int i = tree->length() - 2; i >= 0; --i)
@@ -38,8 +39,10 @@ void GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
 
     auto deltaW = this->compute_gradient(individual);
 
-    auto weight = IndividualInfos::weight.row(individual->central_id);
-    weight -= deltaW * this->learning_rate;
+    if (deltaW.isNaN().any()) return true;
+
+    IndividualInfos::weight.row(individual->central_id) -= deltaW * this->learning_rate;
+    return false;
 }
 
 ArrayXf GradientOptimizer::compute_gradient(Individual* individual)

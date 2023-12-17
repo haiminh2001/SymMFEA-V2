@@ -62,7 +62,7 @@ template ArrayXf Node::eval<std::stack<ArrayXf> &>(std::stack<ArrayXf> &X);
 template <typename T>
 ArrayXf Node::eval(T X)
 {
-    auto result = this->_eval(X);
+    auto result = this->_eval(X) * this->weight();
     this->weightDelta = result;
     return result;
 }

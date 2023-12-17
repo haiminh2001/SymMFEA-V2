@@ -39,7 +39,7 @@ namespace ArrayUtils
             throw std::runtime_error("Failed to open file: " + filename);
         }
 
-        std::vector<std::vector<double>> data;
+        std::vector<std::vector<float>> data;
         std::string line;
 
         if (has_header)
@@ -47,7 +47,7 @@ namespace ArrayUtils
 
         while (std::getline(file, line))
         {
-            std::vector<double> row;
+            std::vector<float> row;
             std::stringstream ss(line);
             std::string cell;
             while (std::getline(ss, cell, ','))
