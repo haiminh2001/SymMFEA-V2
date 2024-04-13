@@ -6,19 +6,18 @@ class IdAllocator
 {
 private:
     static std::vector<bool> id_tracker;
-    
-    //0 position is reserved for OOM individuals
-    static unsigned long OOM_POS;
-    static unsigned long cur_pos;
-    static unsigned long max_pos;
-    static unsigned long num_allocated;
+
+    static uint64_t cur_pos;
+    static uint64_t max_pos;
+    static uint64_t num_allocated;
 
 public:
+    // 0 position is reserved for OOM individuals
+    static uint64_t OOM_POS;
+
     static void init(int max_num_individuals);
-    static unsigned long allocate();
-    static void free(unsigned long index);
+    static uint64_t allocate();
+    static void free(uint64_t index);
 };
-
-
 
 #endif // SYMMFEA_ID_ALLOCATOR_H

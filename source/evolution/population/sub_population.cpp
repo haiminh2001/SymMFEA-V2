@@ -40,13 +40,15 @@ void SubPopulation::evaluate(Trainer* trainer)
     for (auto ind : this->individuals)
         if (!ind->evaluated)
         {
-            std::vector<float> objectives;
             
+
             //NOTE: hard code train steps
             auto metric = trainer->fit(ind, this->dataview, 20);
 
-            objectives.push_back(metric);
-            objectives.push_back(-ind->genes->length());
+            float objectives[2];
+            objectives[0] = metric;
+            objectives[1] = (float) - (ind->genes->length());
+
             ind->setObjective(objectives);
         }
 }

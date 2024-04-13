@@ -3,21 +3,21 @@
 #include "central_units/id_allocator.h"
 #include "vector"
 
-void Selector::call(SubPopulation *subpop, Eigen::Array<unsigned long, Eigen::Dynamic, 1> argpos)
+void Selector::call(SubPopulation *subpop, Eigen::Array<uint64_t, Eigen::Dynamic, 1> argpos)
 {
     assert(subpop->individuals.size() == argpos.size());
-    unsigned long num_orig = subpop->individuals.size();
-    unsigned long num_keep = static_cast<unsigned long>(this->survive_ratio * num_orig);
+    uint64_t num_orig = subpop->individuals.size();
+    uint64_t num_keep = static_cast<uint64_t>(this->survive_ratio * num_orig);
     std::vector<Individual *> survivors;
 
-    for (unsigned long index = 0; index < num_keep; ++index)
+    for (uint64_t index = 0; index < num_keep; ++index)
     {
         // discard invalid individuals
         if (subpop->individuals[argpos[index]]->central_id != 0)
             survivors.push_back(subpop->individuals[argpos[index]]);
     }
 
-    for (unsigned long index = num_keep; index < subpop->individuals.size(); ++index)
+    for (uint64_t index = num_keep; index < subpop->individuals.size(); ++index)
     {
         delete subpop->individuals[argpos[index]];
     }

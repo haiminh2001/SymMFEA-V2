@@ -8,7 +8,7 @@
 class Ranker
 {
 public:
-    Eigen::Array<unsigned long, Eigen::Dynamic, 1> call(SubPopulation* subpop);
+    Eigen::Array<uint64_t, Eigen::Dynamic, 1> call(SubPopulation* subpop);
 };
 
 #endif // SYMMFEA_RANKER_H

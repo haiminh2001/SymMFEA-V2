@@ -8,7 +8,7 @@ class Individual
 {
 public:
     int skill_factor;
-    unsigned long central_id;
+    uint64_t central_id;
     bool evaluated;
     Tree *genes;
 
@@ -18,9 +18,13 @@ public:
 
     ArrayXf eval(const ArrayXXf &X) const;
 
+    /// @brief 
+    /// Return the objectives of this individual
+    /// First element is the main objective
+    /// @return 
     Eigen::ArrayXf objectives();
 
-    void setObjective(std::vector<float> objectives);
+    void setObjective(float* objectives);
 
     friend std::ostream &operator<<(std::ostream &os, const Individual &individual);
 };

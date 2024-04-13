@@ -10,6 +10,7 @@ public:
     static ArrayXXf objectives;
     static ArrayXXf weight;
     static ArrayXXf weightDelta;
+    static uint32_t num_objectives;
     static void init(int max_num_individuals, int num_objectives, int max_length);
 };
 

@@ -81,8 +81,8 @@ Tree::Tree(std::vector<Node *> nodes, int central_id)
     this->updateNodeMetadata(central_id);
 }
 
-void printSubTree(unsigned long x, unsigned long y, std::vector<Node *> nodes,
-                  unsigned long index, std::ofstream &outputFile)
+void printSubTree(uint64_t x, uint64_t y, std::vector<Node *> nodes,
+                  uint64_t index, std::ofstream &outputFile)
 {
     // x, y is the position of the node
 
@@ -90,12 +90,12 @@ void printSubTree(unsigned long x, unsigned long y, std::vector<Node *> nodes,
 
     outputFile << "\tnode" << index << " [label=\"" << node->symbol.c_str() << "\"];" << std::endl;
 
-    unsigned long cur_index = index - 1;
+    uint64_t cur_index = index - 1;
 
     for (int i = 0; i < node->arity; ++i)
     {
-        unsigned long new_x = x - y / (index + 1);
-        unsigned long new_y = y + 50;
+        uint64_t new_x = x - y / (index + 1);
+        uint64_t new_y = y + 50;
         outputFile << "\tnode" << index << " -> node" << cur_index << ";" << std::endl;
         printSubTree(new_x, new_y, nodes, cur_index, outputFile);
 

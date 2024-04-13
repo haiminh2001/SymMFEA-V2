@@ -5,7 +5,7 @@
 using namespace ArrayUtils;
 
 // return indices in desceding order (best individuals to worst)
-Eigen::Array<unsigned long, Eigen::Dynamic, 1> Ranker::call(SubPopulation *subpop)
+Eigen::Array<uint64_t, Eigen::Dynamic, 1> Ranker::call(SubPopulation *subpop)
 {
     auto indices = subpop->get_central_ids();
     auto objectives = IndividualInfos::objectives(indices, Eigen::all);

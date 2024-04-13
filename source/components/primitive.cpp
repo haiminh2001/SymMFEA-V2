@@ -56,7 +56,7 @@ Primitive::Primitive(int max_index) : Primitive::Primitive()
 NodeFactory random_select(std::vector<NodeFactory> candidates)
 {
 
-    auto randomIndex = Random::randint<unsigned long>(0, candidates.size() - 1);
+    auto randomIndex = Random::randint<uint64_t>(0, candidates.size() - 1);
     return candidates[randomIndex];
 }
 

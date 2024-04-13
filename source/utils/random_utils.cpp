@@ -5,7 +5,7 @@
 namespace Random
 {
     template int randint<int>(int min, int max);
-    template unsigned long randint<unsigned long>(unsigned long min, unsigned long max);
+    template uint64_t randint<uint64_t>(uint64_t min, uint64_t max);
     template <typename T>
     T randint(T min, T max)
     {

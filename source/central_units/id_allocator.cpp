@@ -3,10 +3,10 @@
 #include "iostream"
 
 
-unsigned long IdAllocator::OOM_POS = 0;
-unsigned long IdAllocator::cur_pos = IdAllocator::OOM_POS + 1;
-unsigned long IdAllocator::num_allocated = 0;
-unsigned long IdAllocator::max_pos = 0;
+uint64_t IdAllocator::OOM_POS = 0;
+uint64_t IdAllocator::cur_pos = IdAllocator::OOM_POS + 1;
+uint64_t IdAllocator::num_allocated = 0;
+uint64_t IdAllocator::max_pos = 0;
 
 std::vector<bool> IdAllocator::id_tracker (1);
 
@@ -19,7 +19,7 @@ void IdAllocator::init(int max_num_individuals)
 
 }
 
-unsigned long IdAllocator::allocate()
+uint64_t IdAllocator::allocate()
 {
     auto start = IdAllocator::cur_pos;
     if (IdAllocator::num_allocated == IdAllocator::max_pos + 1)
@@ -41,7 +41,7 @@ unsigned long IdAllocator::allocate()
     return IdAllocator::cur_pos;
 }
 
-void IdAllocator::free(unsigned long index)
+void IdAllocator::free(uint64_t index)
 {
     IdAllocator::id_tracker[index] = false;
     IdAllocator::num_allocated -= 1;
