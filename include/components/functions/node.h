@@ -4,6 +4,8 @@
 #include <Eigen/Dense>
 #include <stack>
 #include <string>
+#include <vector>
+
 using Eigen::ArrayXf;
 using Eigen::ArrayXXf;
 

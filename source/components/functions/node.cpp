@@ -48,7 +48,7 @@ std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
         return std::vector<ArrayXf>();
     else
     {
-        auto derivativeSignals = matrix_vector_row_wise_production(this->inputDelta, dY);
+        auto derivativeSignals = matrix_vector_row_wise_production(this->inputDelta, dY * this->weight());
 
         assert(derivativeSignals.size() == this->arity);
 
