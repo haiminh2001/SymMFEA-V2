@@ -1,13 +1,16 @@
 #include "evolution/reproducer/crossover/subtree.h"
 #include "utils/random_utils.h"
 #include "components/tree/tree_handler.h"
-std::vector<Individual*> SubTreeCrossover::call(Individual* pa, Individual* pb)
+std::vector<Individual *> SubTreeCrossover::call(Individual *pa, Individual *pb)
 {
-    std::vector<Individual*> children;
+    std::vector<Individual *> children;
     // select cut point on target tree, make sure child not deeper or longer than maximum values
     int tar_point;
     if (pa->genes->length() < 2)
+    {
         return children;
+    }
+
     else if (pa->genes->length() == 2)
         tar_point = 1;
     else
@@ -26,7 +29,8 @@ std::vector<Individual*> SubTreeCrossover::call(Individual* pa, Individual* pb)
         }
     }
 
-    if (candidates.size() == 0) return children;
+    if (candidates.size() == 0)
+        return children;
 
     int src_point = Random::randint<int>(0, (int)candidates.size() - 1);
     src_point = candidates[src_point];
@@ -43,17 +47,21 @@ std::vector<Individual*> SubTreeCrossover::call(Individual* pa, Individual* pb)
     auto tar_root2 = std::get<1>(tar_root);
 
     std::vector<Node *> child_nodes;
+    std::vector<float> child_weight;
     child_nodes.insert(child_nodes.end(), tar_root1.begin(), tar_root1.end());
     child_nodes.insert(child_nodes.end(), source_branch.begin(), source_branch.end());
     child_nodes.insert(child_nodes.end(), tar_root2.begin(), tar_root2.end());
 
     for (int i = 0; i < child_nodes.size(); ++i)
     {
+        child_weight.push_back(child_nodes[i]->weight());
         child_nodes.at(i) = child_nodes[i]->clone();
     }
 
-    children.push_back(new Individual(child_nodes, pa->skill_factor));
-
+    Individual* child = new Individual(child_nodes, pa->skill_factor);
+    child->genes->setWeight(child_weight);
+    children.push_back(child);
+    
     return children;
 }
 SubTreeCrossover::SubTreeCrossover(int max_length, int max_depth) : Crossover(max_length, max_depth) {}

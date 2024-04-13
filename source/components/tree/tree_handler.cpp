@@ -26,7 +26,7 @@ void fill_postfix(int cur_idx,
     }
 }
 
-Tree* create_tree(int max_index, int max_length, int max_depth, int central_id)
+Tree* create_tree(int max_index, int max_length, int max_depth, int64_t central_id)
 {
     Primitive primitives = Primitive(max_index = max_index);
     std::vector<Node *> nodes;

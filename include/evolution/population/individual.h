@@ -8,7 +8,7 @@ class Individual
 {
 public:
     int skill_factor;
-    uint64_t central_id;
+    int64_t central_id;
     bool evaluated;
     Tree *genes;
 

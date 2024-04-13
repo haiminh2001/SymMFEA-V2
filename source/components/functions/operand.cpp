@@ -9,7 +9,7 @@ ArrayXf Operand::_eval(std::stack<ArrayXf> &X)
 {
     throw std::runtime_error("This function is not supposed to be called");
     //this function is not used
-    // return just to satisfy signature
+    //return just to satisfy signature
     return X.top();
 }
 

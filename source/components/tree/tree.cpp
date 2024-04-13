@@ -1,4 +1,5 @@
 #include "components/tree/tree.h"
+#include "central_units/individual_infos.h"
 #include <utility>
 #include <vector>
 #include <stack>
@@ -43,7 +44,7 @@ int Tree::depth()
     return this->nodes[this->nodes.size() - 1]->depth;
 }
 
-void Tree::updateNodeMetadata(int central_id)
+void Tree::updateNodeMetadata(int64_t central_id)
 {
     auto length = this->nodes.size();
     for (int i = 0; i < length; ++i)
@@ -75,10 +76,11 @@ void Tree::updateNodeMetadata(int central_id)
     assert(this->length() == this->nodes.size());
 }
 
-Tree::Tree(std::vector<Node *> nodes, int central_id)
+Tree::Tree(std::vector<Node *> nodes, int64_t central_id)
 {
     this->nodes = std::move(nodes);
     this->updateNodeMetadata(central_id);
+    this->central_id = central_id;
 }
 
 void printSubTree(uint64_t x, uint64_t y, std::vector<Node *> nodes,
@@ -131,4 +133,11 @@ std::ostream &operator<<(std::ostream &os, const Tree &tree)
     }
 
     return os;
+}
+
+void Tree::setWeight(std::vector<float> weight){
+    auto row = IndividualInfos::weight.row(this->central_id);
+    for (int i = 0; i < weight.size(); ++i){
+        row(i) = weight[i];
+    }
 }

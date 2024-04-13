@@ -12,15 +12,19 @@ using Eigen::ArrayXXf;
 class Node
 {
 protected:
-    // if not leaf
+    /// @brief
+    /// @param X  this is not a leaf node so it consume a vector of inputs
+    /// @return
     virtual ArrayXf _eval(std::stack<ArrayXf> &X) = 0;
 
-    // if leaf
+    /// @brief
+    /// @param X this is a leaf node so it consume a matrix directly for the ease of use
+    /// @return
     ArrayXf _eval(ArrayXXf X);
 
+public:
     float weight();
 
-public:
     static const bool is_nonlinear = false;
 
     int arity;
@@ -33,7 +37,7 @@ public:
 
     int id = -1;
 
-    int central_id = -1;
+    int64_t central_id = -1;
 
     ArrayXf weightDelta;
     std::vector<ArrayXf> inputDelta;
@@ -47,9 +51,7 @@ public:
     explicit Node(int arity);
 
     std::vector<ArrayXf> backprop(ArrayXf &dY);
-
     virtual Node *clone() = 0;
-
     friend std::ostream &operator<<(std::ostream &os, const Node &node);
 
     template <typename T>

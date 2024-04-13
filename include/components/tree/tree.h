@@ -12,16 +12,18 @@ using Eigen::ArrayXf;
 
 class Tree
 {
+private:
+    int64_t central_id;
 
 public:
     // list of pointers of the nodes
     std::vector<Node *> nodes;
 
-    explicit Tree(std::vector<Node *> nodes, int central_id);
+    explicit Tree(std::vector<Node *> nodes, int64_t central_id);
 
     ArrayXf eval(const ArrayXXf &X);
 
-    void updateNodeMetadata(int central_id);
+    void updateNodeMetadata(int64_t central_id);
 
     int length();
 
@@ -32,6 +34,8 @@ public:
     std::tuple<std::vector<Node *>, std::tuple<std::vector<Node *>, std::vector<Node *>>> split_tree(int split_point);
 
     friend std::ostream &operator<<(std::ostream &os, const Tree &tree);
+
+    void setWeight(std::vector<float> weight);
 };
 
 #endif
