@@ -31,12 +31,12 @@ int main()
 {
     string filename = "/mnt/d/Workspace/SymMFEA/datasets/dataset_2.csv";
     auto data = readCSV(filename);
-    Eigen::ArrayXf gt(data.rows());
-    gt << data(Eigen::all, data.cols() - 1);
+    Eigen::ArrayXf ground_truth(data.rows());
+    ground_truth << data(Eigen::all, data.cols() - 1);
 
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
-    GA algo(500, 1, 2, 100, 30, 5, new Trainer(new R2(), new MSELoss(), new GradientOptimizer(0.001), 5));
+    GA algo(500, 1, 2, 100, 30, 5, new Trainer(new R2(), new MSELoss(), new GradientOptimizer(0.01), 5));
 
-    algo.fit(X, gt);
+    algo.fit(X, ground_truth);
 }

@@ -20,7 +20,7 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
 
     float best_objective;
     if (this->metric->is_larger_better)
-        best_objective = std::numeric_limits<float>::min();
+        best_objective = - std::numeric_limits<float>::max();
     else
         best_objective = std::numeric_limits<float>::max();
 
@@ -32,7 +32,8 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
         auto loss = std::get<1>(diff);
 
         // if backprop return true, it means that the deltaW is nan then we should stop training
-        if (this->optimizer->backprop(individual, deltaY)) break;
+        if (this->optimizer->backprop(individual, deltaY))
+            break;
 
         y_hat = individual->forward(X_val);
         auto metric = this->metric->call(y_val, y_hat);
