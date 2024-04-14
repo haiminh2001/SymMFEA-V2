@@ -13,7 +13,7 @@ SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView data
     this->max_length = max_length;
     this->max_depth = max_depth;
 
-    std::vector<Individual*> individuals;
+    std::vector<Individual *> individuals;
     for (int i = 0; i < num_individual; i++)
     {
         individuals.push_back(new Individual(skill_factor, max_index, max_length, max_depth));
@@ -24,30 +24,34 @@ SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView data
     this->metric = new R2();
 }
 
-Individual* SubPopulation::get_random()
+Individual *SubPopulation::get_random()
 {
     auto idx = Random::randint<int>(0, this->individuals.size() - 1);
     return this->individuals[idx];
 }
 
-void SubPopulation::append(std::vector<Individual*> offsprings)
+void SubPopulation::append(std::vector<Individual *> offsprings)
 {
     this->individuals.insert(this->individuals.end(), offsprings.begin(), offsprings.end());
 };
 
-void SubPopulation::evaluate(Trainer* trainer)
+void SubPopulation::evaluate(Trainer *trainer)
 {
     for (auto ind : this->individuals)
         if (!ind->evaluated)
         {
-            
 
-            //NOTE: hard code train steps
+            // NOTE: hard code train steps
             auto metric = trainer->fit(ind, this->dataview, 20);
 
+            if (!this->metric->is_larger_better)
+            {
+                metric = -metric;
+            }
+            
             float objectives[2];
             objectives[0] = metric;
-            objectives[1] = (float) - (ind->genes->length());
+            objectives[1] = (float)-(ind->genes->length());
 
             ind->setObjective(objectives);
         }
@@ -63,14 +67,15 @@ std::vector<Eigen::Index> SubPopulation::get_central_ids()
     return ids;
 };
 
-Individual* SubPopulation::find_best_fitted_individual()
+Individual *SubPopulation::find_best_fitted_individual()
 {
     auto indices = this->get_central_ids();
     Eigen::ArrayXf objective = IndividualInfos::objectives(indices, 0);
-    auto best_idx = ArrayUtils::argmax <float> (objective);
+    auto best_idx = ArrayUtils::argmax<float>(objective);
     return this->individuals[best_idx];
 }
 
-void SubPopulation::setIndividuals(const std::vector<Individual*> &individuals){
+void SubPopulation::setIndividuals(const std::vector<Individual *> &individuals)
+{
     this->individuals = individuals;
 }
