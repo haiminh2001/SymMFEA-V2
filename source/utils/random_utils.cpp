@@ -10,6 +10,8 @@ namespace Random
     T randint(T min, T max)
     {
         assert(max >= min);
+        if (max == min) return max;
+        
         std::random_device rd;
         std::mt19937 rng(rd());
         std::uniform_int_distribution<T> dist(min, max);

@@ -26,7 +26,7 @@ void fill_postfix(int cur_idx,
     }
 }
 
-Tree* create_tree(int max_index, int max_length, int max_depth, int64_t central_id)
+Tree *create_tree(int max_index, int max_length, int max_depth, int64_t central_id)
 {
     Primitive primitives = Primitive(max_index = max_index);
     std::vector<Node *> nodes;
@@ -90,17 +90,19 @@ Tree* create_tree(int max_index, int max_length, int max_depth, int64_t central_
 
     fill_postfix(0, num_nodes, ls_nodes, postfix);
 
-    Tree* tree = new Tree(postfix, central_id);
-    
+    Tree *tree = new Tree(postfix, central_id);
+
     return tree;
 }
 
-std::tuple<int, int> get_possible_range(Tree tree, int point, int max_depth, int max_length){
+std::tuple<int, int> get_possible_range(Tree tree, int point, int max_depth, int max_length)
+{
     int tar_depth = tree.nodes[point]->depth;
     int tar_level = tree.depth() - tar_depth;
-    max_depth = max_depth - tar_level;
-    int tar_length  = tree.nodes[point]->length;
+    max_depth -= tar_level;
+    
+    int tar_length = tree.nodes[point]->length;
     int tar_remain_length = tree.length() - tar_length;
-    max_length = max_length - tar_remain_length;
+    max_length -= tar_remain_length;
     return std::make_tuple(max_length, max_depth);
 }

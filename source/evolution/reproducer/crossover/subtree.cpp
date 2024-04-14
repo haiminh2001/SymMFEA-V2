@@ -4,7 +4,7 @@
 std::vector<Individual *> SubTreeCrossover::call(Individual *pa, Individual *pb)
 {
     std::vector<Individual *> children;
-    // select cut point on target tree, make sure child not deeper or longer than maximum values
+    // select the cut point on the target tree, make sure the child will not be deeper or longer than the maximum values
     int tar_point;
     if (pa->genes->length() < 2)
     {
@@ -14,9 +14,9 @@ std::vector<Individual *> SubTreeCrossover::call(Individual *pa, Individual *pb)
     else if (pa->genes->length() == 2)
         tar_point = 1;
     else
-        tar_point = Random::randint<int>(1, pa->genes->length() - 1);
+        tar_point = Random::randint<int>(1, pa->genes->length() - 2);
 
-    auto max_sizes = get_possible_range(*(pa->genes), tar_point, this->max_length, this->max_depth);
+    auto max_sizes = get_possible_range(*(pa->genes), tar_point, this->max_depth, this->max_length);
     int max_length = std::get<0>(max_sizes);
     int max_depth = std::get<1>(max_sizes);
 
@@ -58,10 +58,10 @@ std::vector<Individual *> SubTreeCrossover::call(Individual *pa, Individual *pb)
         child_nodes.at(i) = child_nodes[i]->clone();
     }
 
-    Individual* child = new Individual(child_nodes, pa->skill_factor);
+    Individual *child = new Individual(child_nodes, pa->skill_factor);
     child->genes->setWeight(child_weight);
     children.push_back(child);
-    
+
     return children;
 }
 SubTreeCrossover::SubTreeCrossover(int max_length, int max_depth) : Crossover(max_length, max_depth) {}

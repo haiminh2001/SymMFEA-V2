@@ -44,6 +44,8 @@ int Tree::depth()
     return this->nodes[this->nodes.size() - 1]->depth;
 }
 
+/// @brief update the metadata of the nodes
+/// @param central_id the id of the trees in the IndividualInfos
 void Tree::updateNodeMetadata(int64_t central_id)
 {
     auto length = this->nodes.size();
@@ -115,6 +117,9 @@ void Tree::visualize()
     std::system("dot -Tpng /tmp/tree.dot -o tree.png");
 };
 
+/// @brief 
+/// @param split_point the index of the node to split the tree
+/// @return a tuple of 3 elements, the first element is the branch, the second element is the first part of the root, the third element is the second part of the root
 std::tuple<std::vector<Node *>, std::tuple<std::vector<Node *>, std::vector<Node *>>> Tree::split_tree(int split_point)
 {
     std::vector<Node *> branch(this->nodes.begin() + split_point - this->nodes[split_point]->length, this->nodes.begin() + split_point + 1);

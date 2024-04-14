@@ -6,11 +6,11 @@ Crossover::Crossover(int max_length, int max_depth)
     this->max_length = max_length;
 }
 
-std::vector<Individual*> Crossover::call(SubPopulation* subpop)
+std::vector<Individual *> Crossover::call(SubPopulation *subpop)
 {
-    std::vector<Individual*> children;
+    std::vector<Individual *> children;
 
-    int max_num_crossover_failures = subpop->num_individual;
+    uint64_t max_num_crossover_failures = (uint64_t) subpop->num_individual ^ 2;
 
     while (children.size() < subpop->num_individual)
     {
@@ -20,11 +20,17 @@ std::vector<Individual*> Crossover::call(SubPopulation* subpop)
 
         auto c = this->call(i1, i2);
 
-        if (c.size() == 0) max_num_crossover_failures -= 1;
-        else children.insert(children.end(), c.begin(), c.end());
+        if (c.size() == 0)
+            max_num_crossover_failures -= 1;
+        else
+        {
+            max_num_crossover_failures += c.size();
+            children.insert(children.end(), c.begin(), c.end());
+        }
 
-        if (max_num_crossover_failures == 0) {
-            std::cout<<"\nWarning! Crossover cannot create new valid offsprings!!\n";
+        if (max_num_crossover_failures == 0)
+        {
+            std::cout << "\nWarning! Crossover cannot create new valid offsprings!!\n";
             break;
         }
     }
@@ -32,9 +38,9 @@ std::vector<Individual*> Crossover::call(SubPopulation* subpop)
     return children;
 }
 
-std::vector<std::vector<Individual*>> Crossover::call(Population &population)
+std::vector<std::vector<Individual *>> Crossover::call(Population &population)
 {
-    std::vector<std::vector<Individual*>> children;
+    std::vector<std::vector<Individual *>> children;
     for (auto subpop : population.sub_populations)
     {
         children.push_back(this->call(subpop));
