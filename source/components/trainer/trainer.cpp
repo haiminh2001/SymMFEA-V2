@@ -24,6 +24,7 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
     else
         best_objective = std::numeric_limits<float>::max();
 
+    float metric;
     for (int step = 0; step < steps && num_consecutive_not_better < this->early_stopping; ++step)
     {
         auto y_hat = individual->forward(X);
@@ -36,7 +37,7 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
             break;
 
         y_hat = individual->forward(X_val);
-        auto metric = this->metric->call(y_val, y_hat);
+        metric = this->metric->call(y_val, y_hat);
 
         // check if metric is getting better
         if (!(this->metric->is_larger_better ^ (metric > best_objective)))
@@ -49,5 +50,5 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
             num_consecutive_not_better++;
         }
     }
-    return best_objective;
+    return metric;
 }

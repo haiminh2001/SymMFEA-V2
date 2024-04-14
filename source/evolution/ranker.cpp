@@ -12,8 +12,6 @@ Eigen::Array<uint64_t, Eigen::Dynamic, 1> Ranker::call(SubPopulation *subpop)
 
     auto obj_rank = rank<float>(objectives(Eigen::all, 0));
 
-    obj_rank *= objectives.cols() - 1;
-
     for (Eigen::Index i = 1; i < objectives.cols(); ++i)
     {
         obj_rank = obj_rank + rank<float>(objectives(Eigen::all, i));

@@ -14,10 +14,8 @@ ArrayXf Sum::_forward(std::stack<ArrayXf> &X)
         num_remaining_operands--;
     }
 
-    this->inputDelta = std::vector<ArrayXf>(this->arity, ArrayXf(result.size()));
+    this->inputDelta = std::vector<ArrayXf>(this->arity, ArrayXf::Ones(result.size()));
 
-    for (auto vec : this->inputDelta)
-        vec.setOnes();
     return result;
 }
 

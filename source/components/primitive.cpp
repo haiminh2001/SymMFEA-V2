@@ -6,6 +6,7 @@
 #include "components/functions/product.h"
 #include "components/functions/tanh.h"
 #include "components/functions/operand.h"
+#include "components/functions/relu.h"
 
 Node *createOperand(int index = -1, int arity = -1)
 {
@@ -20,6 +21,11 @@ Node *createSum(int index = -1, int arity = -1)
 Node *createTanh(int index = -1, int arity = -1)
 {
     return new Tanh();
+}
+
+Node *createRelu(int index = -1, int arity = -1)
+{
+    return new Relu();
 }
 
 Node *createProduct(int index = -1, int arity = -1)
@@ -45,6 +51,7 @@ Primitive::Primitive()
     this->addNodeFactory(createSum, -1);
     this->addNodeFactory(createProduct, 2);
     this->addNodeFactory(createTanh, 1);
+    this->addNodeFactory(createRelu, 1);
     this->removeDuplicatePossibleArites();
 }
 

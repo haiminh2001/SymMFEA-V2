@@ -54,6 +54,7 @@ void GA::exec_one_generation(int generation, Population population)
 
     for (auto subpop : population.sub_populations)
     {
+        // get the position of the best individuals
         auto argpos = this->ranker->call(subpop);
         this->selector->call(subpop, argpos);
     }
