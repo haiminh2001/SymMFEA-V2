@@ -30,13 +30,6 @@ bool Node::is_leaf()
     return this->arity == 0;
 }
 
-ArrayXf Node::_eval(ArrayXXf X)
-{
-    assert(this->index >= 0);
-    assert(this->is_leaf());
-    auto result = X.col(this->index);
-    return result;
-}
 
 std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
 {
@@ -48,7 +41,7 @@ std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
         return std::vector<ArrayXf>();
     else
     {
-        auto derivativeSignals = matrix_vector_row_wise_production(this->inputDelta, dY * this->weight());
+        auto derivativeSignals = matrix_vector_row_wise_production(this->inputDelta, dY);
 
         assert(derivativeSignals.size() == this->arity);
 

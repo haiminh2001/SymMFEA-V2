@@ -1,5 +1,5 @@
 #include "evolution/reproducer/crossover.h"
-
+#include "iostream"
 Crossover::Crossover(int max_length, int max_depth)
 {
     this->max_depth = max_depth;
@@ -10,6 +10,8 @@ std::vector<Individual*> Crossover::call(SubPopulation* subpop)
 {
     std::vector<Individual*> children;
 
+    int max_num_crossover_failures = subpop->num_individual;
+
     while (children.size() < subpop->num_individual)
     {
 
@@ -18,7 +20,13 @@ std::vector<Individual*> Crossover::call(SubPopulation* subpop)
 
         auto c = this->call(i1, i2);
 
-        children.insert(children.end(), c.begin(), c.end());
+        if (c.size() == 0) max_num_crossover_failures -= 1;
+        else children.insert(children.end(), c.begin(), c.end());
+
+        if (max_num_crossover_failures == 0) {
+            std::cout<<"\nWarning! Crossover cannot create new valid offsprings!!\n";
+            break;
+        }
     }
 
     return children;

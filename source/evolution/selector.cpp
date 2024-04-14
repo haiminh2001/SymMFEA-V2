@@ -8,6 +8,10 @@ void Selector::call(SubPopulation *subpop, Eigen::Array<uint64_t, Eigen::Dynamic
     assert(subpop->individuals.size() == argpos.size());
     uint64_t num_orig = subpop->individuals.size();
     uint64_t num_keep = static_cast<uint64_t>(this->survive_ratio * num_orig);
+    
+    // prevent the subpop from being evaporated
+    if (num_keep <= 0) num_keep = 1;
+
     std::vector<Individual *> survivors;
 
     for (uint64_t index = 0; index < num_keep; ++index)

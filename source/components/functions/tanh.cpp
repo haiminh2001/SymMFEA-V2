@@ -6,7 +6,7 @@ ArrayXf Tanh::_eval(std::stack <ArrayXf>& X){
     auto result = x.array().tanh();
     this->inputDelta.clear();
 
-    this->inputDelta.push_back(1 - result * result);
+    this->inputDelta.push_back((1 - result * result) * this->weight());
     return result;
 }
 

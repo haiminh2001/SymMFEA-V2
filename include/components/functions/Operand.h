@@ -9,7 +9,7 @@ public:
     Node * clone() override;
 
 private:
-    ArrayXf _eval(std::stack <ArrayXf>& X) override;
+    ArrayXf _eval(ArrayXXf X) override;
 };
 
 #endif

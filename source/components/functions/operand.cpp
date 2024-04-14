@@ -5,12 +5,10 @@ Operand::Operand(int index) : Node(0, index)
     this->symbol = std::string("x_") + std::to_string(this->index);
 }
 
-ArrayXf Operand::_eval(std::stack<ArrayXf> &X)
+ArrayXf Operand::_eval(ArrayXXf X)
 {
-    throw std::runtime_error("This function is not supposed to be called");
-    //this function is not used
-    //return just to satisfy signature
-    return X.top();
+    auto result = X.col(this->index);
+    return result;
 }
 
 Node *Operand::clone()

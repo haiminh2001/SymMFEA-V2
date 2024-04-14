@@ -15,12 +15,12 @@ protected:
     /// @brief
     /// @param X  this is not a leaf node so it consume a vector of inputs
     /// @return
-    virtual ArrayXf _eval(std::stack<ArrayXf> &X) = 0;
+    virtual ArrayXf _eval(std::stack<ArrayXf> &X) { return ArrayXf(); };
 
     /// @brief
     /// @param X this is a leaf node so it consume a matrix directly for the ease of use
     /// @return
-    ArrayXf _eval(ArrayXXf X);
+    virtual ArrayXf _eval(ArrayXXf X) { return ArrayXf(); };
 
 public:
     float weight();
