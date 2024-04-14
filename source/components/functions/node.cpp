@@ -62,7 +62,7 @@ ArrayXf Node::forward(T X)
 {
     auto result = this->_forward(X);
     this->weightDelta = result;
-    return result;
+    return result * this->weight();
 }
 
 std::ostream &operator<<(std::ostream &os, const Node &node)
