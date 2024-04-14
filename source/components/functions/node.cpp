@@ -33,7 +33,8 @@ bool Node::is_leaf()
 
 std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
 {
-    auto delta = (this->weightDelta * dY).mean();
+    auto nodeWeight = this->weight();
+    auto delta = (this->weightDelta * dY).mean() * nodeWeight;
 
     IndividualInfos::weightDelta(this->central_id, this->id) = delta;
 
@@ -41,7 +42,7 @@ std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
         return std::vector<ArrayXf>();
     else
     {
-        auto derivativeSignals = matrix_vector_row_wise_production(this->inputDelta, dY);
+        auto derivativeSignals = matrix_vector_row_wise_production(this->inputDelta, dY * nodeWeight);
 
         assert(derivativeSignals.size() == this->arity);
 
@@ -59,7 +60,7 @@ template ArrayXf Node::forward<std::stack<ArrayXf> &>(std::stack<ArrayXf> &X);
 template <typename T>
 ArrayXf Node::forward(T X)
 {
-    auto result = this->_forward(X) * this->weight();
+    auto result = this->_forward(X);
     this->weightDelta = result;
     return result;
 }

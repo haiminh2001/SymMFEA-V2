@@ -7,14 +7,16 @@
 #include <fstream>
 #include <tuple>
 
+/// @brief
+/// @param X 2d array of shape (n_samples, n_features)
+/// @return 1d array of shape (n_samples, )
 ArrayXf Tree::forward(const ArrayXXf &X)
 {
     auto length = this->nodes.size();
     std::stack<ArrayXf> Stack;
 
-    for (int i = 0; i < length; ++i)
+    for (auto node : this->nodes)
     {
-        auto node = this->nodes[i];
 
         ArrayXf val;
 
@@ -24,12 +26,13 @@ ArrayXf Tree::forward(const ArrayXXf &X)
         }
         else
         {
-            val = node->forward<std::stack<ArrayXf>&>(Stack);
+            val = node->forward<std::stack<ArrayXf> &>(Stack);
         }
 
         Stack.push(val);
     }
 
+    // the stack should have only one element which is the final result
     assert(Stack.size() == 1);
     return Stack.top();
 }
@@ -117,7 +120,7 @@ void Tree::visualize()
     std::system("dot -Tpng /tmp/tree.dot -o tree.png");
 };
 
-/// @brief 
+/// @brief
 /// @param split_point the index of the node to split the tree
 /// @return a tuple of 3 elements, the first element is the branch, the second element is the first part of the root, the third element is the second part of the root
 std::tuple<std::vector<Node *>, std::tuple<std::vector<Node *>, std::vector<Node *>>> Tree::split_tree(int split_point)
@@ -140,9 +143,11 @@ std::ostream &operator<<(std::ostream &os, const Tree &tree)
     return os;
 }
 
-void Tree::setWeight(std::vector<float> weight){
+void Tree::setWeight(std::vector<float> weight)
+{
     auto row = IndividualInfos::weight.row(this->central_id);
-    for (int i = 0; i < weight.size(); ++i){
+    for (int i = 0; i < weight.size(); ++i)
+    {
         row(i) = weight[i];
     }
 }

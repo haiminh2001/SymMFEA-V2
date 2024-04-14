@@ -13,6 +13,9 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
     auto X = data.X_train();
     auto y = data.y_train();
 
+    auto X_val = data.X_val();
+    auto y_val = data.y_val();
+
     int num_consecutive_not_better = 0;
 
     float best_objective;
@@ -28,10 +31,11 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
         auto deltaY = std::get<0>(diff);
         auto loss = std::get<1>(diff);
 
+        // if backprop return true, it means that the deltaW is nan then we should stop training
         if (this->optimizer->backprop(individual, deltaY)) break;
 
-        y_hat = individual->forward(data.X_val());
-        auto metric = this->metric->call(data.y_val(), y_hat);
+        y_hat = individual->forward(X_val);
+        auto metric = this->metric->call(y_val, y_hat);
 
         // check if metric is getting better
         if (!(this->metric->is_larger_better ^ (metric > best_objective)))

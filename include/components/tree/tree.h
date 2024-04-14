@@ -8,8 +8,6 @@
 
 #include "components/functions/node.h"
 
-using Eigen::ArrayXf;
-
 class Tree
 {
 private:

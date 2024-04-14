@@ -1,6 +1,6 @@
 #include "components/trainer/gradient_optimizer.h"
 #include "central_units/individual_infos.h"
-#include "vector"
+#include <stack>
 
 GradientOptimizer::GradientOptimizer(float learning_rate)
 {
@@ -12,30 +12,33 @@ bool GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
     
     auto tree = individual->genes;
 
-    std::vector<ArrayXf> stack;
+    std::stack<ArrayXf> Stack;
     auto root = tree->nodes[tree->nodes.size() - 1];
 
-    ArrayXf vector_deltaY();
     auto signal = root->backprop(deltaY);
 
     if (tree->length() == 1)
         return false;
 
-    stack.insert(stack.end(), signal.begin(), signal.end());
+    for (const auto& s :signal) Stack.push(s);
+    
     for (int i = tree->length() - 2; i >= 0; --i)
     {
         // get the signal on top of the stack
         auto node = tree->nodes[i];
-        deltaY = stack[stack.size() - 1];
-        stack.pop_back();
+        deltaY = Stack.top();
+        Stack.pop();
 
         // backprop
         signal = node->backprop(deltaY);
         if (!node->is_leaf())
         {
-            stack.insert(stack.end(), signal.begin(), signal.end());
+            for (const auto & s :signal) Stack.push(s);
         }
     }
+
+    // the stack should be empty after consume all the signals
+    assert (Stack.empty());
 
     auto deltaW = this->compute_gradient(individual);
 

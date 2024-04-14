@@ -5,8 +5,7 @@ ArrayXf Tanh::_forward(std::stack <ArrayXf>& X){
     X.pop();
     auto result = x.array().tanh();
     this->inputDelta.clear();
-
-    this->inputDelta.push_back((1 - result * result));
+    this->inputDelta.push_back(1 - (result * result));
     return result;
 }
 
