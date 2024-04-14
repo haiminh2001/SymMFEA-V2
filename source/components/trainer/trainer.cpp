@@ -23,14 +23,14 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
 
     for (int step = 0; step < steps && num_consecutive_not_better < this->early_stopping; ++step)
     {
-        auto y_hat = individual->eval(X);
+        auto y_hat = individual->forward(X);
         auto diff = this->loss->call(y, y_hat);
         auto deltaY = std::get<0>(diff);
         auto loss = std::get<1>(diff);
 
-        if (this->optimizer->backprop(individual, deltaY)) break;;
+        if (this->optimizer->backprop(individual, deltaY)) break;
 
-        y_hat = individual->eval(data.X_val());
+        y_hat = individual->forward(data.X_val());
         auto metric = this->metric->call(data.y_val(), y_hat);
 
         // check if metric is getting better

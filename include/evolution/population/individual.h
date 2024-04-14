@@ -16,7 +16,7 @@ public:
     Individual(int skill_factor, int max_index, int max_length, int max_depth);
     ~Individual();
 
-    ArrayXf eval(const ArrayXXf &X) const;
+    ArrayXf forward(const ArrayXXf &X) const;
 
     /// @brief 
     /// Return the objectives of this individual

@@ -21,7 +21,7 @@ public:
 
     explicit Tree(std::vector<Node *> nodes, int64_t central_id);
 
-    ArrayXf eval(const ArrayXXf &X);
+    ArrayXf forward(const ArrayXXf &X);
 
     void updateNodeMetadata(int64_t central_id);
 

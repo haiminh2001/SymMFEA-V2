@@ -1,15 +1,17 @@
 #include "components/functions/product.h"
 
-ArrayXf Product::_eval(std::stack <ArrayXf>& X){
-    
-    auto x1 = X.top();
-    X.pop();
+ArrayXf Product::_forward(std::stack <ArrayXf>& X){
+    //the second input is actually on top    
     auto x2 = X.top();
+    X.pop();
+    auto x1 = X.top();
     X.pop();
 
     this->inputDelta.clear();
-    this->inputDelta.push_back(this->weight() * x2);
-    this->inputDelta.push_back(this->weight() * x1);
+    //derivative over the first input
+    this->inputDelta.push_back(x2);
+    //derivative over the second input
+    this->inputDelta.push_back(x1);
     return x1 * x2;
 }
 

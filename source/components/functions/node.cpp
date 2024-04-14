@@ -49,13 +49,17 @@ std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
     }
 }
 
-template ArrayXf Node::eval<ArrayXXf>(ArrayXXf X);
-template ArrayXf Node::eval<std::stack<ArrayXf> &>(std::stack<ArrayXf> &X);
+template ArrayXf Node::forward<ArrayXXf>(ArrayXXf X);
+template ArrayXf Node::forward<std::stack<ArrayXf> &>(std::stack<ArrayXf> &X);
 
+/// @brief 
+/// @tparam T 
+/// @param X 
+/// @return calculate the output of the node and record the weight delta 
 template <typename T>
-ArrayXf Node::eval(T X)
+ArrayXf Node::forward(T X)
 {
-    auto result = this->_eval(X) * this->weight();
+    auto result = this->_forward(X) * this->weight();
     this->weightDelta = result;
     return result;
 }

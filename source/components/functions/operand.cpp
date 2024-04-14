@@ -5,7 +5,7 @@ Operand::Operand(int index) : Node(0, index)
     this->symbol = std::string("x_") + std::to_string(this->index);
 }
 
-ArrayXf Operand::_eval(ArrayXXf X)
+ArrayXf Operand::_forward(ArrayXXf X)
 {
     auto result = X.col(this->index);
     return result;

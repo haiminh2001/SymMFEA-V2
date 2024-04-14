@@ -47,5 +47,6 @@ bool GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
 
 ArrayXf GradientOptimizer::compute_gradient(Individual* individual)
 {
+    // use logarit to prevent overflow
     return IndividualInfos::weightDelta.row(individual->central_id).log();
 }

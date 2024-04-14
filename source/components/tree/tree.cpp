@@ -7,7 +7,7 @@
 #include <fstream>
 #include <tuple>
 
-ArrayXf Tree::eval(const ArrayXXf &X)
+ArrayXf Tree::forward(const ArrayXXf &X)
 {
     auto length = this->nodes.size();
     std::stack<ArrayXf> Stack;
@@ -20,11 +20,11 @@ ArrayXf Tree::eval(const ArrayXXf &X)
 
         if (node->is_leaf())
         {
-            val = node->eval<ArrayXXf>(X);
+            val = node->forward<ArrayXXf>(X);
         }
         else
         {
-            val = node->eval<std::stack<ArrayXf>&>(Stack);
+            val = node->forward<std::stack<ArrayXf>&>(Stack);
         }
 
         Stack.push(val);

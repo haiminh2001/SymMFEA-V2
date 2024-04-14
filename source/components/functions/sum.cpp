@@ -1,7 +1,7 @@
 #include <vector>
 #include "components/functions/sum.h"
 
-ArrayXf Sum::_eval(std::stack<ArrayXf> &X)
+ArrayXf Sum::_forward(std::stack<ArrayXf> &X)
 {
     ArrayXf result = X.top();
     X.pop();
@@ -15,9 +15,9 @@ ArrayXf Sum::_eval(std::stack<ArrayXf> &X)
     }
 
     this->inputDelta = std::vector<ArrayXf>(this->arity, ArrayXf(result.size()));
-    auto weight = this->weight();
+
     for (auto vec : this->inputDelta)
-        vec.fill(weight);
+        vec.setOnes();
     return result;
 }
 

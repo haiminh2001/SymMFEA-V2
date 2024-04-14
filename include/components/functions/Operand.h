@@ -9,7 +9,7 @@ public:
     Node * clone() override;
 
 private:
-    ArrayXf _eval(ArrayXXf X) override;
+    ArrayXf _forward(ArrayXXf X) override;
 };
 
 #endif

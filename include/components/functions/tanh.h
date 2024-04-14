@@ -6,7 +6,7 @@
 class Tanh : public Node
 {
 private:
-    ArrayXf _eval(std::stack<ArrayXf> &X) override;
+    ArrayXf _forward(std::stack<ArrayXf> &X) override;
 
 public:
     explicit Tanh();
