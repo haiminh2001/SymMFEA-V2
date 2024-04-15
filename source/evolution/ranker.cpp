@@ -12,9 +12,11 @@ Eigen::Array<uint64_t, Eigen::Dynamic, 1> Ranker::call(SubPopulation *subpop)
 
     auto obj_rank = rank<float>(objectives(Eigen::all, 0));
 
+    obj_rank *= objectives.rows();
+
     for (Eigen::Index i = 1; i < objectives.cols(); ++i)
     {
-        obj_rank = obj_rank + rank<float>(objectives(Eigen::all, i));
+        obj_rank += rank<float>(objectives(Eigen::all, i));
     }
 
     return argsort<long>(-obj_rank.cast<long>());

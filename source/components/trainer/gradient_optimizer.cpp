@@ -1,6 +1,7 @@
 #include "components/trainer/gradient_optimizer.h"
 #include "central_units/individual_infos.h"
 #include <stack>
+#include <math.h>
 
 GradientOptimizer::GradientOptimizer(float learning_rate)
 {
@@ -50,9 +51,15 @@ bool GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
 
 ArrayXf GradientOptimizer::compute_gradient(Individual* individual)
 {
-    // use logarit to prevent overflow
+    
     auto weightDelta = IndividualInfos::weightDelta.row(individual->central_id);
-    auto sign = weightDelta.sign();
-    auto magnitude = weightDelta.abs().log1p();
-    return sign * magnitude;
+    
+    // use normalization instead of logarit to prevent overflow
+    auto length = sqrt(weightDelta.pow(2).sum());
+    auto secondNorm = weightDelta / length;
+    return secondNorm;
+    // use logarit to prevent overflow
+    // auto sign = weightDelta.sign();
+    // auto magnitude = weightDelta.abs().log1p();
+    // return sign * magnitude;
 }
