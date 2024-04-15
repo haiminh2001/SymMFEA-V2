@@ -1,5 +1,7 @@
-#include "components/trainer/trainer.h"
 #include <limits>
+#include "components/trainer/trainer.h"
+#include "central_units/individual_infos.h"
+
 Trainer::Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int early_stopping)
 {
     this->metric = metric;
@@ -20,7 +22,7 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
 
     float best_objective;
     if (this->metric->is_larger_better)
-        best_objective = - std::numeric_limits<float>::max();
+        best_objective = -std::numeric_limits<float>::max();
     else
         best_objective = std::numeric_limits<float>::max();
 
@@ -44,11 +46,15 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
         {
             best_objective = metric;
             num_consecutive_not_better = 0;
+            IndividualInfos::weightCheckpoint.row(individual->central_id) = IndividualInfos::weight.row(individual->central_id);
         }
         else
         {
             num_consecutive_not_better++;
         }
     }
+
+    // rollback to best checkpoint
+    IndividualInfos::weight.row(individual->central_id) = IndividualInfos::weightCheckpoint.row(individual->central_id);
     return metric;
 }
