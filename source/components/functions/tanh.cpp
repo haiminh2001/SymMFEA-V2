@@ -1,20 +1,25 @@
 #include "components/functions/tanh.h"
 
-ArrayXf Tanh::_forward(std::stack <ArrayXf>& X){
+ArrayXf Tanh::_forward(std::stack<ArrayXf> &X, bool record_gradient)
+{
     auto x = X.top();
     X.pop();
     auto result = x.array().tanh();
-    this->inputDelta.clear();
-    this->inputDelta.push_back(1 - (result * result));
+    if (record_gradient)
+    {
+        this->inputDelta.clear();
+        this->inputDelta.push_back(1 - (result * result));
+    }
     return result;
 }
 
-
-Tanh::Tanh() : Node(1) {
+Tanh::Tanh() : Node(1)
+{
     this->symbol = "Tanh";
 }
 
-Node* Tanh::clone(){
-    Tanh* new_node = new Tanh();
+Node *Tanh::clone()
+{
+    Tanh *new_node = new Tanh();
     return new_node;
 }

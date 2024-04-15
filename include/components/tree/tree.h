@@ -19,7 +19,7 @@ public:
 
     explicit Tree(std::vector<Node *> nodes, int64_t central_id);
 
-    ArrayXf forward(const ArrayXXf &X);
+    ArrayXf forward(const ArrayXXf &X, bool record_gradient = true);
 
     void updateNodeMetadata(int64_t central_id);
 

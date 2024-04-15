@@ -6,7 +6,7 @@
 class Tanh : public Node
 {
 private:
-    ArrayXf _forward(std::stack<ArrayXf> &X) override;
+    ArrayXf _forward(std::stack<ArrayXf> &X, bool record_gradient) override;
 
 public:
     explicit Tanh();

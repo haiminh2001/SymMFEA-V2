@@ -16,15 +16,15 @@ public:
     Individual(int skill_factor, int max_index, int max_length, int max_depth);
     ~Individual();
 
-    ArrayXf forward(const ArrayXXf &X) const;
+    ArrayXf forward(const ArrayXXf &X, bool record_gradient = true) const;
 
-    /// @brief 
+    /// @brief
     /// Return the objectives of this individual
     /// First element is the main objective
-    /// @return 
+    /// @return
     Eigen::ArrayXf objectives();
 
-    void setObjective(float* objectives);
+    void setObjective(float *objectives);
 
     friend std::ostream &operator<<(std::ostream &os, const Individual &individual);
 };

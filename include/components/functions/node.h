@@ -15,12 +15,12 @@ protected:
     /// @brief
     /// @param X  this is not a leaf node so it consume a vector of inputs
     /// @return
-    virtual ArrayXf _forward(std::stack<ArrayXf> &X) { return ArrayXf(); };
+    virtual ArrayXf _forward(std::stack<ArrayXf> &X, bool record_gradient) { return ArrayXf(); };
 
     /// @brief
     /// @param X this is a leaf node so it consume a matrix directly for the ease of use
     /// @return
-    virtual ArrayXf _forward(ArrayXXf X) { return ArrayXf(); };
+    virtual ArrayXf _forward(ArrayXXf X, bool record_gradient) { return ArrayXf(); };
 
 public:
     float weight();
@@ -55,7 +55,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Node &node);
 
     template <typename T>
-    ArrayXf forward(T X);
+    ArrayXf forward(T X, bool record_gradient = true);
 };
 
 #endif

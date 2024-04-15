@@ -29,9 +29,9 @@ Individual::Individual(int skill_factor, int max_index, int max_length, int max_
     this->genes = create_tree(max_index, max_length, max_depth, this->central_id);
 }
 
-ArrayXf Individual::forward(const ArrayXXf &X) const
+ArrayXf Individual::forward(const ArrayXXf &X, bool record_gradient) const
 {
-    return this->genes->forward(X);
+    return this->genes->forward(X, record_gradient);
 };
 
 std::ostream &operator<<(std::ostream &os, const Individual &individual)

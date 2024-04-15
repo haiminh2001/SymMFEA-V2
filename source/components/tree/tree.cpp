@@ -10,7 +10,7 @@
 /// @brief
 /// @param X 2d array of shape (n_samples, n_features)
 /// @return 1d array of shape (n_samples, )
-ArrayXf Tree::forward(const ArrayXXf &X)
+ArrayXf Tree::forward(const ArrayXXf &X, bool record_gradient)
 {
     auto length = this->nodes.size();
     std::stack<ArrayXf> Stack;
@@ -22,11 +22,11 @@ ArrayXf Tree::forward(const ArrayXXf &X)
 
         if (node->is_leaf())
         {
-            val = node->forward<ArrayXXf>(X);
+            val = node->forward<ArrayXXf>(X, record_gradient);
         }
         else
         {
-            val = node->forward<std::stack<ArrayXf> &>(Stack);
+            val = node->forward<std::stack<ArrayXf> &>(Stack, record_gradient);
         }
 
         Stack.push(val);

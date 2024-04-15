@@ -9,7 +9,7 @@ public:
     Node * clone() override;
 
 private:
-    ArrayXf _forward(ArrayXXf X) override;
+    ArrayXf _forward(ArrayXXf X, bool record_gradient) override;
 };
 
 #endif

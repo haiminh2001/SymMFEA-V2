@@ -1,7 +1,7 @@
 #include <vector>
 #include "components/functions/sum.h"
 
-ArrayXf Sum::_forward(std::stack<ArrayXf> &X)
+ArrayXf Sum::_forward(std::stack<ArrayXf> &X, bool record_gradient)
 {
     ArrayXf result = X.top();
     X.pop();
@@ -14,7 +14,10 @@ ArrayXf Sum::_forward(std::stack<ArrayXf> &X)
         num_remaining_operands--;
     }
 
-    this->inputDelta = std::vector<ArrayXf>(this->arity, ArrayXf::Ones(result.size()));
+    if (record_gradient)
+    {
+        this->inputDelta = std::vector<ArrayXf>(this->arity, ArrayXf::Ones(result.size()));
+    }
 
     return result;
 }

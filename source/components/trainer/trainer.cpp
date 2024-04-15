@@ -38,7 +38,7 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
         if (this->optimizer->backprop(individual, deltaY))
             break;
 
-        y_hat = individual->forward(X_val);
+        y_hat = individual->forward(X_val, false);
         metric = this->metric->call(y_val, y_hat);
 
         // check if metric is getting better

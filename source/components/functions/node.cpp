@@ -30,7 +30,6 @@ bool Node::is_leaf()
     return this->arity == 0;
 }
 
-
 std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
 {
     auto nodeWeight = this->weight();
@@ -50,18 +49,19 @@ std::vector<ArrayXf> Node::backprop(ArrayXf &dY)
     }
 }
 
-template ArrayXf Node::forward<ArrayXXf>(ArrayXXf X);
-template ArrayXf Node::forward<std::stack<ArrayXf> &>(std::stack<ArrayXf> &X);
+template ArrayXf Node::forward<ArrayXXf>(ArrayXXf X, bool record_gradient = true);
+template ArrayXf Node::forward<std::stack<ArrayXf> &>(std::stack<ArrayXf> &X, bool record_gradient = true);
 
-/// @brief 
-/// @tparam T 
-/// @param X 
-/// @return calculate the output of the node and record the weight delta 
+/// @brief
+/// @tparam T
+/// @param X
+/// @return calculate the output of the node and record the weight delta
 template <typename T>
-ArrayXf Node::forward(T X)
+ArrayXf Node::forward(T X, bool record_gradient)
 {
-    auto result = this->_forward(X);
-    this->weightDelta = result;
+    auto result = this->_forward(X, record_gradient);
+    if (record_gradient)
+        this->weightDelta = result;
     return result * this->weight();
 }
 
