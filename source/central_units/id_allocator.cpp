@@ -1,5 +1,4 @@
 #include "central_units/id_allocator.h"
-#include "central_units/individual_infos.h"
 #include "vector"
 #include "iostream"
 
@@ -47,5 +46,4 @@ void IdAllocator::free(uint64_t index)
     IdAllocator::id_tracker[index] = false;
     IdAllocator::num_allocated -= 1;
     IdAllocator::cur_pos = index;
-    IndividualInfos::weight.row(index).setOnes();
 }
