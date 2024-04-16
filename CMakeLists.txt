@@ -4,6 +4,8 @@ project(SymMFEA)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Eigen3 REQUIRED)
+find_package(Threads REQUIRED)
+
 # find_package(NumCpp REQUIRED)
 # find_package(Boost 1.71.0 COMPONENTS date_time)
 
@@ -17,6 +19,13 @@ include_directories(include)
 file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "source/*.cpp" "include/*.h"  )
 
 add_executable(SymMFEA main.cpp ${APP_SOURCES})
+
+target_link_libraries(SymMFEA 
+                        PUBLIC 
+                        ${CMAKE_THREAD_LIBS_INIT}
+                        )
+
+
 
 # if(Boost_FOUND)
 #       include_directories(${Boost_INCLUDE_DIRS})

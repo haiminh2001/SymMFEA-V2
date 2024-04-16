@@ -36,7 +36,7 @@ int main()
 
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
-    GA algo(100, 1, 2, 100, 15, 5, new Trainer(new R2(), new MSELoss(), new GradientOptimizer(0.1), 5));
+    GA algo(500, 1, 2, 100, 15, 5, new Trainer(new R2(), new MSELoss(), new GradientOptimizer(0.1), 5));
 
     algo.fit(X, ground_truth);
 }

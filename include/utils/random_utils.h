@@ -2,7 +2,6 @@
 #define SYMMFEA_RANDOM_UTILS_H
 
 
-// NOTE: may be use eigen random instead
 namespace Random
 {
     

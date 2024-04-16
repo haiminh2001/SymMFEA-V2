@@ -5,6 +5,7 @@
 #include "metrics/r2.h"
 #include "utils/array_utils.h"
 #include "central_units/individual_infos.h"
+#include "thread"
 
 SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView dataview, int max_length, int max_depth, int max_index)
 {
@@ -35,28 +36,6 @@ void SubPopulation::append(std::vector<Individual *> offsprings)
     this->individuals.insert(this->individuals.end(), offsprings.begin(), offsprings.end());
 };
 
-void SubPopulation::evaluate(Trainer *trainer)
-{
-    for (auto ind : this->individuals)
-        if (!ind->evaluated)
-        {
-
-            // NOTE: hard code train steps
-            auto metric = trainer->fit(ind, this->dataview, 20);
-
-            if (!this->metric->is_larger_better)
-            {
-                metric = -metric;
-            }
-            
-            float objectives[2];
-            objectives[0] = metric;
-            objectives[1] = (float)-(ind->genes->length());
-
-            ind->setObjective(objectives);
-        }
-}
-
 std::vector<Eigen::Index> SubPopulation::get_central_ids()
 {
     std::vector<Eigen::Index> ids(this->individuals.size());
@@ -78,4 +57,42 @@ Individual *SubPopulation::find_best_fitted_individual()
 void SubPopulation::setIndividuals(const std::vector<Individual *> &individuals)
 {
     this->individuals = individuals;
+}
+
+void _fit(std::vector<Individual *> individuals,
+          int thread_id,
+          int num_threads,
+          Trainer *trainer,
+          DataView dataview,
+          Metric *metric)
+{
+    for (auto ind : individuals)
+    {
+        if ((!ind->evaluated) && (ind->central_id % num_threads == thread_id))
+        {
+            auto ind_metric = trainer->fit(ind, dataview, 20);
+            if (!metric->is_larger_better)
+            {
+                ind_metric = -ind_metric;
+            }
+            float objectives[2];
+            objectives[0] = ind_metric;
+            objectives[1] = (float)-(ind->genes->length());
+            ind->setObjective(objectives);
+        }
+    }
+}
+
+void SubPopulation::evaluate(Trainer *trainer)
+{
+    std::vector<std::thread> threads;
+    int num_threads = 8;
+    for (int i = 0; i < num_threads; ++i)
+    {
+        threads.push_back(std::thread(_fit, this->individuals, i, num_threads, trainer, this->dataview, this->metric));
+    }
+    for (auto &thread : threads)
+    {
+        thread.join();
+    }
 }
