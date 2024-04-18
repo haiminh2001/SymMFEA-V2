@@ -86,7 +86,7 @@ void _fit(std::vector<Individual *> individuals,
 void SubPopulation::evaluate(Trainer *trainer)
 {
     std::vector<std::thread> threads;
-    int num_threads = 8;
+    int num_threads = std::thread::hardware_concurrency();
     for (int i = 0; i < num_threads; ++i)
     {
         threads.push_back(std::thread(_fit, this->individuals, i, num_threads, trainer, this->dataview, this->metric));
