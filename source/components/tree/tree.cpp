@@ -81,11 +81,10 @@ void Tree::updateNodeMetadata(int64_t central_id)
     assert(this->length() == this->nodes.size());
 }
 
-Tree::Tree(std::vector<Node *> nodes, int64_t central_id)
+Tree::Tree(std::vector<Node *> nodes, int64_t central_id) : central_id(central_id)
 {
     this->nodes = std::move(nodes);
     this->updateNodeMetadata(central_id);
-    this->central_id = central_id;
 }
 
 void printSubTree(uint64_t x, uint64_t y, std::vector<Node *> nodes,

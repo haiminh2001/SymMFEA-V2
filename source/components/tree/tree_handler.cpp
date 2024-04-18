@@ -3,6 +3,7 @@
 #include "components/tree/tree.h"
 #include "components/tree/tree_handler.h"
 #include "components/primitive.h"
+#include "utils/random_utils.h"
 
 void fill_postfix(int cur_idx,
                   int &cur_postfix_idx,
@@ -26,14 +27,26 @@ void fill_postfix(int cur_idx,
     }
 }
 
-Tree *create_tree(int max_index, int max_length, int max_depth, int64_t central_id)
+std::vector<Node *> TreeHandler::create_tree(TreeSpec *tree_spec)
 {
-    Primitive primitives = Primitive(max_index = max_index);
+    Primitive primitives = Primitive(tree_spec->usable_indices);
+    int max_depth = tree_spec->max_depth;
+    int max_length = tree_spec->max_length;
+
     std::vector<Node *> nodes;
 
     int a_max = max_length - 1;
 
-    auto root = primitives.sampleNode(1, max_length - 1);
+    auto arity_max = max_length - 1;
+    assert(arity_max >= 0);
+    auto arity_min = std::min(0, arity_max);
+
+    auto root = primitives.sampleNode(arity_min, arity_max);
+
+    if (root->arity == 0)
+    {
+        return std::vector<Node *>({root});
+    }
 
     int num_open_nodes = root->arity;
     std::vector<std::tuple<Node *, int, int>> ls_nodes; //  list of tuple node, depth, first child index
@@ -90,19 +103,43 @@ Tree *create_tree(int max_index, int max_length, int max_depth, int64_t central_
 
     fill_postfix(0, num_nodes, ls_nodes, postfix);
 
-    Tree *tree = new Tree(postfix, central_id);
-
-    return tree;
+    return postfix;
 }
 
-std::tuple<int, int> get_possible_range(Tree tree, int point, int max_depth, int max_length)
+/// @brief Get the maximum length and depth of a branch that can be replaced with the current branch of the given point
+/// @param tree
+/// @param point
+/// @param max_depth
+/// @param max_length
+/// @return a tuple with the first element is the maximum length and the second element is the maximum depth
+std::tuple<int, int> TreeHandler::get_possible_range(Tree *tree, int point, int max_depth, int max_length)
 {
-    int tar_depth = tree.nodes[point]->depth;
-    int tar_level = tree.depth() - tar_depth;
+    int tar_depth = tree->nodes[point]->depth;
+    int tar_level = tree->depth() - tar_depth;
     max_depth -= tar_level;
-    
-    int tar_length = tree.nodes[point]->length;
-    int tar_remain_length = tree.length() - tar_length;
+
+    int tar_length = tree->nodes[point]->length;
+    int tar_remain_length = tree->length() - tar_length;
     max_length -= tar_remain_length;
-    return std::make_tuple(max_length, max_depth);
+
+    // + 1 for max_length to include the node itself
+    return std::make_tuple(max_length + 1, max_depth);
+}
+
+void TreeHandler::copy_nodes_with_weight(std::vector<Node *> *nodes, std::vector<float> *weight)
+{
+
+    for (int i = 0; i < (*nodes).size(); ++i)
+    {
+        // if the node is registered to atree
+        if ((*nodes)[i]->central_id != -1)
+        {
+            (*weight).push_back((*nodes)[i]->weight());
+            (*nodes).at(i) = (*nodes)[i]->clone();
+        }
+        else
+        {
+            (*weight).push_back(Random::randnorm(float(0), (float)(*nodes).size()));
+        }
+    }
 }

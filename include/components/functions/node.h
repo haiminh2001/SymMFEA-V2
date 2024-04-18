@@ -31,13 +31,13 @@ public:
 
     int index;
 
-    int depth = -1;
+    int depth;
 
-    int length = -1;
+    int length;
 
-    int id = -1;
+    int id;
 
-    int64_t central_id = -1;
+    int64_t central_id;
 
     ArrayXf weightDelta;
     std::vector<ArrayXf> inputDelta;
@@ -45,6 +45,8 @@ public:
     std::string symbol;
 
     bool is_leaf();
+
+    Node();
 
     Node(int arity, int index);
 

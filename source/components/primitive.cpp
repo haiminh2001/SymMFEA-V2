@@ -8,27 +8,27 @@
 #include "components/functions/operand.h"
 #include "components/functions/relu.h"
 
-Node *createOperand(int index = -1, int arity = -1)
+Node *createOperand(int index, int arity)
 {
     return new Operand(index);
 }
 
-Node *createSum(int index = -1, int arity = -1)
+Node *createSum(int index, int arity)
 {
     return new Sum(arity);
 }
 
-Node *createTanh(int index = -1, int arity = -1)
+Node *createTanh(int index, int arity)
 {
     return new Tanh();
 }
 
-Node *createRelu(int index = -1, int arity = -1)
+Node *createRelu(int index, int arity)
 {
     return new Relu();
 }
 
-Node *createProduct(int index = -1, int arity = -1)
+Node *createProduct(int index, int arity)
 {
     return new Product();
 }
@@ -36,13 +36,13 @@ Node *createProduct(int index = -1, int arity = -1)
 void Primitive::addNodeFactory(NodeFactory nf, int arity)
 {
     this->functionList.emplace_back(nf, arity);
-    this->possibleArities.push_back(arity);
+    this->useable_indices.push_back(arity);
 }
 
-void Primitive::removeDuplicatePossibleArites()
+void Primitive::removeDuplicatePossibleNumArites()
 {
-    std::sort(this->possibleArities.begin(), this->possibleArities.end());
-    this->possibleArities.erase(std::unique(this->possibleArities.begin(), this->possibleArities.end()), this->possibleArities.end());
+    std::sort(this->useable_indices.begin(), this->useable_indices.end());
+    this->useable_indices.erase(std::unique(this->useable_indices.begin(), this->useable_indices.end()), this->useable_indices.end());
 }
 
 Primitive::Primitive()
@@ -52,12 +52,12 @@ Primitive::Primitive()
     this->addNodeFactory(createProduct, 2);
     this->addNodeFactory(createTanh, 1);
     this->addNodeFactory(createRelu, 1);
-    this->removeDuplicatePossibleArites();
+    this->removeDuplicatePossibleNumArites();
 }
 
-Primitive::Primitive(int max_index) : Primitive::Primitive()
+Primitive::Primitive(std::vector<int> useable_indices) : Primitive::Primitive()
 {
-    this->max_index = max_index;
+    this->useable_indices = useable_indices;
 }
 
 NodeFactory random_select(std::vector<NodeFactory> candidates)
@@ -83,40 +83,43 @@ NodeFactory Primitive::getFunction(int expected_arity)
 
 Node *Primitive::sampleNode(int arity_min, int arity_max)
 {
-    auto n_arity = Random::randint<int>(0, 1);
 
-    int actual_arity;
+    // arity can be -1, which indicates that the node can have a dynamic number of arities
+    // actual_arity is the actual number of arities that the node will have
+    int actual_arity, arity;
 
-    if (n_arity == 1)
+    actual_arity = Random::randint<int>(arity_min, arity_max);
+
+    if (actual_arity < 2)
     {
-        actual_arity = Random::randint<int>(arity_min, arity_max);
-    }
-    else
-    {
-        actual_arity = Random::randint<int>(arity_min, std::min(2, arity_max));
-    }
-
-    int arity;
-    if (actual_arity < 2 && actual_arity > -1)
         arity = actual_arity;
+    }
+
     else if (actual_arity == 2)
     {
         auto dynamic = Random::randint<int>(0, 1);
-        if (dynamic > 0)
+
+        // if dynamic
+        if (dynamic == 1)
             arity = -1;
         else
-            arity = actual_arity;
+            arity = 2;
     }
     else
+    {
+        // actual_arity > 2 means dynamic
         arity = -1;
+    }
 
     auto nf = this->getFunction(arity);
 
+    // default index is -1 indicates that the node is not an operand
     int node_index = -1;
 
-    if (arity == 0)
+    // if the node is an operand, then the index is randomly selected from the list of useable indices
+    if (actual_arity == 0)
     {
-        node_index = Random::randint<int>(0, this->max_index);
+        node_index = this->useable_indices[Random::randint<int>(0, this->useable_indices.size() - 1)];
     }
 
     return nf(node_index, actual_arity);

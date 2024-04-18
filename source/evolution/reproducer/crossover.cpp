@@ -1,16 +1,11 @@
 #include "evolution/reproducer/crossover.h"
 #include "iostream"
-Crossover::Crossover(int max_length, int max_depth)
-{
-    this->max_depth = max_depth;
-    this->max_length = max_length;
-}
 
 std::vector<Individual *> Crossover::call(SubPopulation *subpop)
 {
     std::vector<Individual *> children;
 
-    uint64_t max_num_crossover_failures = (uint64_t) subpop->num_individual ^ 2;
+    uint64_t max_num_crossover_failures = ((uint64_t) subpop->num_individual) * ((uint64_t) subpop->num_individual);
 
     while (children.size() < subpop->num_individual)
     {
@@ -38,10 +33,10 @@ std::vector<Individual *> Crossover::call(SubPopulation *subpop)
     return children;
 }
 
-std::vector<std::vector<Individual *>> Crossover::call(Population &population)
+std::vector<std::vector<Individual *>> Crossover::call(Population* population)
 {
     std::vector<std::vector<Individual *>> children;
-    for (auto subpop : population.sub_populations)
+    for (auto subpop : population->sub_populations)
     {
         children.push_back(this->call(subpop));
     }

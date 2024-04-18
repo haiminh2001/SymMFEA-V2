@@ -3,7 +3,7 @@
 
 #include "components/trainer/trainer.h"
 #include "components/trainer/loss/loss.h"
-#include "metrics/metrics.h"
+#include "components/trainer/metrics/metrics.h"
 #include "evolution/population/individual.h"
 #include "components/data_utils/data_view.h"
 #include "components/trainer/gradient_optimizer.h"

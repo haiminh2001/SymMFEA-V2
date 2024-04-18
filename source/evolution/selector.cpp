@@ -37,5 +37,6 @@ void Selector::call(SubPopulation *subpop, Eigen::Array<uint64_t, Eigen::Dynamic
 
 Selector::Selector(float survive_ratio)
 {
+    assert(survive_ratio * 3 < 1);
     this->survive_ratio = survive_ratio;
 }

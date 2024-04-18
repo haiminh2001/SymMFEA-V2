@@ -13,13 +13,15 @@ std::vector<ArrayXf> matrix_vector_row_wise_production(std::vector<ArrayXf> M, A
     return result;
 }
 
-Node::Node(int arity, int index)
+Node::Node() : depth(-1), length(-1), id(-1), central_id(-1) {}
+
+Node::Node(int arity, int index) : Node()
 {
     this->arity = arity;
     this->index = index;
 }
 
-Node::Node(int arity)
+Node::Node(int arity) : Node()
 {
     this->arity = arity;
     this->index = -1;

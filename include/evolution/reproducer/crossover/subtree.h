@@ -4,7 +4,7 @@
 class SubTreeCrossover : public Crossover
 {
 public:
-    SubTreeCrossover(int max_length, int max_depth);
+    SubTreeCrossover(TreeSpec* tree_spec) : Crossover(tree_spec) {};
     std::vector<Individual*> call(Individual* pa, Individual* pb) override;
 };
 

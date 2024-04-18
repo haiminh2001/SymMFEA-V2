@@ -2,31 +2,18 @@
 #include "central_units/id_allocator.h"
 #include "central_units/individual_infos.h"
 #include "components/tree/tree_handler.h"
-#include <iostream>
 #include <string>
-std::string OOM_WARING = "Warning: an individual can not bet allocated";
 
-Individual::Individual(std::vector<Node *> nodes, int skill_factor)
+Individual::Individual(int skill_factor)
+    : skill_factor(skill_factor), evaluated(false), central_id(IdAllocator::allocate()) {}
+
+Individual::Individual(std::vector<Node *> nodes, int skill_factor) : Individual(skill_factor)
 {
-
-    this->skill_factor = skill_factor;
-    this->central_id = IdAllocator::allocate();
-
-    if (this->central_id == IdAllocator::OOM_POS)
-        std::cerr << OOM_WARING;
-
     this->genes = new Tree(nodes, this->central_id);
-    this->evaluated = false;
 }
-Individual::Individual(int skill_factor, int max_index, int max_length, int max_depth)
+Individual::Individual(int skill_factor, TreeSpec *tree_spec) : Individual(skill_factor)
 {
-    this->skill_factor = skill_factor;
-    this->central_id = IdAllocator::allocate();
-
-    if (this->central_id == IdAllocator::OOM_POS)
-        std::cerr << OOM_WARING;
-    this->evaluated = false;
-    this->genes = create_tree(max_index, max_length, max_depth, this->central_id);
+    this->genes = new Tree(TreeHandler::create_tree(tree_spec), this->central_id);
 }
 
 ArrayXf Individual::forward(const ArrayXXf &X, bool record_gradient) const

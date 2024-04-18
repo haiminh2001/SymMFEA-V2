@@ -2,27 +2,20 @@
 #include <components/tree/tree_handler.h>
 #include "utils/random_utils.h"
 #include <vector>
-#include "metrics/r2.h"
 #include "utils/array_utils.h"
 #include "central_units/individual_infos.h"
 #include "thread"
 
-SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView dataview, int max_length, int max_depth, int max_index)
+SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView dataview, TreeSpec *tree_spec)
+    : tree_spec(tree_spec), dataview(dataview), skill_factor(skill_factor), num_individual(num_individual)
 {
-    this->skill_factor = skill_factor;
-    this->dataview = dataview;
-    this->max_length = max_length;
-    this->max_depth = max_depth;
-
+    
     std::vector<Individual *> individuals;
     for (int i = 0; i < num_individual; i++)
     {
-        individuals.push_back(new Individual(skill_factor, max_index, max_length, max_depth));
+        individuals.push_back(new Individual(skill_factor, tree_spec));
     }
     this->individuals = individuals;
-    this->num_individual = num_individual;
-    // hard code r2
-    this->metric = new R2();
 }
 
 Individual *SubPopulation::get_random()
@@ -70,6 +63,7 @@ void _fit(std::vector<Individual *> individuals,
     {
         if ((!ind->evaluated) && (ind->central_id % num_threads == thread_id))
         {
+            //NOTE: hard cor steps here
             auto ind_metric = trainer->fit(ind, dataview, 20);
             if (!metric->is_larger_better)
             {

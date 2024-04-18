@@ -3,7 +3,8 @@
 #include "evolution/population/individual.h"
 #include "components/data_utils/data_view.h"
 #include "components/trainer/trainer.h"
-#include "metrics/metrics.h"
+#include "components/trainer/metrics/metrics.h"
+#include "evolution/reproducer/tree_spec.h"
 #include <vector>
 #include "Eigen/Dense"
 
@@ -11,15 +12,14 @@ class SubPopulation
 {
 private:
     Metric *metric;
-    int max_length;
-    int max_depth;
+    TreeSpec *tree_spec;
 
 public:
     int skill_factor;
     std::vector<Individual *> individuals;
     DataView dataview;
     int num_individual;
-    SubPopulation(int num_individual, int skill_factor, DataView dataview, int max_length, int max_depth, int max_index);
+    SubPopulation(int num_individual, int skill_factor, DataView dataview, TreeSpec *tree_spec);
     Individual *get_random();
     void append(std::vector<Individual *> offsprings);
     void evaluate(Trainer* trainer);

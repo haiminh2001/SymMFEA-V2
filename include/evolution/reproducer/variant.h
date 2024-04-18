@@ -1,0 +1,17 @@
+#ifndef SYMMFEA_VARIANT_H
+#define SYMMFEA_VARIANT_H
+#include "evolution/population/individual.h"
+#include "evolution/population/population.h"
+#include "evolution/reproducer/mutation.h"
+#include "evolution/reproducer/crossover.h"
+#include <vector>
+
+class Variant
+{
+public:
+    Variant(Mutation* mutation, Crossover* crossover) : mutation(mutation), crossover(crossover) {}; 
+    Mutation* mutation;
+    Crossover* crossover;
+    void call(Population* population);
+};
+#endif // SYMMFEA_VARIANT_H

@@ -1,7 +1,8 @@
 #ifndef SYMMFEA_R2_H
 #define SYMMFEA_R2_H
 #include <Eigen/Dense>
-#include "metrics/metrics.h"
+#include "components/trainer/metrics/metrics.h"
+
 class R2 : public Metric
 {
 public:

@@ -17,4 +17,13 @@ namespace Random
         std::uniform_int_distribution<T> dist(min, max);
         return dist(rng);
     }
+
+    template float randnorm<float>(float mean, float std_dev);
+    template <typename T>
+    T randnorm(T mean, T std_dev){
+        std::random_device rd;
+        std::mt19937 rng(rd());
+        std::normal_distribution<T> dist(mean, std_dev);
+        return dist(rng);
+    }
 }

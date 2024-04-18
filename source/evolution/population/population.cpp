@@ -2,13 +2,12 @@
 #include "components/data_utils/data_view.h"
 #include "components/data_utils/data_pool.h"
 
-Population::Population(int num_tasks, int num_individuals_per_tasks, DataPool *datapool, int max_length, int max_depth)
+Population::Population(int num_tasks, int num_individuals_per_tasks, DataPool *datapool, TreeSpec* tree_spec)
 {
-    int max_index = datapool->X_train.cols() - 1;
     for (int i = 0; i < num_tasks; ++i)
     {
         DataView dv(datapool, 1);
-        this->sub_populations.push_back(new SubPopulation(num_individuals_per_tasks, i, dv, max_length, max_depth, max_index));
+        this->sub_populations.push_back(new SubPopulation(num_individuals_per_tasks, i, dv, tree_spec));
     }
 }
 
