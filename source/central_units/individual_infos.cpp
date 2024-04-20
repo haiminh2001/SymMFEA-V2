@@ -14,7 +14,7 @@ void IndividualInfos::init(int max_num_individuals, int num_objectives, int max_
 
     IndividualInfos::weight = ArrayXXf::Random((uint32_t)max_num_individuals + 1, (uint32_t)max_length);
     auto mean = IndividualInfos::weight.mean();
-    float std = 1 / max_length;
+    float std = 1 / static_cast<float>(max_length);
     weight -= mean;
     weight *= std;
 
