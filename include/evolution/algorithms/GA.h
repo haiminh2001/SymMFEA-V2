@@ -33,6 +33,7 @@ public:
        int max_depth,
        Metric *metric,
        Loss *loss,
+       int num_steps = 20,
        float learning_rate = 0.1,
        int early_stopping = 5,
        float survive_ratio = 0.33);

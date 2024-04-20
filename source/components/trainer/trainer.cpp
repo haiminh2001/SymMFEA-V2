@@ -2,15 +2,7 @@
 #include "components/trainer/trainer.h"
 #include "central_units/individual_infos.h"
 
-Trainer::Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int early_stopping)
-{
-    this->metric = metric;
-    this->loss = loss;
-    this->early_stopping = early_stopping;
-    this->optimizer = optimizer;
-}
-
-float Trainer::fit(Individual *individual, DataView &data, int steps)
+float Trainer::fit(Individual *individual, DataView &data)
 {
     auto X = data.X_train();
     auto y = data.y_train();
@@ -27,7 +19,7 @@ float Trainer::fit(Individual *individual, DataView &data, int steps)
         best_objective = std::numeric_limits<float>::max();
 
     float metric;
-    for (int step = 0; step < steps && num_consecutive_not_better < this->early_stopping; ++step)
+    for (int step = 0; step < this->num_steps && num_consecutive_not_better < this->early_stopping; ++step)
     {
         auto y_hat = individual->forward(X);
         auto diff = this->loss->call(y, y_hat);

@@ -21,7 +21,15 @@ int main()
 
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
-    GA algo(200, 1, 2, 200, 30, 5, new R2(), new MSELoss());
+    GA algo(200,
+            1,
+            2,
+            200,
+            50,
+            4,
+            new R2(),
+            new MSELoss(),
+            50);
 
     algo.fit(X, ground_truth);
 }

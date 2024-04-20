@@ -15,9 +15,15 @@ private:
     Loss *loss;
     GradientOptimizer *optimizer;
     int early_stopping;
+    int num_steps;
 
 public:
-    Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int early_stopping);
-    float fit(Individual *individual, DataView &data, int steps);
+    Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int num_steps, int early_stopping)
+        : metric(metric),
+          loss(loss),
+          optimizer(optimizer),
+          num_steps(num_steps),
+          early_stopping(early_stopping){};
+    float fit(Individual *individual, DataView &data);
 };
 #endif // SYMMFEA_TRAINER_H

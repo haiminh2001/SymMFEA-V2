@@ -64,7 +64,7 @@ void _fit(std::vector<Individual *> individuals,
         if ((!ind->evaluated) && (ind->central_id % num_threads == thread_id))
         {
             //NOTE: hard cor steps here
-            auto ind_metric = trainer->fit(ind, dataview, 20);
+            auto ind_metric = trainer->fit(ind, dataview);
             if (!metric->is_larger_better)
             {
                 ind_metric = -ind_metric;
