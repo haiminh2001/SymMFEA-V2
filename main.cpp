@@ -22,6 +22,7 @@ int main()
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
     GA algo(200,
+            40,
             1,
             2,
             200,

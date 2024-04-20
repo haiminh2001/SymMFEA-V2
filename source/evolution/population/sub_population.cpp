@@ -7,9 +7,9 @@
 #include "thread"
 
 SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView dataview, TreeSpec *tree_spec)
-    : tree_spec(tree_spec), dataview(dataview), skill_factor(skill_factor), num_individual(num_individual)
+    : tree_spec(tree_spec), dataview(dataview), skill_factor(skill_factor)
 {
-    
+
     std::vector<Individual *> individuals;
     for (int i = 0; i < num_individual; i++)
     {
@@ -63,7 +63,6 @@ void _fit(std::vector<Individual *> individuals,
     {
         if ((!ind->evaluated) && (ind->central_id % num_threads == thread_id))
         {
-            //NOTE: hard cor steps here
             auto ind_metric = trainer->fit(ind, dataview);
             if (!metric->is_larger_better)
             {
@@ -89,4 +88,9 @@ void SubPopulation::evaluate(Trainer *trainer)
     {
         thread.join();
     }
+}
+
+uint32_t SubPopulation::current_num_individuals()
+{
+    return static_cast<uint32_t>(this->individuals.size());
 }

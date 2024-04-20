@@ -3,28 +3,30 @@
 #include "central_units/id_allocator.h"
 #include "vector"
 
-void Selector::call(SubPopulation *subpop, Eigen::Array<uint64_t, Eigen::Dynamic, 1> argpos)
+void Selector::call(SubPopulation *subpop, Eigen::Array<uint64_t, Eigen::Dynamic, 1> argpos, uint32_t current_generation)
 {
     assert(subpop->individuals.size() == argpos.size());
-    uint64_t num_orig = subpop->individuals.size();
-    uint64_t num_keep = static_cast<uint64_t>(this->survive_ratio * num_orig);
-    
+
+    uint32_t num_keep = this->calculate_num_survive(current_generation);
+
     // prevent the subpop from being evaporated
-    if (num_keep <= 0) num_keep = 1;
+    if (num_keep <= 0)
+        num_keep = 1;
 
     std::vector<Individual *> survivors;
 
-    uint64_t num_discarded = 0;
+    uint32_t num_discarded = 0;
 
-    for (uint64_t index = 0; index < num_keep; ++index)
+    for (uint32_t index = 0; index < num_keep; ++index)
     {
         // discard invalid individuals
         if (subpop->individuals[argpos[index]]->central_id != 0)
             survivors.push_back(subpop->individuals[argpos[index]]);
-        else num_discarded += 1;
+        else
+            num_discarded += 1;
     }
 
-    for (uint64_t index = num_keep; index < subpop->individuals.size(); ++index)
+    for (uint32_t index = num_keep; index < subpop->individuals.size(); ++index)
     {
         // return the central_id to the coordinator
         delete subpop->individuals[argpos[index]];
@@ -35,8 +37,7 @@ void Selector::call(SubPopulation *subpop, Eigen::Array<uint64_t, Eigen::Dynamic
     subpop->setIndividuals(survivors);
 }
 
-Selector::Selector(float survive_ratio)
+uint32_t Selector::calculate_num_survive(uint32_t current_generation)
 {
-    assert(survive_ratio * 3 < 1);
-    this->survive_ratio = survive_ratio;
+    return this->initial_population_size - (this->initial_population_size - this->final_population_size) * current_generation / this->num_generations;
 }

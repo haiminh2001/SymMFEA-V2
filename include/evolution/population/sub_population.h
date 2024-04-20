@@ -18,7 +18,7 @@ public:
     int skill_factor;
     std::vector<Individual *> individuals;
     DataView dataview;
-    int num_individual;
+    uint32_t current_num_individuals();
     SubPopulation(int num_individual, int skill_factor, DataView dataview, TreeSpec *tree_spec);
     Individual *get_random();
     void append(std::vector<Individual *> offsprings);

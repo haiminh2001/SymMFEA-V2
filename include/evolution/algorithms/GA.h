@@ -17,7 +17,7 @@ private:
     int num_tasks;
     int max_length;
     int max_depth;
-    int num_generations;
+    uint32_t num_generations;
     ProgressBar *progress_bar;
     Variant *variant;
     Selector *selector;
@@ -25,19 +25,19 @@ private:
     Trainer *trainer;
 
 public:
-    GA(int num_inviduals_per_tasks,
+    GA(uint32_t num_inviduals_per_tasks,
+       uint32_t num_final_individuals_per_tasks,
        int num_tasks,
        int num_objectives,
-       int num_generations,
+       uint32_t num_generations,
        int max_length,
        int max_depth,
        Metric *metric,
        Loss *loss,
        int num_steps = 20,
        float learning_rate = 0.1,
-       int early_stopping = 5,
-       float survive_ratio = 0.33);
+       int early_stopping = 5);
     void fit(Eigen::ArrayXXf X, Eigen::ArrayXf y);
-    void exec_one_generation(int generation, Population* population);
+    void exec_one_generation(uint32_t generation, Population *population);
 };
 #endif // SYMMFEA_GA_H

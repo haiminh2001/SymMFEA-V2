@@ -5,9 +5,11 @@ std::vector<Individual *> Mutation::call(SubPopulation *subpop)
 {
     std::vector<Individual *> children;
 
-    uint64_t max_num_mutation_failures = ((uint64_t) subpop->num_individual) * ((uint64_t) subpop->num_individual) ;
+    auto current_num_individuals = subpop->current_num_individuals();
 
-    while (children.size() < subpop->num_individual)
+    uint32_t max_num_mutation_failures = current_num_individuals * 2;
+
+    while (children.size() < current_num_individuals)
     {
 
         auto i1 = subpop->get_random();
