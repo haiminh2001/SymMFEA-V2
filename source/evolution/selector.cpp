@@ -10,7 +10,7 @@ void Selector::call(SubPopulation *subpop, Eigen::Array<uint64_t, Eigen::Dynamic
     uint32_t num_keep = this->calculate_num_survive(current_generation);
 
     // prevent the subpop from being evaporated
-    if (num_keep <= 0)
+    if (num_keep < 1)
         num_keep = 1;
 
     std::vector<Individual *> survivors;
@@ -39,5 +39,6 @@ void Selector::call(SubPopulation *subpop, Eigen::Array<uint64_t, Eigen::Dynamic
 
 uint32_t Selector::calculate_num_survive(uint32_t current_generation)
 {
-    return this->initial_population_size - (this->initial_population_size - this->final_population_size) * current_generation / this->num_generations;
+    double ratio = static_cast<double>(current_generation) / this->num_generations;
+    return this->initial_population_size - static_cast<uint32_t>((this->initial_population_size - this->final_population_size) * ratio);
 }
