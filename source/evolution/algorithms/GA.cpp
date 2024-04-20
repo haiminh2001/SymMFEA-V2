@@ -6,6 +6,7 @@
 #include "evolution/reproducer/tree_spec.h"
 #include "evolution/reproducer/crossover/subtree.h"
 #include "evolution/reproducer/mutation/growbranch.h"
+#include "utils/timer.h"
 #include <math.h>
 GA::GA(uint32_t num_inviduals_per_tasks,
        uint32_t num_final_individuals_per_tasks,
@@ -51,18 +52,25 @@ void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
         this->exec_one_generation(generation, population);
         this->progress_bar->updateProgress(1, population->find_best_fitted_individual());
     }
+    Timer::printTime();
 }
 
 void GA::exec_one_generation(uint32_t generation, Population *population)
 {
+    Timer::startTimer();
     this->variant->call(population);
+    Timer::logTime("Variation");
 
+    Timer::startTimer();
     population->evaluate(this->trainer);
+    Timer::logTime("Evaluation");
 
+    Timer::startTimer();
     for (auto subpop : population->sub_populations)
     {
         // get the position of the best individuals
         auto argpos = this->ranker->call(subpop);
         this->selector->call(subpop, argpos, generation);
     }
+    Timer::logTime("Selection");
 }
