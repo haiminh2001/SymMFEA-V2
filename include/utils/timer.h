@@ -7,7 +7,7 @@
 
 typedef std::chrono::high_resolution_clock::time_point TimeVar;
 
-#define duration(a) std::chrono::duration_cast<std::chrono::seconds>(a).count()
+#define duration(a) std::chrono::duration_cast<std::chrono::microseconds>(a).count()
 #define timeNow() std::chrono::high_resolution_clock::now()
 
 namespace Timer
@@ -35,7 +35,7 @@ namespace Timer
         std::cout<<std::endl;
         for (auto &it : timeMap)
         {
-            std::cout << it.first << " : " << it.second << " s" << std::endl;
+            std::cout << it.first << " : " << double(it.second) * 1e-6 << " s" << std::endl;
         }
     }
 }
