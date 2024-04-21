@@ -36,7 +36,7 @@ public:
        Loss *loss,
        int epochs = 2,
        float learning_rate = 0.1,
-       int early_stopping = 1);
+       int early_stopping = 3);
     void fit(Eigen::ArrayXXf X, Eigen::ArrayXf y);
     void exec_one_generation(uint32_t generation, Population *population);
 };

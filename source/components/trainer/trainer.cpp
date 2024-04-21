@@ -6,7 +6,7 @@
 float Trainer::fit(Individual *individual, DataView &data)
 {
     // NOTE: hard code batchsize to 16
-    auto train_dataloader = DataLoader(data.X_train(), data.y_train(), 64);
+    auto train_dataloader = DataLoader(data.X_train(), data.y_train(), 400);
 
     auto X_val = data.X_val();
     auto y_val = data.y_val();

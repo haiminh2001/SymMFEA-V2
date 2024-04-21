@@ -7,6 +7,8 @@
 #include "components/functions/tanh.h"
 #include "components/functions/operand.h"
 #include "components/functions/relu.h"
+#include "components/functions/aq.h"
+
 
 Node *createOperand(int index, int arity)
 {
@@ -33,6 +35,11 @@ Node *createProduct(int index, int arity)
     return new Product();
 }
 
+Node *createAq(int index, int arity)
+{
+    return new Aq();
+}
+
 void Primitive::addNodeFactory(NodeFactory nf, int arity)
 {
     this->functionList.emplace_back(nf, arity);
@@ -50,6 +57,7 @@ Primitive::Primitive()
     this->addNodeFactory(createOperand, 0);
     this->addNodeFactory(createSum, -1);
     this->addNodeFactory(createProduct, 2);
+    this->addNodeFactory(createAq, 2);
     this->addNodeFactory(createTanh, 1);
     this->addNodeFactory(createRelu, 1);
     this->removeDuplicatePossibleNumArites();
