@@ -1,4 +1,4 @@
-
+#include <vector>
 #include <map>
 #include "utils/random_utils.h"
 #include "components/primitive.h"
@@ -8,7 +8,6 @@
 #include "components/functions/operand.h"
 #include "components/functions/relu.h"
 #include "components/functions/aq.h"
-
 
 Node *createOperand(int index, int arity)
 {
@@ -96,7 +95,21 @@ Node *Primitive::sampleNode(int arity_min, int arity_max)
     // actual_arity is the actual number of arities that the node will have
     int actual_arity, arity;
 
-    actual_arity = Random::randint<int>(arity_min, arity_max);
+    std::vector<float> arity_prob;
+    std::vector<int> arity_candidates;
+
+    // decrease the possibility of extremely lengthy nodes
+    for (int a = arity_min; a <= arity_max; ++a)
+    {
+        if (a <= 2)
+            arity_prob.push_back(1.0);
+        else
+            arity_prob.push_back(1.0 / a);
+
+        arity_candidates.push_back(a);
+    }
+
+    actual_arity = arity_candidates[Random::random_choice<int>(arity_prob)];
 
     if (actual_arity < 2)
     {

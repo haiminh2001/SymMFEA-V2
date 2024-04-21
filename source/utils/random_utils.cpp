@@ -10,8 +10,9 @@ namespace Random
     T randint(T min, T max)
     {
         assert(max >= min);
-        if (max == min) return max;
-        
+        if (max == min)
+            return max;
+
         std::random_device rd;
         std::mt19937 rng(rd());
         std::uniform_int_distribution<T> dist(min, max);
@@ -20,10 +21,24 @@ namespace Random
 
     template float randnorm<float>(float mean, float std_dev);
     template <typename T>
-    T randnorm(T mean, T std_dev){
+    T randnorm(T mean, T std_dev)
+    {
         std::random_device rd;
         std::mt19937 rng(rd());
         std::normal_distribution<T> dist(mean, std_dev);
         return dist(rng);
+    }
+
+    template int random_choice<int>(const std::vector<float> &probabilities);
+    template <typename T>
+    T random_choice( const std::vector<float> &probabilities)
+    {
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+
+        std::discrete_distribution<> dist(probabilities.begin(), probabilities.end());
+
+        return static_cast<T> (dist(gen));
     }
 }
