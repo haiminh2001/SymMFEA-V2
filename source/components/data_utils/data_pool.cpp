@@ -9,7 +9,7 @@ DataPool::DataPool(ArrayXXf& X, ArrayXf& y, float test_size=0.2){
     long n_datapoints = X.rows();
 
     std::vector <long> indices = rand_perm(n_datapoints);
-    long train_size = (long) std::lround(test_size * n_datapoints);
+    long train_size = (long) std::lround((1 - test_size) * n_datapoints);
 
     std::vector <long> train_indices (indices.begin(), indices.begin() + train_size);
     std::vector <long> val_indices (indices.begin() + train_size, indices.end());

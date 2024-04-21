@@ -21,16 +21,17 @@ int main()
 
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
-    GA algo(200,
-            40,
-            1,
-            2,
-            20,
-            50,
-            4,
+    GA algo(200, // num_inviduals_per_tasks
+            40,  // num_final_individuals_per_tasks
+            1,   // num_tasks
+            2,   // num_objectives
+            200, // num_generations
+            50,  // max_length
+            7,   // max_depth
             new R2(),
             new MSELoss(),
-            50);
+            1 // num_steps
+    );
 
     algo.fit(X, ground_truth);
 }
