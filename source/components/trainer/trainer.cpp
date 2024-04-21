@@ -6,7 +6,7 @@
 float Trainer::fit(Individual *individual, DataView &data)
 {
     // NOTE: hard code batchsize to 16
-    auto train_dataloader = DataLoader(data.X_train(), data.y_train(), 16);
+    auto train_dataloader = DataLoader(data.X_train(), data.y_train(), 64);
 
     auto X_val = data.X_val();
     auto y_val = data.y_val();
@@ -26,7 +26,7 @@ float Trainer::fit(Individual *individual, DataView &data)
     ArrayXf* y = new ArrayXf();
 
     bool is_grad_nan = false;
-    for (int step = 0; step < this->num_steps && num_consecutive_not_better < this->early_stopping && (!is_grad_nan); ++step)
+    for (int step = 0; step < this->epochs && num_consecutive_not_better < this->early_stopping && (!is_grad_nan); ++step)
     {
         while (true)
         {

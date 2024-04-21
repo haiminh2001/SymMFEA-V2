@@ -15,14 +15,14 @@ private:
     Loss *loss;
     GradientOptimizer *optimizer;
     int early_stopping;
-    int num_steps;
+    int epochs;
 
 public:
-    Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int num_steps, int early_stopping)
+    Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int epochs, int early_stopping)
         : metric(metric),
           loss(loss),
           optimizer(optimizer),
-          num_steps(num_steps),
+          epochs(epochs),
           early_stopping(early_stopping){};
     float fit(Individual *individual, DataView &data);
 };
