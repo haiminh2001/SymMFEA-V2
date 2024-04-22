@@ -25,13 +25,13 @@ int main()
             20,  // num_final_individuals_per_tasks
             1,   // num_tasks
             2,   // num_objectives
-            500, // num_generations
+            200, // num_generations
             50,  // max_length
-            7,   // max_depth
+            5,   // max_depth
             new R2(),
             new MSELoss(),
             20,   // epochs
-            0.05 // learning_rate
+            0.1 // learning_rate
     );
 
     algo.fit(X, ground_truth);

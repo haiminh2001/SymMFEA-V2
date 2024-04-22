@@ -116,7 +116,6 @@ void Tree::visualize()
     printSubTree(300, 100, this->nodes, this->nodes.size() - 1, outputFile);
     outputFile << "}" << std::endl;
     outputFile.close();
-    std::system("dot -Tpng /tmp/tree.dot -o tree.png");
 };
 
 /// @brief

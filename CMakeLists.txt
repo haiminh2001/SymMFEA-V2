@@ -3,6 +3,8 @@ project(SymMFEA)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math -O3")
+
 find_package(Eigen3 REQUIRED)
 find_package(Threads REQUIRED)
 
@@ -18,6 +20,7 @@ include_directories(include)
 
 file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "source/*.cpp" "include/*.h"  )
 
+add_compile_options("-ffast-math")
 add_executable(SymMFEA main.cpp ${APP_SOURCES})
 
 target_link_libraries(SymMFEA 
