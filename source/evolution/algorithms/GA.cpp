@@ -19,8 +19,9 @@ GA::GA(uint32_t num_inviduals_per_tasks,
        Loss *loss,
        int epochs,
        float learning_rate,
-       int early_stoppoing)
-    : trainer(new Trainer(metric, loss, new GradientOptimizer(learning_rate), epochs, early_stoppoing)),
+       int early_stoppoing,
+       int batch_size)
+    : trainer(new Trainer(metric, loss, new GradientOptimizer(learning_rate), epochs, early_stoppoing, batch_size)),
       progress_bar(new ProgressBar(num_generations)),
       ranker(new Ranker()),
       selector(new Selector(num_inviduals_per_tasks, num_final_individuals_per_tasks, num_generations)),

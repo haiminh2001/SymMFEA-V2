@@ -16,14 +16,16 @@ private:
     GradientOptimizer *optimizer;
     int early_stopping;
     int epochs;
+    int batch_size;
 
 public:
-    Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int epochs, int early_stopping)
+    Trainer(Metric *metric, Loss *loss, GradientOptimizer *optimizer, int epochs, int early_stopping, int batch_size)
         : metric(metric),
           loss(loss),
           optimizer(optimizer),
           epochs(epochs),
-          early_stopping(early_stopping){};
+          early_stopping(early_stopping),
+          batch_size(batch_size){};
     float fit(Individual *individual, DataView &data);
 };
 #endif // SYMMFEA_TRAINER_H
