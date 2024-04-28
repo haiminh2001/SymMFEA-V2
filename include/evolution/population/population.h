@@ -4,7 +4,7 @@
 #include "evolution/population/sub_population.h"
 #include "components/trainer/trainer.h"
 #include "evolution/reproducer/tree_spec.h"
-#include <vector>
+
 class Population
 {
 public:

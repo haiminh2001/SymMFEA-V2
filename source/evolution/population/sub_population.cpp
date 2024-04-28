@@ -6,51 +6,43 @@
 #include "central_units/individual_infos.h"
 #include "thread"
 
+/// @brief create a node on the red black tree and insert the individual
+/// @param individual 
+void SubPopulation::insert_individual(Individual *individual)
+{
+    auto node = new RedBlackTree::Node();
+    node->individual = individual;
+    this->individuals->insert(node);
+};
+
+/// @brief init a subpopulation with a number of random individuals
+/// @param num_individual 
+/// @param skill_factor 
+/// @param dataview 
+/// @param tree_spec 
 SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView dataview, TreeSpec *tree_spec)
     : tree_spec(tree_spec), dataview(dataview), skill_factor(skill_factor)
 {
+    this->individuals = new RedBlackTree::RedBlackTree();
 
-    std::vector<Individual *> individuals;
     for (int i = 0; i < num_individual; i++)
     {
-        individuals.push_back(new Individual(skill_factor, tree_spec));
+        this->insert_individual(new Individual(skill_factor, tree_spec));
     }
-    this->individuals = individuals;
 }
 
 Individual *SubPopulation::get_random()
 {
-    auto idx = Random::randint<int>(0, this->individuals.size() - 1);
-    return this->individuals[idx];
+    return this->individuals->get_random_node()->individual;
 }
 
-void SubPopulation::append(std::vector<Individual *> offsprings)
-{
-    this->individuals.insert(this->individuals.end(), offsprings.begin(), offsprings.end());
-};
-
-std::vector<Eigen::Index> SubPopulation::get_central_ids()
-{
-    std::vector<Eigen::Index> ids(this->individuals.size());
-    for (Eigen::Index i = 0; i < this->individuals.size(); ++i)
-    {
-        ids[i] = this->individuals[i]->central_id;
-    }
-    return ids;
-};
 
 Individual *SubPopulation::find_best_fitted_individual()
 {
-    auto indices = this->get_central_ids();
-    Eigen::ArrayXf objective = IndividualInfos::objectives(indices, 0);
-    auto best_idx = ArrayUtils::argmax<float>(objective);
-    return this->individuals[best_idx];
+    return this->individuals->get_largest_node()->individual;
 }
 
-void SubPopulation::setIndividuals(const std::vector<Individual *> &individuals)
-{
-    this->individuals = individuals;
-}
+
 
 void _fit(std::vector<Individual *> individuals,
           int thread_id,
@@ -92,5 +84,5 @@ void SubPopulation::evaluate(Trainer *trainer)
 
 uint32_t SubPopulation::current_num_individuals()
 {
-    return static_cast<uint32_t>(this->individuals.size());
+    return this->individuals->num_nodes;
 }

@@ -11,6 +11,10 @@ namespace Random
     template <typename T>
     T randnorm(T mean, T std_dev);
 
+    /// @brief return a random indice from the given probabilities
+    /// @tparam T 
+    /// @param probabilities 
+    /// @return 
     template <typename T>
     T random_choice(const std::vector<float> &probabilities);
     

@@ -4,6 +4,7 @@
 #include "utils/random_utils.h"
 #include <iostream>
 #include <queue>
+#include <mutex>
 
 namespace RedBlackTree
 {
@@ -15,6 +16,9 @@ namespace RedBlackTree
 
     class Node
     {
+    private:
+        std::mutex mtx;
+
     public:
         Individual *individual;
         float value;
@@ -277,8 +281,8 @@ namespace RedBlackTree
                 p = node;
                 node = node->left;
             }
+            p->left = node->right;
             delete node;
-            p->left = nullptr;
         }
         // Function to get the largest node
         Node *get_largest_node()

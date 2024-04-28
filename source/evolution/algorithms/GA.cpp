@@ -6,13 +6,14 @@
 #include "evolution/reproducer/tree_spec.h"
 #include "evolution/reproducer/crossover/subtree.h"
 #include "evolution/reproducer/mutation/growbranch.h"
+#include "evolution/algorithms/worker.h"
 #include "utils/timer.h"
+#include "thread"
 #include <math.h>
-GA::GA(uint32_t num_inviduals_per_tasks,
-       uint32_t num_final_individuals_per_tasks,
+GA::GA(uint64_t num_solutions,
+       uint64_t num_concurrent_inviduals_per_tasks,
        int num_tasks,
        int num_objectives,
-       uint32_t num_generations,
        int max_length,
        int max_depth,
        Metric *metric,
@@ -22,21 +23,17 @@ GA::GA(uint32_t num_inviduals_per_tasks,
        int early_stoppoing,
        int batch_size)
     : trainer(new Trainer(metric, loss, new GradientOptimizer(learning_rate), epochs, early_stoppoing, batch_size)),
-      progress_bar(new ProgressBar(num_generations)),
-      ranker(new Ranker()),
-      selector(new Selector(num_inviduals_per_tasks, num_final_individuals_per_tasks, num_generations)),
+      progress_bar(new ProgressBar(num_concurrent_inviduals_per_tasks)),
+      num_solutions(num_solutions),
       num_tasks(num_tasks),
       max_length(max_length),
       max_depth(max_depth),
       num_objectives(num_objectives),
-      num_generations(num_generations),
-      num_inviduals_per_tasks(num_inviduals_per_tasks)
+      num_concurrent_inviduals_per_tasks(num_concurrent_inviduals_per_tasks)
 {
 
-    uint64_t max_num_individuals = static_cast<uint64_t>(num_inviduals_per_tasks * num_tasks * 3);
-
-    IdAllocator::init(max_num_individuals);
-    IndividualInfos::init(max_num_individuals, num_objectives, max_length);
+    IdAllocator::init(num_solutions);
+    IndividualInfos::init(num_solutions, num_objectives, max_length);
 }
 
 void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
@@ -47,31 +44,42 @@ void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
     auto mutation = new GrowBranchMutation(tree_spec);
     this->variant = new Variant(mutation, crossover);
 
-    Population *population = new Population(this->num_tasks, this->num_inviduals_per_tasks, new DataPool(X, y, 0.2), tree_spec);
-    for (uint32_t generation = 0; generation < this->num_generations; ++generation)
+    Population *population = new Population(this->num_tasks, this->num_concurrent_inviduals_per_tasks, new DataPool(X, y, 0.2), tree_spec);
+
+    int num_threads = std::thread::hardware_concurrency();
+    
+    std::vector<std::thread> threads;
+    for (int i = 0; i < num_threads; ++i)
     {
-        this->exec_one_generation(generation, population);
-        this->progress_bar->updateProgress(1, population->find_best_fitted_individual());
+        Worker *worker = new Worker();
+        threads.push_back(std::thread([](Worker *worker, Population *population)
+                                      { worker->run(population); },
+                                      worker, population));
     }
+    for (auto &thread : threads)
+    {
+        thread.join();
+    }
+
     Timer::printTime();
 }
 
-void GA::exec_one_generation(uint32_t generation, Population *population)
-{
-    Timer::startTimer();
-    this->variant->call(population);
-    Timer::logTime("Variation");
+// void GA::exec_one_generation(uint32_t generation, Population *population)
+// {
+//     Timer::startTimer();
+//     this->variant->call(population);
+//     Timer::logTime("Variation");
 
-    Timer::startTimer();
-    population->evaluate(this->trainer);
-    Timer::logTime("Evaluation");
+//     Timer::startTimer();
+//     population->evaluate(this->trainer);
+//     Timer::logTime("Evaluation");
 
-    Timer::startTimer();
-    for (auto subpop : population->sub_populations)
-    {
-        // get the position of the best individuals
-        auto argpos = this->ranker->call(subpop);
-        this->selector->call(subpop, argpos, generation);
-    }
-    Timer::logTime("Selection");
-}
+//     Timer::startTimer();
+//     for (auto subpop : population->sub_populations)
+//     {
+//         // get the position of the best individuals
+//         auto argpos = this->ranker->call(subpop);
+//         this->selector->call(subpop, argpos, generation);
+//     }
+//     Timer::logTime("Selection");
+// }
