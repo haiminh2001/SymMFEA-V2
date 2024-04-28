@@ -12,6 +12,7 @@ public:
     Variant(Mutation* mutation, Crossover* crossover) : mutation(mutation), crossover(crossover) {}; 
     Mutation* mutation;
     Crossover* crossover;
-    void call(Population* population);
+    
+    std::vector<Individual*> call(Population* popluation);
 };
 #endif // SYMMFEA_VARIANT_H

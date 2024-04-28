@@ -14,86 +14,41 @@ namespace RedBlackTree
         BLACK
     };
 
-    class Node
+    class IndividualNode
     {
     private:
-        std::mutex mtx;
+        std::mutex lock;
 
     public:
         Individual *individual;
         float value;
-        Node *parent;
-        Node *left;
-        Node *right;
+        IndividualNode *parent;
+        IndividualNode *left;
+        IndividualNode *right;
         NodeColor color;
 
-        Node() : individual(nullptr), parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
-        ~Node()
+        IndividualNode() : individual(nullptr), parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
+        ~IndividualNode()
         {
             delete individual;
         }
     };
 
-    Node *successor(Node *node)
-    {
-        if (node->right != nullptr)
-        {
-            // If the node has a right child, find the leftmost node in the right subtree
-            Node *current = node->right;
-            while (current->left != nullptr)
-            {
-                current = current->left;
-            }
-            return current;
-        }
-        else
-        {
-            // If the node does not have a right child, find the first ancestor that is a left child
-            Node *parent = node->parent;
-            while (parent != nullptr && node == parent->right)
-            {
-                node = parent;
-                parent = parent->parent;
-            }
-            return parent;
-        }
-    }
+    IndividualNode *successor(IndividualNode *node);
 
     // function to perform BST insertion of a Node
-    Node *bst(Node *trav,
-              Node *temp)
-    {
-        // If the tree is empty,
-        // return a new Node
-        if (!trav)
-            return temp;
-
-        // Otherwise recur down the tree
-        if (temp->value < trav->value)
-        {
-            trav->left = bst(trav->left, temp);
-            trav->left->parent = trav;
-        }
-        else if (temp->value > trav->value)
-        {
-            trav->right = bst(trav->right, temp);
-            trav->right->parent = trav;
-        }
-
-        // Return the (unchanged) Node pointer
-        return trav;
-    }
+    IndividualNode *binary_search_tree_insert(IndividualNode *root, IndividualNode *temp);
 
     class RedBlackTree
     {
     private:
-        Node *root;
+        IndividualNode *root;
 
         // Function performing right rotation
         // of the passed Node
-        void rightrotate(Node *temp)
+        void rightrotate(IndividualNode *temp)
         {
-            Node *left = temp->left;
+            IndividualNode *left = temp->left;
             temp->left = left->right;
             if (temp->left)
                 temp->left->parent = temp;
@@ -110,9 +65,9 @@ namespace RedBlackTree
 
         // Function performing left rotation
         // of the passed Node
-        void leftrotate(Node *temp)
+        void leftrotate(IndividualNode *temp)
         {
-            Node *right = temp->right;
+            IndividualNode *right = temp->right;
             temp->right = right->left;
             if (temp->right)
                 temp->right->parent = temp;
@@ -129,10 +84,10 @@ namespace RedBlackTree
 
         // This function fixes violations
         // caused by BST insertion
-        void fixup(Node *pt)
+        void fixup(IndividualNode *pt)
         {
-            Node *parent_pt = nullptr;
-            Node *grand_parent_pt = nullptr;
+            IndividualNode *parent_pt = nullptr;
+            IndividualNode *grand_parent_pt = nullptr;
 
             while ((pt != root) && (pt->color != NodeColor::BLACK) && (pt->parent->color == NodeColor::RED))
             {
@@ -146,7 +101,7 @@ namespace RedBlackTree
                 if (parent_pt == grand_parent_pt->left)
                 {
 
-                    Node *uncle_pt = grand_parent_pt->right;
+                    IndividualNode *uncle_pt = grand_parent_pt->right;
 
                     /* Case : 1
                         The uncle of pt is also red
@@ -189,7 +144,7 @@ namespace RedBlackTree
                    pt */
                 else
                 {
-                    Node *uncle_pt = grand_parent_pt->left;
+                    IndividualNode *uncle_pt = grand_parent_pt->left;
 
                     /*  Case : 1
                         The uncle of pt is also red
@@ -232,7 +187,7 @@ namespace RedBlackTree
         void bfsPrint()
         {
 
-            std::queue<Node *> queue;
+            std::queue<IndividualNode *> queue;
 
             queue.push(root);
 
@@ -260,9 +215,9 @@ namespace RedBlackTree
         }
 
         // Function to insert a node into the Red-Black Tree
-        void insert(Node *node)
+        void insert(IndividualNode *node)
         {
-            this->root = bst(root, node);
+            this->root = binary_search_tree_insert(root, node);
             this->fixup(node);
             this->root->color = NodeColor::BLACK;
             this->num_nodes++;
@@ -274,8 +229,8 @@ namespace RedBlackTree
             if (root == nullptr)
                 return;
 
-            Node *node = root;
-            Node *p;
+            IndividualNode *node = root;
+            IndividualNode *p;
             while (node->left != nullptr)
             {
                 p = node;
@@ -285,12 +240,12 @@ namespace RedBlackTree
             delete node;
         }
         // Function to get the largest node
-        Node *get_largest_node()
+        IndividualNode *get_largest_node()
         {
             if (root == nullptr)
                 return nullptr;
 
-            Node *node = root;
+            IndividualNode *node = root;
 
             while (node->right != nullptr)
             {
@@ -299,12 +254,12 @@ namespace RedBlackTree
             return node;
         }
         // NOTE: may implement a different logic to handle different height of the tree
-        Node *get_random_node()
+        IndividualNode *get_random_node()
         {
             if (root == nullptr)
                 return nullptr;
 
-            Node *node = root;
+            IndividualNode *node = root;
             uint8_t direction;
 
             while (true)
@@ -322,10 +277,10 @@ namespace RedBlackTree
                 if (node->right)
                     direction_probs.push_back(10);
                 else
-                    direction_probs.push_back(0);   
+                    direction_probs.push_back(0);
 
-                direction = Random::random_choice<uint8_t>(direction_probs);
-                
+                direction = Random::random_choice<int>(direction_probs);
+
                 if (direction == 2)
                     node = node->right;
                 else if (direction == 1)

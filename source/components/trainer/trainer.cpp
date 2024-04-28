@@ -3,12 +3,12 @@
 #include "components/data_utils/data_loader.h"
 #include "central_units/individual_infos.h"
 
-float Trainer::fit(Individual *individual, DataView &data)
+float Trainer::fit(Individual *individual, DataView* data)
 {
-    auto train_dataloader = DataLoader(data.X_train(), data.y_train(), this->batch_size);
+    auto train_dataloader = DataLoader(data->X_train(), data->y_train(), this->batch_size);
 
-    auto X_val = data.X_val();
-    auto y_val = data.y_val();
+    auto X_val = data->X_val();
+    auto y_val = data->y_val();
 
     int num_consecutive_not_better = 0;
 
@@ -66,5 +66,8 @@ float Trainer::fit(Individual *individual, DataView &data)
 
     // rollback to best checkpoint
     IndividualInfos::weight.row(individual->central_id) = IndividualInfos::weightCheckpoint.row(individual->central_id);
-    return metric;
+
+    if (!this->metric->is_larger_better) best_objective = -best_objective;
+
+    return best_objective;
 }

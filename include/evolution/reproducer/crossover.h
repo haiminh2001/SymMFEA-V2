@@ -12,7 +12,5 @@ public:
     Crossover(TreeSpec* tree_spec) : tree_spec(tree_spec) {}; 
     TreeSpec* tree_spec;
     virtual std::vector<Individual*> call(Individual* pa, Individual* pb) = 0;
-    std::vector<Individual*> call(SubPopulation* supop);
-    std::vector<std::vector<Individual*>> call(Population* population);
 };
 #endif // SYMMFEA_CROSSOVER_H

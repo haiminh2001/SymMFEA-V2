@@ -8,10 +8,9 @@
 class Population
 {
 public:
-    std::vector<SubPopulation*> sub_populations;
-    Population(int num_tasks, int num_inviduals_per_tasks, DataPool *datapool, TreeSpec* tree_spec);
-    void append(std::vector<std::vector<Individual*>> offsprings);
-    void evaluate(Trainer* trainer);
-    std::vector<Individual*> find_best_fitted_individual();
+    std::vector<SubPopulation *> sub_populations;
+    Population(int num_tasks, int num_inviduals_per_tasks, DataPool *datapool, TreeSpec *tree_spec);
+    std::vector<Individual *> find_best_fitted_individual(std::vector<std::vector<float>> *return_objectives);
+    void get_random_subpopulations(SubPopulation **subpop_a, SubPopulation **subpop_b);
 };
 #endif // SYMMFEA_POPULATION_H

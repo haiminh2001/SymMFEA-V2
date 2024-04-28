@@ -26,6 +26,6 @@ public:
           epochs(epochs),
           early_stopping(early_stopping),
           batch_size(batch_size){};
-    float fit(Individual *individual, DataView &data);
+    float fit(Individual *individual, DataView* data);
 };
 #endif // SYMMFEA_TRAINER_H

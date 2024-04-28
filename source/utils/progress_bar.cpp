@@ -1,5 +1,6 @@
 #include "utils/progress_bar.h"
 #include <string>
+#include <cmath>
 
 // ANSI color codes
 #define ANSI_COLOR_RED "\033[38;5;160m"
@@ -9,15 +10,9 @@
 #define ANSI_COLOR_ORANGE "\033[38;5;208m" // 256-color code for orange
 #define ANSI_COLOR_RESET "\033[0m"
 
-ProgressBar::ProgressBar(int num_iterations, int barWidth)
+void ProgressBar::updateProgress(int num_steps, Population *population)
 {
-    this->num_iterations = num_iterations;
-    this->current = 0;
-    this->barWidth = barWidth;
-}
-
-void ProgressBar::updateProgress(int num_steps, std::vector<Individual *> best_individuals)
-{
+    lock.lock();
     if (this->current == 0)
     {
         this->start_time = std::chrono::steady_clock::now();
@@ -54,20 +49,34 @@ void ProgressBar::updateProgress(int num_steps, std::vector<Individual *> best_i
 
     std::cout << ANSI_COLOR_RESET << ANSI_COLOR_ORANGE << "]; " << std::setw(3) << ANSI_COLOR_RESET;
 
-    std::string metrics = "";
+    int percent = static_cast<int>(std::floor(this->current * 100.0 / this->num_iterations));
 
-    for (auto ind : best_individuals)
+    std::string metric_string = "";
+    if (percent > this->last_percent_checkpoint)
     {
-        auto met = ind->objectives()(0);
-        metrics += std::to_string(met);
-        metrics += " ";
+
+        
+        std::vector<std::vector<float>> return_objectives;
+        population->find_best_fitted_individual(&return_objectives);
+        for (auto met : return_objectives)
+        {
+            metric_string += std::to_string(met[0]);
+            metric_string += " ";
+        }
+
+        // Print current generation in grey
+        metric_string += ANSI_COLOR_RED + std::to_string(this->current) + " / " + std::to_string(this->num_iterations) + " (" + std::to_string(percent) + "%)" + ANSI_COLOR_RESET;
+
+        // Print metric in green
+        metric_string += ANSI_COLOR_GREY + std::string(" Metric: ") + ANSI_COLOR_RESET + ANSI_COLOR_GREEN + metric_string + ANSI_COLOR_RESET;
+
+        last_metric_string = metric_string;
     }
-
-    // Print current generation in grey
-    std::cout << ANSI_COLOR_GREY << "Current Generation: " << ANSI_COLOR_RESET << ANSI_COLOR_RED << this->current << " / " << this->num_iterations << " (" << static_cast<int>(this->current * 100.0 / this->num_iterations) << "%)" << ANSI_COLOR_RESET;
-    // Print metric in green
-    std::cout << ANSI_COLOR_GREY << " Metric: " << ANSI_COLOR_RESET << ANSI_COLOR_GREEN << metrics << ANSI_COLOR_RESET;
-
+    else{
+        metric_string = last_metric_string;
+    }
+    std::cout << metric_string;
     std::cout << "\r";
     std::cout.flush();
+    lock.unlock();
 }

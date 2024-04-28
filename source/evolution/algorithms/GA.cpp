@@ -8,9 +8,11 @@
 #include "evolution/reproducer/mutation/growbranch.h"
 #include "evolution/algorithms/worker.h"
 #include "utils/timer.h"
+#include "utils/mutex.h"
+
 #include "thread"
 #include <math.h>
-GA::GA(uint64_t num_solutions,
+GA::GA(int64_t num_solutions,
        uint64_t num_concurrent_inviduals_per_tasks,
        int num_tasks,
        int num_objectives,
@@ -23,17 +25,17 @@ GA::GA(uint64_t num_solutions,
        int early_stoppoing,
        int batch_size)
     : trainer(new Trainer(metric, loss, new GradientOptimizer(learning_rate), epochs, early_stoppoing, batch_size)),
-      progress_bar(new ProgressBar(num_concurrent_inviduals_per_tasks)),
-      num_solutions(num_solutions),
+      progress_bar(new ProgressBar(num_concurrent_inviduals_per_tasks, 80)),
       num_tasks(num_tasks),
       max_length(max_length),
       max_depth(max_depth),
       num_objectives(num_objectives),
-      num_concurrent_inviduals_per_tasks(num_concurrent_inviduals_per_tasks)
+      num_concurrent_inviduals_per_tasks(num_concurrent_inviduals_per_tasks),
+      quota(new MutexUtils::MutexObject<int64_t>(num_solutions))
 {
-
-    IdAllocator::init(num_solutions);
-    IndividualInfos::init(num_solutions, num_objectives, max_length);
+    uint64_t max_num_concurrent_num_individuals = num_concurrent_inviduals_per_tasks * num_tasks * 2;
+    IdAllocator::init(max_num_concurrent_num_individuals);
+    IndividualInfos::init(max_num_concurrent_num_individuals, num_objectives, max_length);
 }
 
 void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
@@ -47,14 +49,14 @@ void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
     Population *population = new Population(this->num_tasks, this->num_concurrent_inviduals_per_tasks, new DataPool(X, y, 0.2), tree_spec);
 
     int num_threads = std::thread::hardware_concurrency();
-    
+
     std::vector<std::thread> threads;
     for (int i = 0; i < num_threads; ++i)
     {
         Worker *worker = new Worker();
-        threads.push_back(std::thread([](Worker *worker, Population *population)
-                                      { worker->run(population); },
-                                      worker, population));
+        threads.push_back(std::thread([](Worker *worker, GA *ga, Population *population)
+                                      { worker->run(ga, population); },
+                                      worker, this, population));
     }
     for (auto &thread : threads)
     {

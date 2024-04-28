@@ -7,7 +7,6 @@ class IndividualInfos
 {
 public:
     // objectives are in the format of being larger is better and the first column is the main objective
-    static ArrayXXf objectives;
     static ArrayXXf weight;
     static ArrayXXf weightCheckpoint;
     static ArrayXXf weightDelta;

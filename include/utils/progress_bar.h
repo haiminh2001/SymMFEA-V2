@@ -4,11 +4,15 @@
 #include <iostream>
 #include <chrono>
 #include <iomanip>
-#include <evolution/population/individual.h>
+#include <evolution/population/population.h>
+#include <mutex>
 
 class ProgressBar
 {
 private:
+    std::mutex lock;
+    std::string last_metric_string;
+    int last_percent_checkpoint;
     int num_iterations;
     int current;
     int barWidth;
@@ -28,9 +32,13 @@ private:
     }
 
 public:
-    ProgressBar(int num_iterations, int bar_width = 70);
-    void updateProgress(int num_steps, std::vector <Individual*> best_individuals);
+    ProgressBar(int num_iterations, int barWidth)
+        : last_percent_checkpoint(-1),
+          num_iterations(num_iterations),
+          current(0),
+          barWidth(barWidth),
+          last_metric_string("") {}
+    void updateProgress(int num_steps, Population *population);
 };
-
 
 #endif // SYMMFEA_PROGRESS_BAR_H

@@ -18,15 +18,6 @@ public:
     ~Individual();
 
     ArrayXf forward(const ArrayXXf &X, bool record_gradient = true) const;
-
-    /// @brief
-    /// Return the objectives of this individual
-    /// First element is the main objective
-    /// @return
-    Eigen::ArrayXf objectives();
-
-    void setObjective(float *objectives);
-
     friend std::ostream &operator<<(std::ostream &os, const Individual &individual);
 };
 #endif // SYMMFEA_INDIVIDUAL_H

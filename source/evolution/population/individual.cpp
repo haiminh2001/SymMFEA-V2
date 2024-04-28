@@ -27,24 +27,6 @@ std::ostream &operator<<(std::ostream &os, const Individual &individual)
     return os;
 }
 
-/// @brief
-/// set the individual objectives and set the "evaluated" attribute to "true"
-/// @param objectives
-void Individual::setObjective(float *objectives)
-{
-    for (int i = 0; i < IndividualInfos::num_objectives; ++i)
-    {
-        IndividualInfos::objectives(this->central_id, i) = objectives[i];
-    }
-
-    this->evaluated = true;
-}
-
-Eigen::ArrayXf Individual::objectives()
-{
-    return IndividualInfos::objectives(this->central_id, Eigen::all);
-}
-
 Individual::~Individual()
 {
     IdAllocator::free(this->central_id);
