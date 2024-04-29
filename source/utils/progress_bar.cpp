@@ -12,7 +12,7 @@
 
 void ProgressBar::updateProgress(int num_steps, Population *population)
 {
-    lock.lock();
+    std::lock_guard<std::mutex> lock(this->lock);
     if (this->current == 0)
     {
         this->start_time = std::chrono::steady_clock::now();
@@ -78,5 +78,5 @@ void ProgressBar::updateProgress(int num_steps, Population *population)
     std::cout << metric_string;
     std::cout << "\r";
     std::cout.flush();
-    lock.unlock();
+    
 }

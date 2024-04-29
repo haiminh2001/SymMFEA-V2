@@ -77,3 +77,4 @@ float Node::weight()
 {
     return IndividualInfos::weight(this->central_id, this->id);
 }
+

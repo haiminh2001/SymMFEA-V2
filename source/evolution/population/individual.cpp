@@ -30,4 +30,5 @@ std::ostream &operator<<(std::ostream &os, const Individual &individual)
 Individual::~Individual()
 {
     IdAllocator::free(this->central_id);
+    delete this->genes;
 }

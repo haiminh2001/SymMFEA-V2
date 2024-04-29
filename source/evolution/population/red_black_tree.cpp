@@ -216,17 +216,17 @@ namespace RedBlackTree
 
     void RedBlackTree::insert(IndividualNode *node)
     {
-        this->lock.lock();
+        std::lock_guard<std::mutex> lock(this->lock);
         this->root = binary_search_tree_insert(root, node);
         this->fixup(node);
         this->root->color = NodeColor::BLACK;
         this->num_nodes++;
-        this->lock.unlock();
+        
     }
 
     void RedBlackTree::remove_smallest_node()
     {
-        this->lock.lock();
+        std::lock_guard<std::mutex> lock(this->lock);
         if (root == nullptr)
             return;
 
@@ -240,12 +240,11 @@ namespace RedBlackTree
         p->left = node->right;
         delete node;
         this->num_nodes--;
-        this->lock.unlock();
     }
 
     IndividualNode *RedBlackTree::get_largest_node()
     {
-        this->lock.lock();
+        std::lock_guard<std::mutex> lock(this->lock);
         if (root == nullptr)
             return nullptr;
 
@@ -256,13 +255,12 @@ namespace RedBlackTree
             node = node->right;
         }
         return node;
-        this->lock.unlock();
     }
 
     // NOTE: may implement a different logic to handle different height of the tree
     IndividualNode *RedBlackTree::get_random_node()
     {
-        this->lock.lock();
+        std::lock_guard<std::mutex> lock(this->lock);
         if (root == nullptr)
             return nullptr;
 
@@ -295,7 +293,7 @@ namespace RedBlackTree
             else
                 node = node->left;
         }
-        this->lock.unlock();
+        
         return node;
     }
 

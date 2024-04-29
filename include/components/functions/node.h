@@ -58,6 +58,8 @@ public:
 
     template <typename T>
     ArrayXf forward(T X, bool record_gradient = true);
+
+    ~Node() {};
 };
 
 #endif

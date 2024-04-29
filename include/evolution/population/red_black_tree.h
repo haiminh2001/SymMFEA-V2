@@ -17,8 +17,6 @@ namespace RedBlackTree
     class IndividualNode
     {
     private:
-        std::mutex lock;
-
     public:
         Individual *individual;
         float value;
@@ -30,9 +28,7 @@ namespace RedBlackTree
         IndividualNode() : individual(nullptr), parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
         ~IndividualNode()
         {
-            this->lock.lock();
             delete this->individual;
-            this->lock.unlock();
         }
     };
 
@@ -73,7 +69,7 @@ namespace RedBlackTree
         // Function to get the largest node
         IndividualNode *get_largest_node();
 
-                IndividualNode *get_random_node();
+        IndividualNode *get_random_node();
     };
 
     // test:
