@@ -36,6 +36,10 @@ namespace RedBlackTree
     // function to perform BST insertion of a Node
     IndividualNode *binary_search_tree_insert(IndividualNode *root, IndividualNode *temp);
 
+    void swap_position_on_tree(IndividualNode *a, IndividualNode *b);
+
+    void binary_search_tree_delete(IndividualNode *node);
+
     class RedBlackTree
     {
     private:
@@ -71,31 +75,6 @@ namespace RedBlackTree
         IndividualNode *get_random_node();
     };
 
-    // test:
-    // int main()
-    // {
-    //     int n = 7;
-    //     int a[7] = {7, 6, 5, 4, 3, 2, 1};
-
-    //     RedBlackTree tree = RedBlackTree();
-
-    //     Node *t;
-    //     for (int i = 0; i < n; i++)
-    //     {
-
-    //         Node *temp = new Node(a[i]);
-
-    //         if (i == 2)
-    //             t = temp;
-    //         tree.insert(temp);
-    //     }
-
-    //     tree.remove(t);
-
-    //     tree.bfsPrint();
-
-    //     return 0;
-    // }
 }
 
 #endif // SYMMFEA_RED_BLACK_TREE_H
