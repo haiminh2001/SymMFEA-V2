@@ -31,6 +31,85 @@ namespace RedBlackTree
         }
     }
 
+    void swap_position_on_tree(IndividualNode *a, IndividualNode *b)
+    {
+
+        if (b->parent)
+        {
+            if (b->parent->left == b)
+                b->parent->left = a;
+            else
+                b->parent->right = a;
+        }
+        if (a->parent)
+        {
+            if (a->parent->left == a)
+                a->parent->left = b;
+            else
+                a->parent->right = b;
+        }
+        IndividualNode *temp = a->parent;
+        a->parent = b->parent;
+        b->parent = temp;
+
+        temp = a->left;
+        a->left = b->left;
+        if (a->left)
+            a->left->parent = a;
+
+        b->left = temp;
+        if (b->left)
+            b->left->parent = b;
+
+        temp = a->right;
+        a->right = b->right;
+        if (a->right)
+            a->right->parent = a;
+
+        b->right = temp;
+        if (b->right)
+            b->right->parent = b;
+    }
+
+    void binary_search_tree_delete(IndividualNode *node)
+    {
+        if (node == nullptr)
+            return;
+
+        if ((!node->left) && (!node->right))
+        {
+            if (node->parent)
+            {
+                if (node->parent->left == node)
+                    node->parent->left = nullptr;
+                else
+                    node->parent->right = nullptr;
+            }
+            delete node;
+        }
+        else if ((!node->left) || (!node->right))
+        {
+            IndividualNode *child = node->left ? node->left : node->right;
+            if (node->parent)
+            {
+                if (node->parent->left == node)
+                    node->parent->left = child;
+                else
+                    node->parent->right = child;
+            }
+            delete node;
+        }
+
+        else
+        {
+            IndividualNode *successor_node = successor(node);
+            
+            swap_position_on_tree(node, successor_node);
+
+            binary_search_tree_delete(node);
+        }
+    }
+
     IndividualNode *binary_search_tree_insert(IndividualNode *root,
                                               IndividualNode *temp)
     {
