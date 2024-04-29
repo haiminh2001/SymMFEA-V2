@@ -20,7 +20,7 @@ std::vector<std::shared_ptr<Individual>> Population::find_best_fitted_individual
     {
         auto node = subpop->find_best_fitted_individual();
         (*return_objectives).push_back({node->value});
-        bests.push_back(node->individual);
+        bests.push_back(node->data);
     }
     return bests;
 }

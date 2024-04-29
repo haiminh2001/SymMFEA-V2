@@ -2,16 +2,19 @@
 
 namespace RedBlackTree
 {
-    IndividualNode::IndividualNode(std::shared_ptr<Individual> individual) : IndividualNode()
+    template <typename T>
+    IndividualNode<T>::IndividualNode(T data) : IndividualNode()
     {
-        this->individual = individual;
+        this->data = data;
     }
-    IndividualNode *successor(IndividualNode *node)
+
+    template <typename T>
+    IndividualNode<T> *successor(IndividualNode<T> *node)
     {
         if (node->right != nullptr)
         {
             // If the node has a right child, find the leftmost node in the right subtree
-            IndividualNode *current = node->right;
+            IndividualNode<T> *current = node->right;
             while (current->left != nullptr)
             {
                 current = current->left;
@@ -21,7 +24,7 @@ namespace RedBlackTree
         else
         {
             // If the node does not have a right child, find the first ancestor that is a left child
-            IndividualNode *parent = node->parent;
+            IndividualNode<T> *parent = node->parent;
             while (parent != nullptr && node == parent->right)
             {
                 node = parent;
@@ -31,7 +34,8 @@ namespace RedBlackTree
         }
     }
 
-    void swap_position_on_tree(IndividualNode *a, IndividualNode *b)
+    template <typename T>
+    void swap_position_on_tree(IndividualNode<T> *a, IndividualNode<T> *b)
     {
 
         if (b->parent)
@@ -48,7 +52,7 @@ namespace RedBlackTree
             else
                 a->parent->right = b;
         }
-        IndividualNode *temp = a->parent;
+        IndividualNode<T> *temp = a->parent;
         a->parent = b->parent;
         b->parent = temp;
 
@@ -71,7 +75,8 @@ namespace RedBlackTree
             b->right->parent = b;
     }
 
-    void binary_search_tree_delete(IndividualNode *node)
+    template <typename T>
+    void binary_search_tree_delete(IndividualNode<T> *node)
     {
         if (node == nullptr)
             return;
@@ -89,7 +94,7 @@ namespace RedBlackTree
         }
         else if ((!node->left) || (!node->right))
         {
-            IndividualNode *child = node->left ? node->left : node->right;
+            IndividualNode<T> *child = node->left ? node->left : node->right;
             if (node->parent)
             {
                 if (node->parent->left == node)
@@ -102,16 +107,17 @@ namespace RedBlackTree
 
         else
         {
-            IndividualNode *successor_node = successor(node);
-            
+            IndividualNode<T> *successor_node = successor(node);
+
             swap_position_on_tree(node, successor_node);
 
             binary_search_tree_delete(node);
         }
     }
 
-    IndividualNode *binary_search_tree_insert(IndividualNode *root,
-                                              IndividualNode *temp)
+    template <typename T>
+    IndividualNode<T> *binary_search_tree_insert(IndividualNode<T> *root,
+                                                 IndividualNode<T> *temp)
     {
         // If the tree is empty,
         // return a new Node
@@ -134,9 +140,10 @@ namespace RedBlackTree
         return root;
     }
 
-    void RedBlackTree::right_rotate(IndividualNode *temp)
+    template <typename T>
+    void RedBlackTree<T>::right_rotate(IndividualNode<T> *temp)
     {
-        IndividualNode *left = temp->left;
+        IndividualNode<T> *left = temp->left;
         temp->left = left->right;
         if (temp->left)
             temp->left->parent = temp;
@@ -151,9 +158,10 @@ namespace RedBlackTree
         temp->parent = left;
     }
 
-    void RedBlackTree::left_rotate(IndividualNode *temp)
+    template <typename T>
+    void RedBlackTree<T>::left_rotate(IndividualNode<T> *temp)
     {
-        IndividualNode *right = temp->right;
+        IndividualNode<T> *right = temp->right;
         temp->right = right->left;
         if (temp->right)
             temp->right->parent = temp;
@@ -167,10 +175,11 @@ namespace RedBlackTree
         right->left = temp;
     }
 
-    void RedBlackTree::fixup(IndividualNode *pt)
+    template <typename T>
+    void RedBlackTree<T>::fixup(IndividualNode<T> *pt)
     {
-        IndividualNode *parent_pt = nullptr;
-        IndividualNode *grand_parent_pt = nullptr;
+        IndividualNode<T> *parent_pt = nullptr;
+        IndividualNode<T> *grand_parent_pt = nullptr;
 
         while ((pt != root) && (pt->color != NodeColor::BLACK) && (pt->parent->color == NodeColor::RED))
         {
@@ -184,7 +193,7 @@ namespace RedBlackTree
             if (parent_pt == grand_parent_pt->left)
             {
 
-                IndividualNode *uncle_pt = grand_parent_pt->right;
+                IndividualNode<T> *uncle_pt = grand_parent_pt->right;
 
                 /* Case : 1
                     The uncle of pt is also red
@@ -227,7 +236,7 @@ namespace RedBlackTree
                pt */
             else
             {
-                IndividualNode *uncle_pt = grand_parent_pt->left;
+                IndividualNode<T> *uncle_pt = grand_parent_pt->left;
 
                 /*  Case : 1
                     The uncle of pt is also red
@@ -264,10 +273,11 @@ namespace RedBlackTree
         }
     }
 
-    std::string RedBlackTree::bfsPrint()
+    template <typename T>
+    std::string RedBlackTree<T>::bfsPrint()
     {
         std::string result = "";
-        std::queue<IndividualNode *> queue;
+        std::queue<IndividualNode<T> *> queue;
 
         queue.push(root);
 
@@ -297,7 +307,8 @@ namespace RedBlackTree
         return result;
     }
 
-    void RedBlackTree::insert(IndividualNode *node)
+    template <typename T>
+    void RedBlackTree<T>::insert(IndividualNode<T> *node)
     {
         std::lock_guard<std::mutex> lock(this->lock);
         this->root = binary_search_tree_insert(root, node);
@@ -306,14 +317,15 @@ namespace RedBlackTree
         this->num_nodes++;
     }
 
-    void RedBlackTree::remove_smallest_node()
+    template <typename T>
+    void RedBlackTree<T>::remove_smallest_node()
     {
         std::lock_guard<std::mutex> lock(this->lock);
         if (root == nullptr)
             return;
 
-        IndividualNode *node = root;
-        IndividualNode *p;
+        IndividualNode<T> *node = root;
+        IndividualNode<T> *p;
         while (node->left != nullptr)
         {
             p = node;
@@ -324,12 +336,13 @@ namespace RedBlackTree
         this->num_nodes--;
     }
 
-    IndividualNode *RedBlackTree::get_largest_node()
+    template <typename T>
+    IndividualNode<T> *RedBlackTree<T>::get_largest_node()
     {
         if (root == nullptr)
             return nullptr;
 
-        IndividualNode *node = root;
+        IndividualNode<T> *node = root;
 
         while (node->right != nullptr)
         {
@@ -339,12 +352,13 @@ namespace RedBlackTree
     }
 
     // NOTE: may implement a different logic to handle different height of the tree
-    IndividualNode *RedBlackTree::get_random_node()
+    template <typename T>
+    IndividualNode<T> *RedBlackTree<T>::get_random_node()
     {
         if (root == nullptr)
             return nullptr;
 
-        IndividualNode *node = root;
+        IndividualNode<T> *node = root;
         uint8_t direction;
 
         while (true)

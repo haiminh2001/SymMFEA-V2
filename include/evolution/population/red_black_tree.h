@@ -16,11 +16,12 @@ namespace RedBlackTree
         BLACK
     };
 
+    template <typename T>
     class IndividualNode
     {
     private:
     public:
-        std::shared_ptr<Individual> individual;
+        T data;
         float value;
         IndividualNode *parent;
         IndividualNode *left;
@@ -28,35 +29,40 @@ namespace RedBlackTree
         NodeColor color;
 
         IndividualNode() : parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
-        IndividualNode(std::shared_ptr<Individual> individual);
+        IndividualNode(T individual);
     };
 
-    IndividualNode *successor(IndividualNode *node);
+    template <typename T>
+    IndividualNode<T> *successor(IndividualNode<T> *node);
 
     // function to perform BST insertion of a Node
-    IndividualNode *binary_search_tree_insert(IndividualNode *root, IndividualNode *temp);
+    template <typename T>
+    IndividualNode<T> *binary_search_tree_insert(IndividualNode<T> *root, IndividualNode<T> *temp);
 
-    void swap_position_on_tree(IndividualNode *a, IndividualNode *b);
+    template <typename T>
+    void swap_position_on_tree(IndividualNode<T> *a, IndividualNode<T> *b);
 
-    void binary_search_tree_delete(IndividualNode *node);
+    template <typename T>
+    void binary_search_tree_delete(IndividualNode<T> *node);
 
+    template <typename T>
     class RedBlackTree
     {
     private:
         std::mutex lock;
-        IndividualNode *root;
+        IndividualNode<T> *root;
 
         // Function performing right rotation
         // of the passed Node
-        void right_rotate(IndividualNode *temp);
+        void right_rotate(IndividualNode<T> *temp);
 
         // Function performing left rotation
         // of the passed Node
-        void left_rotate(IndividualNode *temp);
+        void left_rotate(IndividualNode<T> *temp);
 
         // This function fixes violations
         // caused by BST insertion
-        void fixup(IndividualNode *pt);
+        void fixup(IndividualNode<T> *pt);
 
     public:
         uint32_t num_nodes;
@@ -64,15 +70,15 @@ namespace RedBlackTree
         std::string bfsPrint();
 
         // Function to insert a node into the Red-Black Tree
-        void insert(IndividualNode *node);
+        void insert(IndividualNode<T> *node);
 
         // Function to remove the smallest node
         void remove_smallest_node();
 
         // Function to get the largest node
-        IndividualNode *get_largest_node();
+        IndividualNode<T> *get_largest_node();
 
-        IndividualNode *get_random_node();
+        IndividualNode<T> *get_random_node();
     };
 
 }
