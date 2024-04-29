@@ -1,9 +1,12 @@
 #include "evolution/reproducer/crossover/subtree.h"
 #include "utils/random_utils.h"
 #include "components/tree/tree_handler.h"
-std::vector<Individual *> SubTreeCrossover::call(Individual *pa, Individual *pb)
+std::vector<std::shared_ptr<Individual>> SubTreeCrossover::call(std::shared_ptr<Individual> pa_, std::shared_ptr<Individual> pb_)
 {
-    std::vector<Individual *> children;
+    auto pa = pa_.get();
+    auto pb = pb_.get();
+
+    std::vector<std::shared_ptr<Individual>> children;
     // select the cut point on the target tree, make sure the child will not be deeper or longer than the maximum values
     int tar_point;
     if (pa->genes->length() < 2)
@@ -54,11 +57,10 @@ std::vector<Individual *> SubTreeCrossover::call(Individual *pa, Individual *pb)
 
     TreeHandler::copy_nodes_with_weight(&child_nodes, &child_weight);
 
-    Individual *child = new Individual(child_nodes, pa->skill_factor);
+    std::shared_ptr<Individual> child = std::make_shared<Individual>(child_nodes, pa->skill_factor);
     child->genes->setWeight(child_weight);
     children.push_back(child);
 
-    //NOTE: add tree's size verification here
-
+    // NOTE: add tree's size verification here
     return children;
 }

@@ -2,9 +2,11 @@
 #define SYMMFEA_RED_BLACK_TREE_H
 #include "evolution/population/individual.h"
 #include "utils/random_utils.h"
+
 #include <iostream>
 #include <queue>
 #include <mutex>
+#include <memory>
 
 namespace RedBlackTree
 {
@@ -18,18 +20,15 @@ namespace RedBlackTree
     {
     private:
     public:
-        Individual *individual;
+        std::shared_ptr<Individual> individual;
         float value;
         IndividualNode *parent;
         IndividualNode *left;
         IndividualNode *right;
         NodeColor color;
 
-        IndividualNode() : individual(nullptr), parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
-        ~IndividualNode()
-        {
-            delete this->individual;
-        }
+        IndividualNode() : parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
+        IndividualNode(std::shared_ptr<Individual> individual);
     };
 
     IndividualNode *successor(IndividualNode *node);

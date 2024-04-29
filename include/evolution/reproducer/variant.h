@@ -13,6 +13,6 @@ public:
     Mutation* mutation;
     Crossover* crossover;
     
-    std::vector<Individual*> call(Population* popluation);
+    std::vector<std::shared_ptr<Individual>> call(Population* popluation);
 };
 #endif // SYMMFEA_VARIANT_H

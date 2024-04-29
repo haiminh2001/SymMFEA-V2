@@ -21,10 +21,10 @@ private:
 public:
     DataView *dataview;
     int skill_factor;
-    void insert_individual(Individual *individual, std::vector<float> objectives);
+    void insert_individual(std::shared_ptr<Individual> individual, std::vector<float> objectives);
     uint32_t current_num_individuals();
     SubPopulation(int num_individual, int skill_factor, DataView *dataview, TreeSpec *tree_spec);
-    Individual *get_random();
+    std::shared_ptr<Individual> get_random();
     RedBlackTree::IndividualNode *find_best_fitted_individual();
     void remove_worst();
 };

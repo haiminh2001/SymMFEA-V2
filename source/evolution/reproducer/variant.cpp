@@ -1,5 +1,5 @@
 #include "evolution/reproducer/variant.h"
-std::vector<Individual*> Variant::call(Population *population)
+std::vector<std::shared_ptr<Individual>> Variant::call(Population *population)
 {
 
     SubPopulation *father;
@@ -15,7 +15,7 @@ std::vector<Individual*> Variant::call(Population *population)
     auto mutation_offsprings_mother = this->mutation->call(mother_ind);
 
     // Concatenate the offspring vectors
-    std::vector<Individual*> offsprings;
+    std::vector<std::shared_ptr<Individual>> offsprings;
     offsprings.insert(offsprings.end(), crossover_offsprings.begin(), crossover_offsprings.end());
     offsprings.insert(offsprings.end(), mutation_offsprings_father.begin(), mutation_offsprings_father.end());
     offsprings.insert(offsprings.end(), mutation_offsprings_mother.begin(), mutation_offsprings_mother.end());

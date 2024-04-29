@@ -8,10 +8,10 @@ GradientOptimizer::GradientOptimizer(float learning_rate)
     this->learning_rate = learning_rate;
 }
 /// return if deltaW is nan or not
-bool GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
+bool GradientOptimizer::backprop(std::shared_ptr<Individual> individual, ArrayXf deltaY)
 {
     
-    auto tree = individual->genes;
+    auto tree = individual.get()->genes;
 
     std::stack<ArrayXf> Stack;
     auto root = tree->nodes[tree->nodes.size() - 1];
@@ -49,10 +49,10 @@ bool GradientOptimizer::backprop(Individual *individual, ArrayXf deltaY)
     return false;
 }
 
-ArrayXf GradientOptimizer::compute_gradient(Individual* individual)
+ArrayXf GradientOptimizer::compute_gradient(std::shared_ptr<Individual> individual)
 {
     
-    auto weightDelta = IndividualInfos::weightDelta.row(individual->central_id);
+    auto weightDelta = IndividualInfos::weightDelta.row(individual.get()->central_id);
     
     // use normalization instead of logarit to prevent overflow
     auto length = sqrt(weightDelta.pow(2).sum());

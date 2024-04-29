@@ -11,6 +11,6 @@ class Mutation
 public:
     Mutation(TreeSpec* tree_spec) : tree_spec(tree_spec) {}; 
     TreeSpec* tree_spec;
-    virtual std::vector<Individual*> call(Individual* parent) = 0;
+    virtual std::vector<std::shared_ptr<Individual>> call(std::shared_ptr<Individual> parent) = 0;
 };
 #endif // SYMMFEA_MUTATION_H

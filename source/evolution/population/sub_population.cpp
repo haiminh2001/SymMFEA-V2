@@ -9,15 +9,13 @@
 
 /// @brief create a node on the red black tree and insert the individual
 /// @param individual
-void SubPopulation::insert_individual(Individual *individual, std::vector<float> objectives)
+void SubPopulation::insert_individual(std::shared_ptr<Individual> individual, std::vector<float> objectives)
 {
-    auto node = new RedBlackTree::IndividualNode();
-    node->individual = individual;
+    auto node = new RedBlackTree::IndividualNode(individual);
     this->individuals->insert(node);
 
-    //NOTE: may reimplement the value of the individual
+    // NOTE: may reimplement the value of the individual
     node->value = objectives[0];
-    
 };
 
 /// @brief init a subpopulation with a number of random individuals
@@ -34,11 +32,12 @@ SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView *dat
     {
         // without training, set the objective to -inf
         // may change this behaviour
-        this->insert_individual(new Individual(skill_factor, tree_spec), {-std::numeric_limits<float>::max()});
+        this->insert_individual(std::make_shared<Individual>(skill_factor, tree_spec),
+                                {-std::numeric_limits<float>::max()});
     }
 }
 
-Individual *SubPopulation::get_random()
+std::shared_ptr<Individual> SubPopulation::get_random()
 {
     return this->individuals->get_random_node()->individual;
 }
@@ -52,6 +51,7 @@ uint32_t SubPopulation::current_num_individuals()
 {
     return this->individuals->num_nodes;
 }
-void SubPopulation::remove_worst(){
+void SubPopulation::remove_worst()
+{
     this->individuals->remove_smallest_node();
 }

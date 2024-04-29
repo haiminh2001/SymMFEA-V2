@@ -3,7 +3,7 @@
 #include "components/data_utils/data_loader.h"
 #include "central_units/individual_infos.h"
 
-float Trainer::fit(Individual *individual, DataView* data)
+float Trainer::fit(std::shared_ptr<Individual> individual, DataView *data)
 {
     auto train_dataloader = DataLoader(data->X_train(), data->y_train(), this->batch_size);
 
@@ -18,11 +18,9 @@ float Trainer::fit(Individual *individual, DataView* data)
     else
         best_objective = std::numeric_limits<float>::max();
 
-
-
     float metric;
-    ArrayXXf* X = new ArrayXXf();
-    ArrayXf* y = new ArrayXf();
+    ArrayXXf *X = new ArrayXXf();
+    ArrayXf *y = new ArrayXf();
 
     bool is_grad_nan = false;
     for (int step = 0; step < this->epochs && num_consecutive_not_better < this->early_stopping && (!is_grad_nan); ++step)
@@ -33,7 +31,7 @@ float Trainer::fit(Individual *individual, DataView* data)
             if (!X)
                 break;
 
-            auto y_hat = individual->forward(*X);
+            auto y_hat = individual.get()->forward(*X);
             auto diff = this->loss->call(*y, y_hat);
             auto deltaY = std::get<0>(diff);
             auto loss = std::get<1>(diff);
@@ -46,9 +44,10 @@ float Trainer::fit(Individual *individual, DataView* data)
             }
         }
 
-        if (is_grad_nan) break;
+        if (is_grad_nan)
+            break;
 
-        auto y_hat = individual->forward(X_val, false);
+        auto y_hat = individual.get()->forward(X_val, false);
         metric = this->metric->call(y_val, y_hat);
 
         // check if metric is getting better
@@ -56,7 +55,7 @@ float Trainer::fit(Individual *individual, DataView* data)
         {
             best_objective = metric;
             num_consecutive_not_better = 0;
-            IndividualInfos::weightCheckpoint.row(individual->central_id) = IndividualInfos::weight.row(individual->central_id);
+            IndividualInfos::weightCheckpoint.row(individual.get()->central_id) = IndividualInfos::weight.row(individual.get()->central_id);
         }
         else
         {
@@ -65,9 +64,10 @@ float Trainer::fit(Individual *individual, DataView* data)
     }
 
     // rollback to best checkpoint
-    IndividualInfos::weight.row(individual->central_id) = IndividualInfos::weightCheckpoint.row(individual->central_id);
+    IndividualInfos::weight.row(individual.get()->central_id) = IndividualInfos::weightCheckpoint.row(individual.get()->central_id);
 
-    if (!this->metric->is_larger_better) best_objective = -best_objective;
+    if (!this->metric->is_larger_better)
+        best_objective = -best_objective;
 
     return best_objective;
 }

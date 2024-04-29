@@ -2,6 +2,10 @@
 
 namespace RedBlackTree
 {
+    IndividualNode::IndividualNode(std::shared_ptr<Individual> individual) : IndividualNode()
+    {
+        this->individual = individual;
+    }
     IndividualNode *successor(IndividualNode *node)
     {
         if (node->right != nullptr)
@@ -221,7 +225,6 @@ namespace RedBlackTree
         this->fixup(node);
         this->root->color = NodeColor::BLACK;
         this->num_nodes++;
-        
     }
 
     void RedBlackTree::remove_smallest_node()
@@ -244,7 +247,6 @@ namespace RedBlackTree
 
     IndividualNode *RedBlackTree::get_largest_node()
     {
-        std::lock_guard<std::mutex> lock(this->lock);
         if (root == nullptr)
             return nullptr;
 
@@ -260,7 +262,6 @@ namespace RedBlackTree
     // NOTE: may implement a different logic to handle different height of the tree
     IndividualNode *RedBlackTree::get_random_node()
     {
-        std::lock_guard<std::mutex> lock(this->lock);
         if (root == nullptr)
             return nullptr;
 
@@ -293,7 +294,7 @@ namespace RedBlackTree
             else
                 node = node->left;
         }
-        
+
         return node;
     }
 
