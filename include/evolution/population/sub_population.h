@@ -26,5 +26,6 @@ public:
     SubPopulation(int num_individual, int skill_factor, DataView *dataview, TreeSpec *tree_spec);
     Individual *get_random();
     RedBlackTree::IndividualNode *find_best_fitted_individual();
+    void remove_worst();
 };
 #endif // SYMMFEA_SUB_POPULATION_H

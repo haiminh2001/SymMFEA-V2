@@ -52,3 +52,6 @@ uint32_t SubPopulation::current_num_individuals()
 {
     return this->individuals->num_nodes;
 }
+void SubPopulation::remove_worst(){
+    this->individuals->remove_smallest_node();
+}

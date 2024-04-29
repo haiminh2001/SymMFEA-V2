@@ -13,8 +13,11 @@ void Worker::run(GA *ga, Population *population)
             auto metric = ga->trainer->fit(offspring, subpop->dataview);
             std::vector<float> objectives = {metric};
             subpop->insert_individual(offspring, objectives);
+            subpop->remove_worst();
         }
+        
         (*ga->quota)-=offsprings.size();
+
     }
 }
 
