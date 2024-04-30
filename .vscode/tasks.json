@@ -3,22 +3,8 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "build",
-			"command": "cmake",
-			"args": [
-				"-S",
-				"${workspaceFolder}",
-				"${workspaceFolder}/source",
-				"-B",
-				"cmake-build-debug"
-			],
-			"group": "build",
-			"problemMatcher": "$gcc"
-		},
-		{
-			"type": "shell",
-			"label": "run_test",
-			"command": "${workspaceFolder}/cmake-tests/SymMFEA_test",
+			"label": "run",
+			"command": "${workspaceFolder}/run.sh",
 			"group": {
 				"kind": "test",
 				"isDefault": true
@@ -26,8 +12,8 @@
 		},
 		{
 			"type": "shell",
-			"label": "build_test",
-			"command": "${workspaceFolder}/build_test.sh",
+			"label": "run_test",
+			"command": "${workspaceFolder}/test.sh",
 			"group": {
 				"kind": "test",
 				"isDefault": true

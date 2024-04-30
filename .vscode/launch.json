@@ -26,18 +26,6 @@
             ],
             "preLaunchTask": "build",
             "miDebuggerPath": "/usr/bin/gdb"
-        },
-        {
-            "name": "CMake:Run Tests",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/cmake-tests/SymMFEA_test",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "preLaunchTask": "build_test",
         }
     ]
 }

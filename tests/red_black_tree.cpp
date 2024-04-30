@@ -14,28 +14,12 @@ protected:
     }
 };
 
-TEST_F(RedBlackTreeTest, InsertAndFindTest) {
+TEST_F(RedBlackTreeTest, InsertTest) {
     
 
     RedBlackTree::IndividualNode<int>* node = new RedBlackTree::IndividualNode<int>(1);
     tree->insert(node);
 
     ASSERT_TRUE(tree->num_nodes == 1);
-    // tree->insert(individual2);
-
-    // ASSERT_TRUE(tree->find(individual1));
-    // ASSERT_TRUE(tree->find(individual2));
 }
 
-// TEST_F(RedBlackTreeTest, RemoveTest) {
-//     int individual1 = 1;
-//     int individual2 = 2;
-
-//     tree->insert(individual1);
-//     tree->insert(individual2);
-
-//     tree->remove(individual1);
-
-//     ASSERT_FALSE(tree->find(individual1));
-//     ASSERT_TRUE(tree->find(individual2));
-// }
