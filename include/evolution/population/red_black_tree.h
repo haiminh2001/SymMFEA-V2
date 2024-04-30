@@ -29,7 +29,7 @@ namespace RedBlackTree
         NodeColor color;
 
         IndividualNode() : parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
-        IndividualNode(T individual) : IndividualNode()
+        IndividualNode(T data) : IndividualNode()
         {
             this->data = data;
         }
@@ -172,7 +172,6 @@ namespace RedBlackTree
     {
     private:
         std::mutex lock;
-        IndividualNode<T> *root;
 
         // Function performing right rotation
         // of the passed Node
@@ -311,6 +310,7 @@ namespace RedBlackTree
         }
 
     public:
+        IndividualNode<T> *root;
         uint32_t num_nodes;
         RedBlackTree() : root(nullptr), num_nodes(0) {}
         std::string bfsPrint()

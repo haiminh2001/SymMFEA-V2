@@ -1,25 +1,51 @@
 #include "gtest/gtest.h"
 #include "evolution/population/red_black_tree.h"
 
-class RedBlackTreeTest : public ::testing::Test {
+#include "iostream"
+
+#define create_node(val) tmp_node= new RedBlackTree::IndividualNode<int>(); tmp_node->value = val;
+class RedBlackTreeTest : public ::testing::Test
+{
 protected:
     RedBlackTree::RedBlackTree<int> *tree;
+    RedBlackTree::IndividualNode<int> *tmp_node;
 
-    void SetUp() override {
+    void SetUp() override
+    {
         tree = new RedBlackTree::RedBlackTree<int>();
     }
 
-    void TearDown() override {
+    void TearDown() override
+    {
         delete tree;
+    }
+
+    void checkRedNodeNotHaveRedChild(RedBlackTree::IndividualNode<int> *node)
+    {
+        if (node == nullptr)
+        {
+            return;
+        }
+        checkRedNodeNotHaveRedChild(node->left);
+
+        // check
+        if (node->color == RedBlackTree::NodeColor::RED)
+        {
+            ASSERT_TRUE(node->left == nullptr || node->left->color == RedBlackTree::NodeColor::BLACK);
+            ASSERT_TRUE(node->right == nullptr || node->right->color == RedBlackTree::NodeColor::BLACK);
+        }
+
+        checkRedNodeNotHaveRedChild(node->right);
     }
 };
 
-TEST_F(RedBlackTreeTest, InsertTest) {
-    
+TEST_F(RedBlackTreeTest, InsertTest)
+{
 
-    RedBlackTree::IndividualNode<int>* node = new RedBlackTree::IndividualNode<int>(1);
-    tree->insert(node);
-
-    ASSERT_TRUE(tree->num_nodes == 1);
+    for (int i = 0; i < 50; ++i){
+        int randomValue = rand() % 100;
+        create_node(randomValue);
+        tree->insert(tmp_node);
+        checkRedNodeNotHaveRedChild(tree->root);
+    }
 }
-

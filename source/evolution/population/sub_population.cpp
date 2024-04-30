@@ -12,10 +12,9 @@
 void SubPopulation::insert_individual(std::shared_ptr<Individual> individual, std::vector<float> objectives)
 {
     auto node = new RedBlackTree::IndividualNode<std::shared_ptr<Individual>>(individual);
-    this->individuals->insert(node);
-
     // NOTE: may reimplement the value of the individual
     node->value = objectives[0];
+    this->individuals->insert(node);
 };
 
 /// @brief init a subpopulation with a number of random individuals
