@@ -15,7 +15,7 @@ using Eigen::ArrayXXf;
 int main()
 {
     string filename = "/mnt/d/Workspace/SymMFEA/datasets/dataset_2.csv";
-    auto data = readCSV(filename);
+    Eigen::ArrayXXf data = readCSV(filename);
     Eigen::ArrayXf ground_truth(data.rows());
     ground_truth << data(Eigen::all, data.cols() - 1);
 
