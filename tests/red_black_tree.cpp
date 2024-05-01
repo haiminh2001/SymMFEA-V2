@@ -39,6 +39,28 @@ protected:
 
         checkRedNodeNotHaveRedChild(node->right);
     }
+
+    void checkParent(RedBlackTree::IndividualNode<int> *node)
+    {
+        if (node == nullptr)
+        {
+            return;
+        }
+
+        checkParent(node->left);
+
+        // check
+        if (node == this->tree->root)
+        {
+            ASSERT_TRUE(node->parent == nullptr);
+        }
+        else
+        {
+            ASSERT_TRUE(node->parent != nullptr);
+        }
+
+        checkParent(node->right);
+    }
 };
 
 TEST_F(RedBlackTreeTest, RotateLeft)
@@ -102,6 +124,13 @@ TEST_F(RedBlackTreeTest, RotateLeft)
     ASSERT_TRUE(tree->root->left == right_child_of_rotate_point) << "Left of root value: " << tree->root->left->value << "; which is should be: " << right_child_of_rotate_point->value;
     ASSERT_TRUE(right_child_of_rotate_point->left == rotate_point);
     ASSERT_TRUE(rotate_point->right == left_child_of_right_child_of_rotate_point) << "Right of rotate point value: " << rotate_point->right->value << "; which is should be: " << left_child_of_right_child_of_rotate_point->value;
+
+    //check root when it is rotated to another node
+    tree->left_rotate(tree->root);
+    ASSERT_TRUE(tree->root->value == 15);
+
+    checkParent(tree->root);
+
 }
 
 TEST_F(RedBlackTreeTest, RotateRight)
@@ -152,7 +181,6 @@ TEST_F(RedBlackTreeTest, RotateRight)
     tmp_node->parent = tree->root->right;
     left_child_of_rotate_point = tmp_node;
 
-
     create_node(6);
     tree->root->right->left->left = tmp_node;
     tmp_node->parent = tree->root->right->left;
@@ -171,6 +199,12 @@ TEST_F(RedBlackTreeTest, RotateRight)
     ASSERT_TRUE(tree->root->right == left_child_of_rotate_point) << "Right of root value: " << tree->root->right->value << "; which is should be: " << left_child_of_rotate_point->value;
     ASSERT_TRUE(left_child_of_rotate_point->right == rotate_point);
     ASSERT_TRUE(rotate_point->left == right_child_of_left_child_of_rotate_point) << "Left of rotate point value: " << rotate_point->left->value << "; which is should be: " << right_child_of_left_child_of_rotate_point->value;
+
+    //check root when it is rotated to another node
+    tree->right_rotate(tree->root);
+    ASSERT_TRUE(tree->root->value == 5);
+
+    checkParent(tree->root);
 }
 
 TEST_F(RedBlackTreeTest, InsertTest)
