@@ -28,6 +28,21 @@ namespace RedBlackTree
         IndividualNode *right;
         NodeColor color;
 
+        bool is_left_child()
+        {
+            if (this->parent == nullptr)
+                return false;
+
+            return this->parent->left == this;
+        }
+        bool is_right_child()
+        {
+            if (this->parent == nullptr)
+                return false;
+
+            return this->parent->right == this;
+        }
+
         std::string color_string()
         {
             return this->color == NodeColor::RED ? "RED" : "BLACK";
@@ -178,6 +193,7 @@ namespace RedBlackTree
     private:
         std::mutex lock;
 
+    public:
         // Function performing right rotation of the subtree with the root node is passed
         void right_rotate(IndividualNode<T> *temp)
         {
@@ -200,17 +216,34 @@ namespace RedBlackTree
         void left_rotate(IndividualNode<T> *temp)
         {
             IndividualNode<T> *right = temp->right;
-            temp->right = right->left;
-            if (temp->right)
-                temp->right->parent = temp;
+
+            assert(right != nullptr && "Invalid left rotation, no right child!!");
+
+            // attach the right node to the parent of the current node
             right->parent = temp->parent;
-            if (!temp->parent)
+            if (temp->parent == nullptr)
+            {
                 root = right;
-            else if (temp == temp->parent->left)
-                temp->parent->left = right;
+            }
             else
-                temp->parent->right = right;
+            {
+                if (temp->is_left_child())
+                {
+                    temp->parent->left = right;
+                }
+                else
+                {
+                    temp->parent->right = right;
+                }
+            }
+            // attach the left of the right child to the right of the temp node
+            temp->right = right->left;
+            
+            // attach the temp node as the left child of the right node
             right->left = temp;
+            temp->parent = right;
+
+            
         }
 
         // This function fixes violations
@@ -219,55 +252,20 @@ namespace RedBlackTree
         {
             IndividualNode<T> *parent_pt = nullptr;
             IndividualNode<T> *grand_parent_pt = nullptr;
+            IndividualNode<T> *uncle_pt = nullptr;
 
-            while ((pt != root) && (pt->color != NodeColor::BLACK) && (pt->parent->color == NodeColor::RED))
+            while ((pt != this->root) && (pt->parent->color == NodeColor::RED))
             {
                 parent_pt = pt->parent;
                 grand_parent_pt = pt->parent->parent;
-
+                uncle_pt = (parent_pt == grand_parent_pt->left) ? grand_parent_pt->right : grand_parent_pt->left;
+                // not implement yet
+                break;
                 /*  Case : A
-                     Parent of pt is left child
-                     of Grand-parent of
-                   pt */
+                Parent of pt is left child
+                of Grand-parent of pt */
                 if (parent_pt == grand_parent_pt->left)
                 {
-
-                    IndividualNode<T> *uncle_pt = grand_parent_pt->right;
-
-                    /* Case : 1
-                        The uncle of pt is also red
-                        Only Recoloring required */
-                    if (uncle_pt != nullptr && uncle_pt->color == NodeColor::RED)
-                    {
-                        grand_parent_pt->color = NodeColor::RED;
-                        parent_pt->color = NodeColor::BLACK;
-                        uncle_pt->color = NodeColor::BLACK;
-                        pt = grand_parent_pt;
-                    }
-
-                    else
-                    {
-
-                        /* Case : 2-sidequest
-                        pt is right child of its parent
-                        Left-rotation required */
-                        if (pt == parent_pt->right)
-                        {
-                            left_rotate(parent_pt);
-                            pt = parent_pt;
-                            parent_pt = pt->parent;
-
-                        }
-
-                        /* Case : 2
-                        pt is left child of its parent
-                        Right-rotation required */
-                        right_rotate(grand_parent_pt);
-                        auto t = parent_pt->color;
-                        parent_pt->color = grand_parent_pt->color;
-                        grand_parent_pt->color = t;
-                        pt = parent_pt;
-                    }
                 }
 
                 /* Case : B
@@ -276,44 +274,11 @@ namespace RedBlackTree
                    pt */
                 else
                 {
-                    IndividualNode<T> *uncle_pt = grand_parent_pt->left;
-
-                    /*  Case : 1
-                        The uncle of pt is also red
-                        Only Recoloring required */
-                    if ((uncle_pt != nullptr) && (uncle_pt->color == NodeColor::RED))
-                    {
-                        grand_parent_pt->color = NodeColor::RED;
-                        parent_pt->color = NodeColor::BLACK;
-                        uncle_pt->color = NodeColor::BLACK;
-                        pt = grand_parent_pt;
-                    }
-                    else
-                    {
-                        /* Case : 2-sidequest
-                           pt is left child of its parent
-                           Right-rotation required */
-                        if (pt == parent_pt->left)
-                        {
-                            right_rotate(parent_pt);
-                            pt = parent_pt;
-                            parent_pt = pt->parent;
-                        }
-
-                        /* Case : 2
-                             pt is right child of its parent
-                             Left-rotation required */
-                        left_rotate(grand_parent_pt);
-                        auto t = parent_pt->color;
-                        parent_pt->color = grand_parent_pt->color;
-                        grand_parent_pt->color = t;
-                        pt = parent_pt;
-                    }
                 }
             }
+            this->root->color = NodeColor::BLACK;
         }
 
-    public:
         IndividualNode<T> *root;
         uint32_t num_nodes;
         RedBlackTree() : root(nullptr), num_nodes(0) {}
@@ -356,7 +321,6 @@ namespace RedBlackTree
             std::lock_guard<std::mutex> lock(this->lock);
             this->root = binary_search_tree_insert(root, node);
             this->fixup(node);
-            this->root->color = NodeColor::BLACK;
             this->num_nodes++;
         }
 
