@@ -97,7 +97,7 @@ namespace RedBlackTree
             root->left = binary_search_tree_insert(root->left, temp);
             root->left->parent = root;
         }
-        else if (temp->value > root->value)
+        else
         {
             root->right = binary_search_tree_insert(root->right, temp);
             root->right->parent = root;
