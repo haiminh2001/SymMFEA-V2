@@ -28,6 +28,11 @@ namespace RedBlackTree
         IndividualNode *right;
         NodeColor color;
 
+        std::string color_string()
+        {
+            return this->color == NodeColor::RED ? "RED" : "BLACK";
+        }
+
         IndividualNode() : parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
         IndividualNode(T data) : IndividualNode()
         {
@@ -173,8 +178,7 @@ namespace RedBlackTree
     private:
         std::mutex lock;
 
-        // Function performing right rotation
-        // of the passed Node
+        // Function performing right rotation of the subtree with the root node is passed
         void right_rotate(IndividualNode<T> *temp)
         {
             IndividualNode<T> *left = temp->left;
@@ -192,8 +196,7 @@ namespace RedBlackTree
             temp->parent = left;
         }
 
-        // Function performing left rotation
-        // of the passed Node
+        // Function performing right rotation of the subtree with the root node is passed
         void left_rotate(IndividualNode<T> *temp)
         {
             IndividualNode<T> *right = temp->right;
@@ -245,19 +248,20 @@ namespace RedBlackTree
                     else
                     {
 
-                        /* Case : 2
-                             pt is right child of its parent
-                             Left-rotation required */
+                        /* Case : 2-sidequest
+                        pt is right child of its parent
+                        Left-rotation required */
                         if (pt == parent_pt->right)
                         {
                             left_rotate(parent_pt);
                             pt = parent_pt;
                             parent_pt = pt->parent;
+
                         }
 
-                        /* Case : 3
-                             pt is left child of its parent
-                             Right-rotation required */
+                        /* Case : 2
+                        pt is left child of its parent
+                        Right-rotation required */
                         right_rotate(grand_parent_pt);
                         auto t = parent_pt->color;
                         parent_pt->color = grand_parent_pt->color;
@@ -286,7 +290,7 @@ namespace RedBlackTree
                     }
                     else
                     {
-                        /* Case : 2
+                        /* Case : 2-sidequest
                            pt is left child of its parent
                            Right-rotation required */
                         if (pt == parent_pt->left)
@@ -296,7 +300,7 @@ namespace RedBlackTree
                             parent_pt = pt->parent;
                         }
 
-                        /* Case : 3
+                        /* Case : 2
                              pt is right child of its parent
                              Left-rotation required */
                         left_rotate(grand_parent_pt);
@@ -328,17 +332,17 @@ namespace RedBlackTree
                 if (current_node->left || current_node->right)
                 {
 
-                    result += std::to_string(current_node->value) + ": ";
+                    result += std::to_string(current_node->value) + "(" + current_node->color_string() + ") " + ": ";
                     if (current_node->left)
                     {
                         queue.push(current_node->left);
-                        result += std::to_string(current_node->left->value) + " ";
+                        result += std::to_string(current_node->left->value) + "(" + current_node->left->color_string() + ") " + " ";
                     }
                     if (current_node->right)
                     {
                         queue.push(current_node->right);
 
-                        result += std::to_string(current_node->right->value) + " ";
+                        result += std::to_string(current_node->right->value) + "(" + current_node->right->color_string() + ") " + " ";
                     }
                     result += '\n';
                 }

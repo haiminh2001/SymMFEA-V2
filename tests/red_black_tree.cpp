@@ -46,6 +46,7 @@ TEST_F(RedBlackTreeTest, InsertTest)
         int randomValue = rand() % 100;
         create_node(randomValue);
         tree->insert(tmp_node);
+        std::cout<<"Step"<< i<<":\n"<<tree->bfsPrint();
         checkRedNodeNotHaveRedChild(tree->root);
     }
 }
