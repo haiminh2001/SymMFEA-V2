@@ -1,7 +1,9 @@
 #include "gtest/gtest.h"
 #include "evolution/population/red_black_tree.h"
 
-#include "iostream"
+#include <iostream>
+#include <stack>
+#include <tuple>
 
 #define create_node(val)                                \
     tmp_node = new RedBlackTree::IndividualNode<int>(); \
@@ -60,6 +62,35 @@ protected:
         }
 
         checkParent(node->right);
+    }
+    void checkBlackPathLength()
+    {
+        int any_leaf_black_path_length = -1;
+        std::stack<std::tuple<RedBlackTree::IndividualNode<int> *, int>> Stack;
+
+        Stack.push(std::make_tuple(tree->root, 1));
+
+        while (!Stack.empty())
+        {
+            auto [node, black_path_length] = Stack.top();
+            Stack.pop();
+
+            if (node == nullptr)
+            {
+                // leaf node
+                if (any_leaf_black_path_length == -1)
+                    any_leaf_black_path_length = black_path_length;
+                else
+                    ASSERT_EQ(black_path_length, any_leaf_black_path_length );
+            }
+
+            else
+            {
+                int current_black_path_length = black_path_length + (node->color == RedBlackTree::NodeColor::BLACK ? 1 : 0);
+                Stack.push(std::make_tuple(node->left, current_black_path_length));
+                Stack.push(std::make_tuple(node->right, current_black_path_length));
+            }
+        }
     }
 };
 
@@ -125,12 +156,11 @@ TEST_F(RedBlackTreeTest, RotateLeft)
     ASSERT_TRUE(right_child_of_rotate_point->left == rotate_point);
     ASSERT_TRUE(rotate_point->right == left_child_of_right_child_of_rotate_point) << "Right of rotate point value: " << rotate_point->right->value << "; which is should be: " << left_child_of_right_child_of_rotate_point->value;
 
-    //check root when it is rotated to another node
+    // check root when it is rotated to another node
     tree->left_rotate(tree->root);
     ASSERT_TRUE(tree->root->value == 15);
 
     checkParent(tree->root);
-
 }
 
 TEST_F(RedBlackTreeTest, RotateRight)
@@ -200,7 +230,7 @@ TEST_F(RedBlackTreeTest, RotateRight)
     ASSERT_TRUE(left_child_of_rotate_point->right == rotate_point);
     ASSERT_TRUE(rotate_point->left == right_child_of_left_child_of_rotate_point) << "Left of rotate point value: " << rotate_point->left->value << "; which is should be: " << right_child_of_left_child_of_rotate_point->value;
 
-    //check root when it is rotated to another node
+    // check root when it is rotated to another node
     tree->right_rotate(tree->root);
     ASSERT_TRUE(tree->root->value == 5);
 
@@ -218,5 +248,6 @@ TEST_F(RedBlackTreeTest, InsertTest)
         std::cout << "Step" << i << ":\n"
                   << tree->bfsPrint();
         checkRedNodeNotHaveRedChild(tree->root);
+        this->checkBlackPathLength();
     }
 }
