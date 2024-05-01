@@ -198,19 +198,35 @@ namespace RedBlackTree
         void right_rotate(IndividualNode<T> *temp)
         {
             IndividualNode<T> *left = temp->left;
-            temp->left = left->right;
-            if (temp->left)
-                temp->left->parent = temp;
+
+            assert(left != nullptr && "Invalid right rotation, no left child!!");
+
+            // attach the left node to the parent of the current node
             left->parent = temp->parent;
-            if (!temp->parent)
+            if (temp->parent == nullptr)
+            {
                 root = left;
-            else if (temp == temp->parent->left)
-                temp->parent->left = left;
+            }
             else
-                temp->parent->right = left;
+            {
+                if (temp->is_left_child())
+                {
+                    temp->parent->left = left;
+                }
+                else
+                {
+                    temp->parent->right = left;
+                }
+            }
+            // attach the right of the left child to the left of the temp node
+            temp->left = left->right;
+            
+            // attach the temp node as the right child of the left node
             left->right = temp;
             temp->parent = left;
+            
         }
+
 
         // Function performing right rotation of the subtree with the root node is passed
         void left_rotate(IndividualNode<T> *temp)

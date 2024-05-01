@@ -41,7 +41,7 @@ protected:
     }
 };
 
-TEST_F(RedBlackTreeTest, RotateLeftInsert)
+TEST_F(RedBlackTreeTest, RotateLeft)
 {
 
     /*
@@ -102,7 +102,75 @@ TEST_F(RedBlackTreeTest, RotateLeftInsert)
     ASSERT_TRUE(tree->root->left == right_child_of_rotate_point) << "Left of root value: " << tree->root->left->value << "; which is should be: " << right_child_of_rotate_point->value;
     ASSERT_TRUE(right_child_of_rotate_point->left == rotate_point);
     ASSERT_TRUE(rotate_point->right == left_child_of_right_child_of_rotate_point) << "Right of rotate point value: " << rotate_point->right->value << "; which is should be: " << left_child_of_right_child_of_rotate_point->value;
-    
+}
+
+TEST_F(RedBlackTreeTest, RotateRight)
+{
+
+    /*
+        * Test rotate right
+        *     10
+        *    /  \
+        *   5   15
+        *  /    / \
+        * 3    7  20
+        *     / \
+        *    6   8
+        *
+        * After rotate right
+        *       10
+        *      /  \
+        *     5   7
+        *    /   / \
+        *   3   6  15
+        *         / \
+        *        8  20
+
+    */
+
+    create_node(10);
+    tree->root = tmp_node;
+    RedBlackTree::IndividualNode<int> *rotate_point;
+    RedBlackTree::IndividualNode<int> *left_child_of_rotate_point;
+    RedBlackTree::IndividualNode<int> *right_child_of_left_child_of_rotate_point;
+
+    create_node(5);
+    tree->root->left = tmp_node;
+    tmp_node->parent = tree->root;
+
+    create_node(15);
+    tree->root->right = tmp_node;
+    tmp_node->parent = tree->root;
+    rotate_point = tmp_node;
+
+    create_node(3);
+    tree->root->left->left = tmp_node;
+    tmp_node->parent = tree->root->left;
+
+    create_node(7);
+    tree->root->right->left = tmp_node;
+    tmp_node->parent = tree->root->right;
+    left_child_of_rotate_point = tmp_node;
+
+
+    create_node(6);
+    tree->root->right->left->left = tmp_node;
+    tmp_node->parent = tree->root->right->left;
+
+    create_node(8);
+    tree->root->right->left->right = tmp_node;
+    tmp_node->parent = tree->root->right->left;
+    right_child_of_left_child_of_rotate_point = tmp_node;
+
+    create_node(20);
+    tree->root->right->right = tmp_node;
+    tmp_node->parent = tree->root->right;
+
+    tree->right_rotate(rotate_point);
+
+    ASSERT_TRUE(tree->root->right == left_child_of_rotate_point) << "Right of root value: " << tree->root->right->value << "; which is should be: " << left_child_of_rotate_point->value;
+    ASSERT_TRUE(left_child_of_rotate_point->right == rotate_point);
+    ASSERT_TRUE(rotate_point->left == right_child_of_left_child_of_rotate_point) << "Left of rotate point value: " << rotate_point->left->value << "; which is should be: " << right_child_of_left_child_of_rotate_point->value;
 }
 
 TEST_F(RedBlackTreeTest, InsertTest)
