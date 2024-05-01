@@ -48,6 +48,7 @@ namespace RedBlackTree
             return this->color == NodeColor::RED ? "RED" : "BLACK";
         }
 
+        // Default color of a new node is red
         IndividualNode() : parent(nullptr), left(nullptr), right(nullptr), color(NodeColor::RED) {}
         IndividualNode(T data) : IndividualNode()
         {
@@ -195,101 +196,148 @@ namespace RedBlackTree
 
     public:
         // Function performing right rotation of the subtree with the root node is passed
-        void right_rotate(IndividualNode<T> *temp)
+        void right_rotate(IndividualNode<T> *rotation_point)
         {
-            IndividualNode<T> *left = temp->left;
+            IndividualNode<T> *left = rotation_point->left;
 
             assert(left != nullptr && "Invalid right rotation, no left child!!");
 
             // attach the left node to the parent of the current node
-            left->parent = temp->parent;
-            if (temp->parent == nullptr)
+            left->parent = rotation_point->parent;
+            if (rotation_point == this->root)
             {
                 root = left;
             }
             else
             {
-                if (temp->is_left_child())
+                if (rotation_point->is_left_child())
                 {
-                    temp->parent->left = left;
+                    rotation_point->parent->left = left;
                 }
                 else
                 {
-                    temp->parent->right = left;
+                    rotation_point->parent->right = left;
                 }
             }
             // attach the right of the left child to the left of the temp node
-            temp->left = left->right;
-            
+            rotation_point->left = left->right;
+
             // attach the temp node as the right child of the left node
-            left->right = temp;
-            temp->parent = left;
-            
+            left->right = rotation_point;
+            rotation_point->parent = left;
         }
 
-
         // Function performing right rotation of the subtree with the root node is passed
-        void left_rotate(IndividualNode<T> *temp)
+        void left_rotate(IndividualNode<T> *rotation_point)
         {
-            IndividualNode<T> *right = temp->right;
+            IndividualNode<T> *right = rotation_point->right;
 
             assert(right != nullptr && "Invalid left rotation, no right child!!");
 
             // attach the right node to the parent of the current node
-            right->parent = temp->parent;
-            if (temp->parent == nullptr)
+            right->parent = rotation_point->parent;
+            if (rotation_point == this->root)
             {
                 root = right;
             }
             else
             {
-                if (temp->is_left_child())
+                if (rotation_point->is_left_child())
                 {
-                    temp->parent->left = right;
+                    rotation_point->parent->left = right;
                 }
                 else
                 {
-                    temp->parent->right = right;
+                    rotation_point->parent->right = right;
                 }
             }
             // attach the left of the right child to the right of the temp node
-            temp->right = right->left;
-            
-            // attach the temp node as the left child of the right node
-            right->left = temp;
-            temp->parent = right;
+            rotation_point->right = right->left;
 
-            
+            // attach the temp node as the left child of the right node
+            right->left = rotation_point;
+            rotation_point->parent = right;
         }
 
         // This function fixes violations
         // caused by BST insertion
-        void fixup(IndividualNode<T> *pt)
+        // reference: https://www.programiz.com/dsa/insertion-in-a-red-black-tree
+        void fixup_insert_violations(IndividualNode<T> *new_node)
         {
-            IndividualNode<T> *parent_pt = nullptr;
-            IndividualNode<T> *grand_parent_pt = nullptr;
-            IndividualNode<T> *uncle_pt = nullptr;
+            IndividualNode<T> *parent = nullptr;
+            IndividualNode<T> *grandparent = nullptr;
+            IndividualNode<T> *uncle = nullptr;
 
-            while ((pt != this->root) && (pt->parent->color == NodeColor::RED))
+            while ((new_node != this->root) && (new_node->parent->color == NodeColor::RED))
             {
-                parent_pt = pt->parent;
-                grand_parent_pt = pt->parent->parent;
-                uncle_pt = (parent_pt == grand_parent_pt->left) ? grand_parent_pt->right : grand_parent_pt->left;
-                // not implement yet
-                break;
+                parent = new_node->parent;
+                grandparent = new_node->parent->parent;
+                uncle = (parent == grandparent->left) ? grandparent->right : grandparent->left;
+
                 /*  Case : A
-                Parent of pt is left child
-                of Grand-parent of pt */
-                if (parent_pt == grand_parent_pt->left)
+                Parent of new_node is left child
+                of Grand-parent of new_node */
+                if (parent->is_left_child())
                 {
+                    /* Case-I*/
+                    if (uncle != nullptr && uncle->color == NodeColor::RED)
+                    {
+                        grandparent->color = NodeColor::RED;
+                        parent->color = NodeColor::BLACK;
+                        uncle->color = NodeColor::BLACK;
+                        new_node = grandparent;
+                    }
+
+                    else
+                    {
+                        /* Case-II*/
+                        if (new_node->is_right_child())
+                        {
+                            new_node = parent;
+                            this->left_rotate(new_node);
+                        }
+
+                        /* Case-III */
+                        else
+                        {
+                            parent->color = NodeColor::BLACK;
+                            grandparent->color = NodeColor::RED;
+                            this->right_rotate(grandparent);
+                        }
+                    }
                 }
 
                 /* Case : B
-                     Parent of pt is right
-                     child of Grand-parent of
-                   pt */
+                Parent of new_node is right
+                child of Grand-parent of
+                new_node */
                 else
                 {
+                    /* Case-I*/
+                    if (uncle != nullptr && uncle->color == NodeColor::RED)
+                    {
+                        grandparent->color = NodeColor::RED;
+                        parent->color = NodeColor::BLACK;
+                        uncle->color = NodeColor::BLACK;
+                        new_node = grandparent;
+                    }
+                    else
+                    {
+                        /* Case-II*/
+                        if (new_node->is_left_child())
+                        {
+                            new_node = parent;
+                            this->right_rotate(new_node);
+                        }
+
+                        /* Case-III */
+                        else
+                        {
+                            parent->color = NodeColor::BLACK;
+                            grandparent->color = NodeColor::RED;
+                            this->left_rotate(grandparent);
+                        }
+                    }
                 }
             }
             this->root->color = NodeColor::BLACK;
@@ -336,7 +384,7 @@ namespace RedBlackTree
         {
             std::lock_guard<std::mutex> lock(this->lock);
             this->root = binary_search_tree_insert(root, node);
-            this->fixup(node);
+            this->fixup_insert_violations(node);
             this->num_nodes++;
         }
 
