@@ -81,7 +81,7 @@ protected:
                 if (any_leaf_black_path_length == -1)
                     any_leaf_black_path_length = black_path_length;
                 else
-                    ASSERT_EQ(black_path_length, any_leaf_black_path_length );
+                    ASSERT_EQ(black_path_length, any_leaf_black_path_length);
             }
 
             else
@@ -91,6 +91,22 @@ protected:
                 Stack.push(std::make_tuple(node->right, current_black_path_length));
             }
         }
+    }
+    void checkIsBinarySeachTree(RedBlackTree::IndividualNode<int> *node)
+    {
+        if (node == nullptr)
+        {
+            return;
+        }
+        checkIsBinarySeachTree(node->left);
+
+        // since the value is float, equal is not deterministic
+        if (node->left != nullptr)
+            ASSERT_GE(node->value, node->left->value);
+        if (node->right != nullptr)
+            ASSERT_GE(node->right->value, node->value);
+
+        checkIsBinarySeachTree(node->right);
     }
 };
 
@@ -160,7 +176,8 @@ TEST_F(RedBlackTreeTest, RotateLeft)
     tree->left_rotate(tree->root);
     ASSERT_TRUE(tree->root->value == 15);
 
-    checkParent(tree->root);
+    this->checkParent(tree->root);
+    this->checkIsBinarySeachTree(tree->root);
 }
 
 TEST_F(RedBlackTreeTest, RotateRight)
@@ -172,14 +189,14 @@ TEST_F(RedBlackTreeTest, RotateRight)
         *    /  \
         *   5   15
         *  /    / \
-        * 3    7  20
+        * 3    12  20
         *     / \
         *    6   8
         *
         * After rotate right
         *       10
         *      /  \
-        *     5   7
+        *     5   12
         *    /   / \
         *   3   6  15
         *         / \
@@ -206,7 +223,7 @@ TEST_F(RedBlackTreeTest, RotateRight)
     tree->root->left->left = tmp_node;
     tmp_node->parent = tree->root->left;
 
-    create_node(7);
+    create_node(12);
     tree->root->right->left = tmp_node;
     tmp_node->parent = tree->root->right;
     left_child_of_rotate_point = tmp_node;
@@ -234,7 +251,8 @@ TEST_F(RedBlackTreeTest, RotateRight)
     tree->right_rotate(tree->root);
     ASSERT_TRUE(tree->root->value == 5);
 
-    checkParent(tree->root);
+    this->checkParent(tree->root);
+    this->checkIsBinarySeachTree(tree->root);
 }
 
 TEST_F(RedBlackTreeTest, InsertTest)
@@ -245,9 +263,99 @@ TEST_F(RedBlackTreeTest, InsertTest)
         int randomValue = rand() % 100;
         create_node(randomValue);
         tree->insert(tmp_node);
-        std::cout << "Step" << i << ":\n"
-                  << tree->bfsPrint();
-        checkRedNodeNotHaveRedChild(tree->root);
+        this->checkRedNodeNotHaveRedChild(tree->root);
         this->checkBlackPathLength();
+        this->checkIsBinarySeachTree(tree->root);
     }
+}
+
+TEST_F(RedBlackTreeTest, BinaryTreeDeleteTest)
+{
+    /*
+        * Test binary tree delete
+        *     10
+        *    /  \
+        *   5   15
+        *  / \    \
+        * 3   7    20
+        *    / \   /
+        *   6   8  17
+        *
+        * After delete 7
+        *       10
+        *      /  \
+        *     5   15
+        *    / \    \
+        *   3   8    20
+        *      /    /
+        *     6    17
+        *
+        * After delete 10
+        *       15
+        *      / \
+        *     5   20
+        *    / \  /
+        *   3  8  17  
+        *
+
+        */
+    
+    create_node(10);
+    tree->root = tmp_node;
+    auto node10 = tmp_node;
+
+    create_node(5);
+    tree->root->left = tmp_node;
+    tmp_node->parent = tree->root;
+
+    create_node(15);
+    tree->root->right = tmp_node;
+    tmp_node->parent = tree->root;
+
+    create_node(3);
+    tree->root->left->left = tmp_node;
+    tmp_node->parent = tree->root->left;
+
+    create_node(7);
+    tree->root->left->right = tmp_node;
+    tmp_node->parent = tree->root->left;
+    auto node7 = tmp_node;
+
+    create_node(20);
+    tree->root->right->right = tmp_node;
+    tmp_node->parent = tree->root->right;
+
+    create_node(6);
+    tree->root->left->right->left = tmp_node;
+    tmp_node->parent = tree->root->left->right;
+
+    create_node(8);
+    tree->root->left->right->right = tmp_node;
+    tmp_node->parent = tree->root->left->right;
+
+    create_node(17);
+    tree->root->right->right->left = tmp_node;
+    tmp_node->parent = tree->root->right->right;
+
+    // test the test itself :))
+    this->checkIsBinarySeachTree(tree->root);
+
+    // remove 7
+    tree->binary_search_tree_delete(node7);
+    std::cout<<"After remove 7\n";
+    std::cout<<tree->bfsPrint()<<"\n";
+
+    this->checkParent(tree->root);
+    this->checkIsBinarySeachTree(tree->root);
+
+    
+
+    // remove 10
+    tree->binary_search_tree_delete(node10);
+    std::cout<<"After remove 10\n";
+    std::cout<<tree->bfsPrint()<<"\n";
+
+    this->checkParent(tree->root);
+    this->checkIsBinarySeachTree(tree->root);
+    
 }

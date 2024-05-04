@@ -3,7 +3,6 @@
 #include "evolution/population/individual.h"
 #include "utils/random_utils.h"
 
-#include <iostream>
 #include <queue>
 #include <mutex>
 #include <memory>
@@ -72,13 +71,12 @@ namespace RedBlackTree
         else
         {
             // If the node does not have a right child, find the first ancestor that is a left child
-            IndividualNode<T> *parent = node->parent;
-            while (parent != nullptr && node == parent->right)
+            IndividualNode<T> *ancestor = node->parent;
+            while ((ancestor != nullptr) && ancestor->is_right_child())
             {
-                node = parent;
-                parent = parent->parent;
+                ancestor = ancestor->parent;
             }
-            return parent;
+            return ancestor;
         }
     }
 
@@ -108,93 +106,123 @@ namespace RedBlackTree
     }
 
     template <typename T>
-    void swap_position_on_tree(IndividualNode<T> *a, IndividualNode<T> *b)
-    {
-
-        if (b->parent)
-        {
-            if (b->parent->left == b)
-                b->parent->left = a;
-            else
-                b->parent->right = a;
-        }
-        if (a->parent)
-        {
-            if (a->parent->left == a)
-                a->parent->left = b;
-            else
-                a->parent->right = b;
-        }
-        IndividualNode<T> *temp = a->parent;
-        a->parent = b->parent;
-        b->parent = temp;
-
-        temp = a->left;
-        a->left = b->left;
-        if (a->left)
-            a->left->parent = a;
-
-        b->left = temp;
-        if (b->left)
-            b->left->parent = b;
-
-        temp = a->right;
-        a->right = b->right;
-        if (a->right)
-            a->right->parent = a;
-
-        b->right = temp;
-        if (b->right)
-            b->right->parent = b;
-    }
-
-    template <typename T>
-    void binary_search_tree_delete(IndividualNode<T> *node)
-    {
-        if (node == nullptr)
-            return;
-
-        if ((!node->left) && (!node->right))
-        {
-            if (node->parent)
-            {
-                if (node->parent->left == node)
-                    node->parent->left = nullptr;
-                else
-                    node->parent->right = nullptr;
-            }
-            delete node;
-        }
-        else if ((!node->left) || (!node->right))
-        {
-            IndividualNode<T> *child = node->left ? node->left : node->right;
-            if (node->parent)
-            {
-                if (node->parent->left == node)
-                    node->parent->left = child;
-                else
-                    node->parent->right = child;
-            }
-            delete node;
-        }
-
-        else
-        {
-            IndividualNode<T> *successor_node = successor(node);
-
-            swap_position_on_tree(node, successor_node);
-
-            binary_search_tree_delete(node);
-        }
-    }
-
-    template <typename T>
     class RedBlackTree
     {
     private:
         std::mutex lock;
 
     public:
+        void swap_position_on_tree(IndividualNode<T> *a, IndividualNode<T> *b)
+        {
+            // swap root if one of the nodes is root
+            IndividualNode<T> *temp;
+            if (this->root == a)
+            {
+                this->root = b;
+            }
+            else if (this->root == b)
+            {
+                this->root = a;
+            }
+
+            // swap parent
+            if (b->parent)
+            {
+                if (b->is_left_child())
+                    b->parent->left = a;
+                else
+                    b->parent->right = a;
+            }
+            if (a->parent)
+            {
+                if (a->is_left_child())
+                    a->parent->left = b;
+                else
+                    a->parent->right = b;
+            }
+            temp = a->parent;
+            a->parent = b->parent;
+            b->parent = temp;
+
+            // swap left child
+            temp = a->left;
+            a->left = b->left;
+            if (a->left)
+                a->left->parent = a;
+
+            b->left = temp;
+            if (b->left)
+                b->left->parent = b;
+
+            // swap right child
+            temp = a->right;
+            a->right = b->right;
+            if (a->right)
+                a->right->parent = a;
+
+            b->right = temp;
+            if (b->right)
+                b->right->parent = b;
+        }
+
+        // no validation, assume that the node is on the tree
+        void binary_search_tree_delete(IndividualNode<T> *node)
+        {
+            if (node == nullptr)
+                return;
+
+            // leaf node
+            if ((node->left == nullptr) && (node->right == nullptr))
+            {
+                if (node->is_left_child())
+                {
+                    node->parent->left = nullptr;
+                }
+                else
+                {
+                    node->parent->right = nullptr;
+                }
+                delete node;
+            }
+
+            // one-child node
+            else if ((node->left == nullptr) || (node->right == nullptr))
+            {
+                IndividualNode<T> *child = (node->left == nullptr) ? node->right : node->left;
+
+                // if the node does not have parent, then it should be the root
+                if (node->parent == nullptr)
+                {
+                    this->root = child;
+                }
+                else
+                {
+                    // detach the node from the tree
+                    if (node->is_left_child())
+                    {
+                        node->parent->left = child;
+                    }
+                    else
+                    {
+                        node->parent->right = child;
+                    }
+                }
+
+                child->parent = node->parent;
+
+                delete node;
+            }
+
+            else // two-child node
+            {
+                IndividualNode<T> *successor_node = successor(node);
+                if (successor_node == nullptr)
+                    return;
+                this->swap_position_on_tree(node, successor_node);
+                this->binary_search_tree_delete(node);
+            }
+        }
+
         // Function performing right rotation of the subtree with the root node is passed
         void right_rotate(IndividualNode<T> *rotation_point)
         {
