@@ -437,7 +437,6 @@ namespace RedBlackTree
                         {
                             assert(parent_of_replacing_node != nullptr);
                             sibling = parent_of_replacing_node->left == nullptr ? parent_of_replacing_node->right : parent_of_replacing_node->left;
-
                         }
                         else
                         {
@@ -537,10 +536,10 @@ namespace RedBlackTree
                             }
                         }
 
-
-                        if (replacing_node != nullptr)
-                        replacing_node->color = NodeColor::BLACK;
+                        
                     }
+                    if (replacing_node != nullptr)
+                            replacing_node->color = NodeColor::BLACK;
                 }
             }
         }
@@ -599,7 +598,7 @@ namespace RedBlackTree
             IndividualNode<T> *parent_of_replacing_node = nullptr;
             this->binary_search_tree_delete(node, &deleted_node_color, &replacing_node, &parent_of_replacing_node);
 
-            std::cout<<"haha"<<this->bfsPrint()<<"\n";
+            std::cout << "haha" << this->bfsPrint() << "\n";
 
             if (replacing_node == nullptr)
                 // record the parent of the node that was deleted in case that the replacing node is null
