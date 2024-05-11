@@ -6,6 +6,7 @@
 #include <queue>
 #include <mutex>
 #include <memory>
+#include <iostream>
 
 namespace RedBlackTree
 {
@@ -163,13 +164,21 @@ namespace RedBlackTree
             b->right = temp;
             if (b->right)
                 b->right->parent = b;
+
+            // auto temp_color = a->color;
+            // a->color = b->color;
+            // b->color = temp_color;
         }
 
         // no validation, assume that the node is on the tree
-        void binary_search_tree_delete(IndividualNode<T> *node)
+        // return the color of the node that was deleted and the node that is replacing it
+        void binary_search_tree_delete(IndividualNode<T> *node,
+                                       NodeColor *deleted_node_color = nullptr,
+                                       IndividualNode<T> **replacing_node = nullptr,
+                                       IndividualNode<T> **parent_of_replacing_node = nullptr)
         {
             if (node == nullptr)
-                return;
+                throw std::runtime_error("Invalid node to delete");
 
             // leaf node
             if ((node->left == nullptr) && (node->right == nullptr))
@@ -181,6 +190,18 @@ namespace RedBlackTree
                 else
                 {
                     node->parent->right = nullptr;
+                }
+
+                // delete node and return
+                if (deleted_node_color)
+                {
+                    *deleted_node_color = node->color;
+                }
+                if (replacing_node)
+                {
+                    // no children, so no replacement
+                    *replacing_node = nullptr;
+                    *parent_of_replacing_node = node->parent;
                 }
                 delete node;
             }
@@ -210,6 +231,15 @@ namespace RedBlackTree
 
                 child->parent = node->parent;
 
+                // delete node and return
+                if (deleted_node_color)
+                {
+                    *deleted_node_color = node->color;
+                }
+                if (replacing_node)
+                {
+                    *replacing_node = child;
+                }
                 delete node;
             }
 
@@ -217,9 +247,9 @@ namespace RedBlackTree
             {
                 IndividualNode<T> *successor_node = successor(node);
                 if (successor_node == nullptr)
-                    return;
+                    throw std::runtime_error("Invalid succesorr node");
                 this->swap_position_on_tree(node, successor_node);
-                this->binary_search_tree_delete(node);
+                this->binary_search_tree_delete(node, deleted_node_color, replacing_node, parent_of_replacing_node);
             }
         }
 
@@ -371,6 +401,150 @@ namespace RedBlackTree
             this->root->color = NodeColor::BLACK;
         }
 
+        /*
+            Fix up the violations occuring after the binary search tree deletion.
+            Reference: https://www.programiz.com/dsa/deletion-from-a-red-black-tree
+        */
+        void fixup_delete_violations(IndividualNode<T> *replacing_node,
+                                     NodeColor deleted_node_color,
+                                     IndividualNode<T> *parent_of_replacing_node)
+        {
+            IndividualNode<T> *sibling = nullptr;
+
+            // if no black was deleted or the replacing_node is now root
+            if (deleted_node_color == NodeColor::RED || replacing_node == this->root)
+            {
+                return;
+            }
+
+            // else if a black was deleted
+            else
+            {
+                // if the replacing node is red, simply change it to black
+                if ((replacing_node != nullptr) && (replacing_node->color == NodeColor::RED))
+                {
+                    replacing_node->color = NodeColor::BLACK;
+                }
+                // only in this case the black length of this route is reduced by 1 and need to be fixed
+                else
+                {
+
+                    while ((replacing_node == nullptr) ||
+                           ((replacing_node != this->root) and (replacing_node->color == NodeColor::BLACK)))
+                    {
+                        // if replaced node is null, get the sibling from its parent
+                        if (replacing_node == nullptr)
+                        {
+                            assert(parent_of_replacing_node != nullptr);
+                            sibling = parent_of_replacing_node->left == nullptr ? parent_of_replacing_node->right : parent_of_replacing_node->left;
+
+                        }
+                        else
+                        {
+                            sibling = replacing_node->is_left_child() ? replacing_node->parent->right : replacing_node->parent->left;
+
+                            parent_of_replacing_node = replacing_node->parent;
+                        }
+
+                        assert(parent_of_replacing_node == sibling->parent);
+                        assert((sibling != nullptr) && "Invalid sibling");
+
+                        /*
+                            Case I: The replacing_node is the left child
+                        */
+                        if (sibling->is_right_child())
+                        {
+                            // Case I-a-preprocess) The sibling is red, after this step, the sibling will be black and handled in the next step I-a)
+                            if (sibling->color == NodeColor::RED)
+                            {
+                                sibling->color = NodeColor::BLACK;
+                                parent_of_replacing_node->color = NodeColor::RED;
+
+                                this->left_rotate(parent_of_replacing_node);
+
+                                sibling = parent_of_replacing_node->right;
+                            }
+
+                            assert(sibling->color == NodeColor::BLACK && "Invalid sibling color");
+
+                            // Case I-a) The sibling is black
+
+                            // Case I-a-1) Both the sibling's children are black or null
+                            if ((sibling->right == nullptr || sibling->right->color == NodeColor::BLACK) && (sibling->left == nullptr || sibling->left->color == NodeColor::BLACK))
+                            {
+                                sibling->color = NodeColor::RED;
+                                replacing_node = parent_of_replacing_node;
+                            }
+                            // Case I-a-2) Only the right child of the sibling is black or null
+                            else if ((sibling->right == nullptr) || (sibling->right->color == NodeColor::BLACK))
+                            {
+                                sibling->left->color = NodeColor::BLACK;
+                                sibling->color = NodeColor::RED;
+                                this->right_rotate(sibling);
+                            }
+                            // Case I-a-3) Other cases
+                            else
+                            {
+                                sibling->color = parent_of_replacing_node->color;
+                                parent_of_replacing_node->color = NodeColor::BLACK;
+                                sibling->right->color = NodeColor::BLACK;
+                                this->left_rotate(parent_of_replacing_node);
+                                replacing_node = this->root;
+                            }
+                        }
+
+                        /*
+                            Case II: The replacing_node is the right child
+                        */
+                        else
+                        {
+                            // Case II-a-preprocess) The sibling is red, after this step, the sibling will be black and handled in the next step II-a)
+                            if (sibling->color == NodeColor::RED)
+                            {
+                                sibling->color = NodeColor::BLACK;
+                                parent_of_replacing_node->color = NodeColor::RED;
+
+                                this->right_rotate(parent_of_replacing_node);
+
+                                sibling = parent_of_replacing_node->left;
+                            }
+
+                            assert(sibling->color == NodeColor::BLACK && "Invalid sibling color");
+
+                            // Case II-a) The sibling is black
+
+                            // Case II-a-1) Both the sibling's children are black or null
+                            if ((sibling->right == nullptr || sibling->right->color == NodeColor::BLACK) && (sibling->left == nullptr || sibling->left->color == NodeColor::BLACK))
+                            {
+                                sibling->color = NodeColor::RED;
+                                replacing_node = parent_of_replacing_node;
+                            }
+                            // Case II-a-2) Only the left child of the sibling is black
+                            else if ((sibling->left == nullptr) || (sibling->left->color == NodeColor::BLACK))
+                            {
+                                sibling->right->color = NodeColor::BLACK;
+                                sibling->color = NodeColor::RED;
+                                this->left_rotate(sibling);
+                            }
+                            // Case II-a-3) Other cases
+                            else
+                            {
+                                sibling->color = parent_of_replacing_node->color;
+                                parent_of_replacing_node->color = NodeColor::BLACK;
+                                sibling->left->color = NodeColor::BLACK;
+                                this->right_rotate(parent_of_replacing_node);
+                                replacing_node = this->root;
+                            }
+                        }
+
+
+                        if (replacing_node != nullptr)
+                        replacing_node->color = NodeColor::BLACK;
+                    }
+                }
+            }
+        }
+
         IndividualNode<T> *root;
         uint32_t num_nodes;
         RedBlackTree() : root(nullptr), num_nodes(0) {}
@@ -414,6 +588,26 @@ namespace RedBlackTree
             this->root = binary_search_tree_insert(root, node);
             this->fixup_insert_violations(node);
             this->num_nodes++;
+        }
+
+        void remove(IndividualNode<T> *node)
+        {
+            std::lock_guard<std::mutex> lock(this->lock);
+            assert(node != nullptr && "Invalid node to delete");
+            NodeColor deleted_node_color;
+            IndividualNode<T> *replacing_node = nullptr;
+            IndividualNode<T> *parent_of_replacing_node = nullptr;
+            this->binary_search_tree_delete(node, &deleted_node_color, &replacing_node, &parent_of_replacing_node);
+
+            std::cout<<"haha"<<this->bfsPrint()<<"\n";
+
+            if (replacing_node == nullptr)
+                // record the parent of the node that was deleted in case that the replacing node is null
+                assert(parent_of_replacing_node != nullptr);
+
+            this->fixup_delete_violations(replacing_node, deleted_node_color, parent_of_replacing_node);
+
+            this->num_nodes--;
         }
 
         // Function to remove the smallest node

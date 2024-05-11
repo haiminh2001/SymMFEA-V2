@@ -295,11 +295,11 @@ TEST_F(RedBlackTreeTest, BinaryTreeDeleteTest)
         *      / \
         *     5   20
         *    / \  /
-        *   3  8  17  
+        *   3  8  17
         *
 
         */
-    
+
     create_node(10);
     tree->root = tmp_node;
     auto node10 = tmp_node;
@@ -307,6 +307,7 @@ TEST_F(RedBlackTreeTest, BinaryTreeDeleteTest)
     create_node(5);
     tree->root->left = tmp_node;
     tmp_node->parent = tree->root;
+    auto node5 = tmp_node;
 
     create_node(15);
     tree->root->right = tmp_node;
@@ -342,20 +343,48 @@ TEST_F(RedBlackTreeTest, BinaryTreeDeleteTest)
 
     // remove 7
     tree->binary_search_tree_delete(node7);
-    std::cout<<"After remove 7\n";
-    std::cout<<tree->bfsPrint()<<"\n";
+    std::cout << "After remove 7\n";
+    std::cout << tree->bfsPrint() << "\n";
+    ASSERT_EQ(node5->right->value, 8);
 
     this->checkParent(tree->root);
     this->checkIsBinarySeachTree(tree->root);
-
-    
 
     // remove 10
     tree->binary_search_tree_delete(node10);
-    std::cout<<"After remove 10\n";
-    std::cout<<tree->bfsPrint()<<"\n";
+    std::cout << "After remove 10\n";
+    std::cout << tree->bfsPrint() << "\n";
 
     this->checkParent(tree->root);
     this->checkIsBinarySeachTree(tree->root);
-    
+}
+
+TEST_F(RedBlackTreeTest, DeleteTest)
+{
+
+    for (int i = 0; i < 8; ++i)
+    {
+        int randomValue = rand() % 100;
+        create_node(randomValue);
+        tree->insert(tmp_node);
+        // test the test it self :))
+        this->checkRedNodeNotHaveRedChild(tree->root);
+        this->checkBlackPathLength();
+        this->checkIsBinarySeachTree(tree->root);
+    }
+
+    std::cout<<"Original tree: "<<tree->bfsPrint()<<"\n";
+
+    // now actually test the deletion
+    for (int i = 0; i < 8; ++i)
+    {
+        std::cout<<"Deleting node number: "<<i<<" th\n";
+        auto node = tree->get_random_node();
+        std::cout<<"Node: "<<node->value<<" Root: "<<tree->root->value<<"\n";
+        tree->remove(node);
+        std::cout<<"After remove node tree: "<<tree->bfsPrint()<<"\n";
+        this->checkIsBinarySeachTree(tree->root);
+        this->checkBlackPathLength();
+        this->checkRedNodeNotHaveRedChild(tree->root);
+    }
 }
