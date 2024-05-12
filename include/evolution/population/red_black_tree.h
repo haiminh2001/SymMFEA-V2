@@ -188,7 +188,7 @@ namespace RedBlackTree
             right->parent = rotation_point->parent;
             if (rotation_point == this->root)
             {
-                root = right;
+                this->root = right;
             }
             else
             {
@@ -338,39 +338,49 @@ namespace RedBlackTree
             this->num_nodes++;
         }
 
-        void fixup_delete_violation(IndividualNode<T> *node, IndividualNode < T >> *parent)
+        /// @brief
+        /// @param node
+        /// @param parent
+        /// @return if a node is deleted
+        bool _delete_smallest_node_or_backoff(IndividualNode<T> *node, IndividualNode<T> *parent)
         {
-            if (node == this->root)
+            // node is root
+            if (node->parent == nullptr)
             {
                 this->root = nullptr;
-                return;
+                this->num_nodes = 0;
+                return true;
             }
-            // else if ((node->color == NodeColor::BLACK) 
-            //          && (node->parent->color == NodeColor::BLACK)
-            //          && ((node->right != nullptr) && (node->right->color == NodeColor::BLACK))
-            //          && ((node->parent->right->left) == nullptr || (node->parent->right->right == nullptr))
-            //          ){
-            //     /*  
-            //     In this case the black length of the subtree with the root is the parent is 3.
-            //     But the sibling of the node is missing a children 
-            //     so the number of nodes in the subtree with the root is the parent is 4, which is not possible
-            //     to maintain the black length of the subtree 3 with the local manipulations, which requires at least 5 nodes.
-            //     So instead of trying to fix the violation using global manipulations, just back off deletion.
-            //     */
-            //    return;
-            // }
+
+            // detach the node from the tree
+            parent->left = node->right;
+
+            if (node->color == NodeColor::RED)
+            {
+                // simple case, no violation will be created
+                // doing nothing
+            }
             else
             {
-                parent->left = node->right;
-            }
+                // In this case, the node is black then there must be a sibling with the color of black
 
-            if (node->color == NodeColor::BLACK)
-            {
-                // if the node is black then there must be a sibling with the same color
                 assert(parent->right != nullptr && "Invalid deletion, no sibling found!!");
                 auto sibling = parent->right;
-
                 assert(sibling->color == NodeColor::BLACK && "The sibiling should be black");
+
+                // skip impossible local maninpulations
+                if (parent->color == NodeColor::BLACK)
+                {
+                    if (sibling->right && sibling->left)
+                        return false;
+                    if ((!sibling->right) && (!sibling->left))
+                        return false;
+                }
+                else
+                {
+                    if (sibling->right && sibling->left)
+                        return false;
+                }
 
                 /* The mission is now to increase the number of black nodes of the local subtree
                    with the root is the parent left child to increase by one
@@ -379,63 +389,111 @@ namespace RedBlackTree
                 // Case 1: The node had a right child, which now will be the left child of the parent
                 if (parent->left != nullptr)
                 {
-                    // Case 1.1: The left child is red, just recolor it to black
-                    if (parent->left->color == NodeColor::RED){
-                        parent->left->color = NodeColor::BLACK;
+                    parent->left->parent = parent;
+                    // Since the node is black and the smallest node in the subtree and had no left child, the right child of the node must be red.
+                    // recoloring it to black must do the trick
+                    parent->left->color = NodeColor::BLACK;
+                }
+
+                // Case 2: The node had no right child, so the sibling must not have any black child
+                else
+                {
+                    // Case 2.1. The parent is black
+                    if (parent->color == NodeColor::BLACK)
+                    {
+                        // in this case, the black length of the parent was 2
+                        // we MUST maintain the black length of 2 while keeping the parent's position black
+
+                        // if the sibling has no child, it is impossible to maintain the black length
+                        // if the sibling has two red children, it is impossible to maintain the black lenght and the parent's is black
+
+                        assert(sibling->right || sibling->left && "The sibling has no children");
+                        assert(!(sibling->right && sibling->left) && "The sibling has two children");
+
+                        // Case 2.1.1. The sibling's left child is missing
+                        if (sibling->left == nullptr)
+                        {
+                            this->left_rotate(parent);
+                            sibling->right->color = NodeColor::BLACK;
+                        }
+                        // Case 2.1.2. The sibling's right child is missing
+                        else
+                        {
+                            this->right_rotate(sibling);
+                            parent->right->color = NodeColor::BLACK;
+                            this->left_rotate(parent);
+                        }
                     }
-                    // Case 1.2: The left child is already black, then the sibling has a least one black child
-                    else{
-                        /* In this case, initially, the black length of the parent was 3 if the parent was black
-                           and 2 if the parent was red.
-                        */
+                    // Case 2.2. The parent is red
+                    else
+                    {
+                        // In this case, we must MAINTAIN the black length of the parent to 1
+                        // So if the sibling has two children, it is impossible to maintain the black length
+                        assert(!(sibling->right && sibling->left) && "The sibling has two children");
 
-                        auto sibling = parent->right;
-
-                        // Case 1.2.1: The parent is black
-                        if (parent->color == NodeColor::BLACK){
-                            // The sibling must have 2 black children 
-                            assert((sibling->left != nullptr ) && (sibling->right != nullptr));
-
+                        // Case 2.2.1. The sibling has a right child
+                        if (sibling->right)
+                        {
                             this->left_rotate(parent);
+                        }
+                        // Case 2.2.2. The sibling has a left child
+                        else if (sibling->left)
+                        {
+                            this->right_rotate(sibling);
+                            parent->right->color = NodeColor::BLACK;
                             this->left_rotate(parent);
-                            this->left_rotate(sibling->left);
+                            sibling->color = NodeColor::RED;
                         }
-                        // Case 1.2.2: The parent is red
-                        else{
-                            // Case 1.2.2-a) The sibling has 2 black children
-                            if ((sibling->left != nullptr ) && (sibling->right != nullptr)){
-                                this->left_rotate(parent);
-                            }
-                            // Case 1.2.2-b) The sibling has a black left children
-                            else
+                        // Case 2.2.3. The sibling has no children
+                        else
+                        {
+                            parent->color = NodeColor::BLACK;
+                            sibling->color = NodeColor::RED;
                         }
-                            
                     }
                 }
-                
             }
-        }
-
-        // Function to remove the smallest node
-        void remove_smallest_node()
-        {
-            std::lock_guard<std::mutex> lock(this->lock);
-            if (root == nullptr)
-                return;
-
-            IndividualNode<T> *node = root;
-            IndividualNode<T> *parent;
-            while (node->left != nullptr)
-            {
-                parent = node;
-                node = node->left;
-            }
-
-            // fix up violation and detech the node from the tree
-            this->fixup_delete_violation(node, parent);
 
             delete node;
             this->num_nodes--;
+            return true;
+        }
+
+        IndividualNode<T> *get_smallest_node(IndividualNode<T> **parent = nullptr)
+        {
+            if (root == nullptr)
+            {
+                if (parent)
+                    *parent = nullptr;
+                return nullptr;
+            }
+
+            IndividualNode<T> *node = root;
+            IndividualNode<T> *tmp;
+
+            while (node->left != nullptr)
+            {
+                tmp = node;
+                node = node->left;
+            }
+            if (parent)
+                *parent = tmp;
+            return node;
+        }
+
+        // Function to remove the smallest node
+        bool remove_smallest_node()
+        {
+            std::lock_guard<std::mutex> lock(this->lock);
+
+            // find the smallest node and its parent
+            IndividualNode<T> *parent;
+            IndividualNode<T> *node = this->get_smallest_node(&parent);
+
+            if (node == nullptr)
+                return false;
+
+            return this->_delete_smallest_node_or_backoff(node, parent);
         }
 
         // Function to get the largest node

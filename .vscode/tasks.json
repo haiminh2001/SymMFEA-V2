@@ -3,8 +3,8 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "run",
-			"command": "${workspaceFolder}/run.sh",
+			"label": "build",
+			"command": "${workspaceFolder}/build.sh",
 			"group": {
 				"isDefault": true
 			}

@@ -269,92 +269,49 @@ TEST_F(RedBlackTreeTest, InsertTest)
     }
 }
 
-TEST_F(RedBlackTreeTest, BinaryTreeDeleteTest)
+TEST_F(RedBlackTreeTest, RemoveSmallestTest)
 {
-    /*
-        * Test binary tree delete
-        *     10
-        *    /  \
-        *   5   15
-        *  / \    \
-        * 3   7    20
-        *    / \   /
-        *   6   8  17
-        *
-        * After delete 7
-        *       10
-        *      /  \
-        *     5   15
-        *    / \    \
-        *   3   8    20
-        *      /    /
-        *     6    17
-        *
-        * After delete 10
-        *       15
-        *      / \
-        *     5   20
-        *    / \  /
-        *   3  8  17
-        *
+    for (int i = 0; i < 50; ++i)
+    {
+        int randomValue = rand() % 100;
+        create_node(randomValue);
+        tree->insert(tmp_node);
+        this->checkRedNodeNotHaveRedChild(tree->root);
+        this->checkBlackPathLength();
+        this->checkIsBinarySeachTree(tree->root);
+    }
 
-        */
+    int num_nodes;
+    for (int i = 0; i < 50; ++i)
+    {
 
-    create_node(10);
-    tree->root = tmp_node;
-    auto node10 = tmp_node;
+        std::cout << "Deleting node: " << i << " th\n";
+        num_nodes = tree->num_nodes;
 
-    create_node(5);
-    tree->root->left = tmp_node;
-    tmp_node->parent = tree->root;
-    auto node5 = tmp_node;
+        auto smallest_node = tree->get_smallest_node();
 
-    create_node(15);
-    tree->root->right = tmp_node;
-    tmp_node->parent = tree->root;
+        if (tree->remove_smallest_node())
+        {
+            ASSERT_EQ(num_nodes - 1, tree->num_nodes);
+            std::cout << "Deleted a node\n";
+        }
+        else
+        {
+            ASSERT_EQ(smallest_node, tree->get_smallest_node());
+            ASSERT_EQ(num_nodes, tree->num_nodes);
+            std::cout << "Cannot delete a node;\n";
 
-    create_node(3);
-    tree->root->left->left = tmp_node;
-    tmp_node->parent = tree->root->left;
 
-    create_node(7);
-    tree->root->left->right = tmp_node;
-    tmp_node->parent = tree->root->left;
-    auto node7 = tmp_node;
+            int randomValue = rand() % 100;
+            create_node(randomValue);
+            tree->insert(tmp_node);
+            this->checkRedNodeNotHaveRedChild(tree->root);
+            this->checkBlackPathLength();
+            this->checkIsBinarySeachTree(tree->root);
+        }
 
-    create_node(20);
-    tree->root->right->right = tmp_node;
-    tmp_node->parent = tree->root->right;
-
-    create_node(6);
-    tree->root->left->right->left = tmp_node;
-    tmp_node->parent = tree->root->left->right;
-
-    create_node(8);
-    tree->root->left->right->right = tmp_node;
-    tmp_node->parent = tree->root->left->right;
-
-    create_node(17);
-    tree->root->right->right->left = tmp_node;
-    tmp_node->parent = tree->root->right->right;
-
-    // test the test itself :))
-    this->checkIsBinarySeachTree(tree->root);
-
-    // remove 7
-    tree->binary_search_tree_delete(node7);
-    std::cout << "After remove 7\n";
-    std::cout << tree->bfsPrint() << "\n";
-    ASSERT_EQ(node5->right->value, 8);
-
-    this->checkParent(tree->root);
-    this->checkIsBinarySeachTree(tree->root);
-
-    // remove 10
-    tree->binary_search_tree_delete(node10);
-    std::cout << "After remove 10\n";
-    std::cout << tree->bfsPrint() << "\n";
-
-    this->checkParent(tree->root);
-    this->checkIsBinarySeachTree(tree->root);
+        this->checkRedNodeNotHaveRedChild(tree->root);
+        this->checkBlackPathLength();
+        this->checkIsBinarySeachTree(tree->root);
+    }
 }
