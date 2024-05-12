@@ -358,33 +358,3 @@ TEST_F(RedBlackTreeTest, BinaryTreeDeleteTest)
     this->checkParent(tree->root);
     this->checkIsBinarySeachTree(tree->root);
 }
-
-TEST_F(RedBlackTreeTest, DeleteTest)
-{
-
-    for (int i = 0; i < 8; ++i)
-    {
-        int randomValue = rand() % 100;
-        create_node(randomValue);
-        tree->insert(tmp_node);
-        // test the test it self :))
-        this->checkRedNodeNotHaveRedChild(tree->root);
-        this->checkBlackPathLength();
-        this->checkIsBinarySeachTree(tree->root);
-    }
-
-    std::cout<<"Original tree: "<<tree->bfsPrint()<<"\n";
-
-    // now actually test the deletion
-    for (int i = 0; i < 8; ++i)
-    {
-        std::cout<<"Deleting node number: "<<i<<" th\n";
-        auto node = tree->get_random_node();
-        std::cout<<"Node: "<<node->value<<" Root: "<<tree->root->value<<"\n";
-        tree->remove(node);
-        std::cout<<"After remove node tree: "<<tree->bfsPrint()<<"\n";
-        this->checkIsBinarySeachTree(tree->root);
-        this->checkBlackPathLength();
-        this->checkRedNodeNotHaveRedChild(tree->root);
-    }
-}
