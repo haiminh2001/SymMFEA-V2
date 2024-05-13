@@ -352,108 +352,128 @@ namespace RedBlackTree
                 return true;
             }
 
-            // detach the node from the tree
-            parent->left = node->right;
-
             if (node->color == NodeColor::RED)
             {
                 // simple case, no violation will be created
-                // doing nothing
+                // detach the node from the tree
+                parent->left = node->right;
             }
             else
             {
-                // In this case, the node is black then there must be a sibling with the color of black
+                /*
+                    In this case, the node is black then there must be a
+                    sibling whose subtree contain at least  one black node
+                */
 
                 assert(parent->right != nullptr && "Invalid deletion, no sibling found!!");
                 auto sibling = parent->right;
-                assert(sibling->color == NodeColor::BLACK && "The sibiling should be black");
 
-                // skip impossible local maninpulations
-                if (parent->color == NodeColor::BLACK)
+                // Case A: The sibling is Black
+                if (sibling->color == NodeColor::BLACK)
                 {
-                    if (sibling->right && sibling->left)
-                        return false;
-                    if ((!sibling->right) && (!sibling->left))
-                        return false;
-                }
-                else
-                {
-                    if (sibling->right && sibling->left)
-                        return false;
-                }
 
-                /* The mission is now to increase the number of black nodes of the local subtree
-                   with the root is the parent left child to increase by one
-                */
-
-                // Case 1: The node had a right child, which now will be the left child of the parent
-                if (parent->left != nullptr)
-                {
-                    parent->left->parent = parent;
-                    // Since the node is black and the smallest node in the subtree and had no left child, the right child of the node must be red.
-                    // recoloring it to black must do the trick
-                    parent->left->color = NodeColor::BLACK;
-                }
-
-                // Case 2: The node had no right child, so the sibling must not have any black child
-                else
-                {
-                    // Case 2.1. The parent is black
+                    // skip impossible local maninpulations
                     if (parent->color == NodeColor::BLACK)
                     {
-                        // in this case, the black length of the parent was 2
-                        // we MUST maintain the black length of 2 while keeping the parent's position black
-
-                        // if the sibling has no child, it is impossible to maintain the black length
-                        // if the sibling has two red children, it is impossible to maintain the black lenght and the parent's is black
-
-                        assert(sibling->right || sibling->left && "The sibling has no children");
-                        assert(!(sibling->right && sibling->left) && "The sibling has two children");
-
-                        // Case 2.1.1. The sibling's left child is missing
-                        if (sibling->left == nullptr)
-                        {
-                            this->left_rotate(parent);
-                            sibling->right->color = NodeColor::BLACK;
-                        }
-                        // Case 2.1.2. The sibling's right child is missing
-                        else
-                        {
-                            this->right_rotate(sibling);
-                            parent->right->color = NodeColor::BLACK;
-                            this->left_rotate(parent);
-                        }
+                        if (sibling->right && sibling->left)
+                            return false;
+                        if ((!sibling->right) && (!sibling->left))
+                            return false;
                     }
-                    // Case 2.2. The parent is red
                     else
                     {
-                        // In this case, we must MAINTAIN the black length of the parent to 1
-                        // So if the sibling has two children, it is impossible to maintain the black length
-                        assert(!(sibling->right && sibling->left) && "The sibling has two children");
+                        if (sibling->right && sibling->left)
+                            return false;
+                    }
 
-                        // Case 2.2.1. The sibling has a right child
-                        if (sibling->right)
+                    // detach the node from the tree
+                    parent->left = node->right;
+
+                    /* The mission is now to increase the number of black nodes of the local subtree
+                       with the root is the parent left child to increase by one
+                    */
+
+                    // Case 1: The node had a right child, which now will be the left child of the parent
+                    if (parent->left != nullptr)
+                    {
+                        parent->left->parent = parent;
+                        // Since the node is black and the smallest node in the subtree and had no left child, the right child of the node must be red.
+                        // recoloring it to black must do the trick
+                        parent->left->color = NodeColor::BLACK;
+                    }
+
+                    // Case 2: The node had no right child, so the sibling must not have any black child
+                    else
+                    {
+                        // Case 2.1. The parent is black
+                        if (parent->color == NodeColor::BLACK)
                         {
-                            this->left_rotate(parent);
+                            // in this case, the black length of the parent was 2
+                            // we MUST maintain the black length of 2 while keeping the parent's position black
+
+                            // if the sibling has no child, it is impossible to maintain the black length
+                            // if the sibling has two red children, it is impossible to maintain the black lenght and the parent's is black
+
+                            assert(sibling->right || sibling->left && "The sibling has no children");
+                            assert(!(sibling->right && sibling->left) && "The sibling has two children");
+
+                            // Case 2.1.1. The sibling's left child is missing
+                            if (sibling->left == nullptr)
+                            {
+                                this->left_rotate(parent);
+                                sibling->right->color = NodeColor::BLACK;
+                            }
+                            // Case 2.1.2. The sibling's right child is missing
+                            else
+                            {
+                                this->right_rotate(sibling);
+                                parent->right->color = NodeColor::BLACK;
+                                this->left_rotate(parent);
+                            }
                         }
-                        // Case 2.2.2. The sibling has a left child
-                        else if (sibling->left)
-                        {
-                            this->right_rotate(sibling);
-                            parent->right->color = NodeColor::BLACK;
-                            this->left_rotate(parent);
-                            sibling->color = NodeColor::RED;
-                        }
-                        // Case 2.2.3. The sibling has no children
+                        // Case 2.2. The parent is red
                         else
                         {
-                            parent->color = NodeColor::BLACK;
-                            sibling->color = NodeColor::RED;
+                            // In this case, we must MAINTAIN the black length of the parent to 1
+                            // So if the sibling has two children, it is impossible to maintain the black length
+                            assert(!(sibling->right && sibling->left) && "The sibling has two children");
+
+                            // Case 2.2.1. The sibling has a right child
+                            if (sibling->right)
+                            {
+                                this->left_rotate(parent);
+                            }
+                            // Case 2.2.2. The sibling has a left child
+                            else if (sibling->left)
+                            {
+                                this->right_rotate(sibling);
+                                parent->right->color = NodeColor::BLACK;
+                                this->left_rotate(parent);
+                                sibling->color = NodeColor::RED;
+                            }
+                            // Case 2.2.3. The sibling has no children
+                            else
+                            {
+                                parent->color = NodeColor::BLACK;
+                                sibling->color = NodeColor::RED;
+                            }
                         }
                     }
                 }
-            }
+                // Case B: the sibling is red
+                else
+                {
+                    // In this case, the parent must be black
 
+                    // detach the node from the tree
+                    parent->left = node->right;
+
+                    this->left_rotate(parent);
+                    parent->right->color = NodeColor::RED;
+                    parent->color = NodeColor::BLACK;
+                    parent->parent->color = NodeColor::BLACK;
+                }
+            }
             delete node;
             this->num_nodes--;
             return true;
@@ -550,7 +570,6 @@ namespace RedBlackTree
             return node;
         }
     };
-
 }
 
 #endif // SYMMFEA_RED_BLACK_TREE_H

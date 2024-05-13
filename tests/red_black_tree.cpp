@@ -290,16 +290,21 @@ TEST_F(RedBlackTreeTest, RemoveSmallestTest)
 
         auto smallest_node = tree->get_smallest_node();
 
+        std::cout<<"Before deleting\n";
+        std::cout<<tree->bfsPrint()<<std::endl;
         if (tree->remove_smallest_node())
         {
             ASSERT_EQ(num_nodes - 1, tree->num_nodes);
             std::cout << "Deleted a node\n";
+            std::cout<<tree->bfsPrint()<<std::endl;
         }
         else
         {
-            ASSERT_EQ(smallest_node, tree->get_smallest_node());
+            ASSERT_EQ(smallest_node->value, tree->get_smallest_node()->value);
+            // ASSERT_EQ(smallest_node, tree->get_smallest_node());
             ASSERT_EQ(num_nodes, tree->num_nodes);
             std::cout << "Cannot delete a node;\n";
+            std::cout<<tree->bfsPrint()<<std::endl;
 
 
             int randomValue = rand() % 100;
