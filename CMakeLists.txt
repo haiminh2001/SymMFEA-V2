@@ -33,14 +33,15 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 else()
     # Main
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math -O3")
-
-    file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "source/*.cpp" "include/*.h")
-
     # add_compile_options("-ffast-math")
-    add_executable(SymMFEA main.cpp ${APP_SOURCES})
-
-    target_link_libraries(SymMFEA
-        PUBLIC
-        ${CMAKE_THREAD_LIBS_INIT}
-    )
 endif()
+
+file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "source/*.cpp" "include/*.h")
+
+
+add_executable(SymMFEA main.cpp ${APP_SOURCES})
+
+target_link_libraries(SymMFEA
+    PUBLIC
+    ${CMAKE_THREAD_LIBS_INIT}
+)

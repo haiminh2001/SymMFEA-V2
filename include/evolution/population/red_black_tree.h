@@ -347,12 +347,10 @@ namespace RedBlackTree
             // node is root
             if (node->parent == nullptr)
             {
-                this->root = nullptr;
-                this->num_nodes = 0;
-                return true;
+                this->root = node->right;
+                if (node->right) node->right->parent = nullptr;   
             }
-
-            if (node->color == NodeColor::RED)
+            else if (node->color == NodeColor::RED)
             {
                 // simple case, no violation will be created
                 // detach the node from the tree

@@ -271,7 +271,7 @@ TEST_F(RedBlackTreeTest, InsertTest)
 
 TEST_F(RedBlackTreeTest, RemoveSmallestTest)
 {
-    for (int i = 0; i < 50; ++i)
+    for (int i = 0; i < 100; ++i)
     {
         int randomValue = rand() % 100;
         create_node(randomValue);
@@ -282,7 +282,7 @@ TEST_F(RedBlackTreeTest, RemoveSmallestTest)
     }
 
     int num_nodes;
-    for (int i = 0; i < 50; ++i)
+    for (int i = 0; i < 100; ++i)
     {
 
         std::cout << "Deleting node: " << i << " th\n";
