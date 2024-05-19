@@ -28,6 +28,14 @@ namespace RedBlackTree
         IndividualNode *right;
         NodeColor color;
 
+        bool is_left_child_black_or_null()
+        {
+            return (this->left == nullptr || this->left->color == NodeColor::BLACK);
+        }
+        bool is_right_child_black_or_null()
+        {
+            return (this->right == nullptr || this->right->color == NodeColor::BLACK);
+        }
         bool is_left_child()
         {
             if (this->parent == nullptr)
@@ -88,63 +96,7 @@ namespace RedBlackTree
         std::mutex lock;
 
     public:
-        void swap_position_on_tree(IndividualNode<T> *a, IndividualNode<T> *b)
-        {
-            // swap root if one of the nodes is root
-            IndividualNode<T> *temp;
-            if (this->root == a)
-            {
-                this->root = b;
-            }
-            else if (this->root == b)
-            {
-                this->root = a;
-            }
-
-            // swap parent
-            if (b->parent)
-            {
-                if (b->is_left_child())
-                    b->parent->left = a;
-                else
-                    b->parent->right = a;
-            }
-            if (a->parent)
-            {
-                if (a->is_left_child())
-                    a->parent->left = b;
-                else
-                    a->parent->right = b;
-            }
-            temp = a->parent;
-            a->parent = b->parent;
-            b->parent = temp;
-
-            // swap left child
-            temp = a->left;
-            a->left = b->left;
-            if (a->left)
-                a->left->parent = a;
-
-            b->left = temp;
-            if (b->left)
-                b->left->parent = b;
-
-            // swap right child
-            temp = a->right;
-            a->right = b->right;
-            if (a->right)
-                a->right->parent = a;
-
-            b->right = temp;
-            if (b->right)
-                b->right->parent = b;
-
-            // auto temp_color = a->color;
-            // a->color = b->color;
-            // b->color = temp_color;
-        }
-
+       
         // Function performing right rotation of the subtree with the root node is passed
         void right_rotate(IndividualNode<T> *rotation_point)
         {
@@ -171,6 +123,10 @@ namespace RedBlackTree
             }
             // attach the right of the left child to the left of the temp node
             rotation_point->left = left->right;
+            if (left->right != nullptr)
+            {
+                left->right->parent = rotation_point;
+            }
 
             // attach the temp node as the right child of the left node
             left->right = rotation_point;
@@ -188,7 +144,7 @@ namespace RedBlackTree
             right->parent = rotation_point->parent;
             if (rotation_point == this->root)
             {
-                this->root = right;
+                root = right;
             }
             else
             {
@@ -203,6 +159,11 @@ namespace RedBlackTree
             }
             // attach the left of the right child to the right of the temp node
             rotation_point->right = right->left;
+
+            if (right->left != nullptr)
+            {
+                right->left->parent = rotation_point;
+            }
 
             // attach the temp node as the left child of the right node
             right->left = rotation_point;
@@ -293,11 +254,105 @@ namespace RedBlackTree
             this->root->color = NodeColor::BLACK;
         }
 
+        void fixup_delete_violations(IndividualNode<T> *replacing_node, IndividualNode<T> *replacing_node_parent, bool is_replacing_node_left_child)
+        {
+            IndividualNode<T> *replacing_node_sibling = nullptr;
+
+            while ((replacing_node == nullptr) || (replacing_node != this->root && replacing_node->color == NodeColor::BLACK))
+            {
+                // get the replacing_node_sibling and replacing_node parent
+                if (replacing_node == nullptr)
+                {
+                    replacing_node_sibling = is_replacing_node_left_child ? replacing_node_parent->right : replacing_node_parent->left;
+                }
+                else
+                {
+                    replacing_node_sibling = replacing_node->is_left_child() ? replacing_node->parent->right : replacing_node->parent->left;
+                    replacing_node_parent = replacing_node->parent;
+                }
+
+                if ((replacing_node == nullptr && is_replacing_node_left_child) || ((replacing_node != nullptr) && (replacing_node->is_left_child())))
+                {
+                    if (replacing_node_sibling->color == NodeColor::RED)
+                    {
+                        replacing_node_sibling->color = NodeColor::BLACK;
+                        replacing_node_parent->color = NodeColor::RED;
+                        this->left_rotate(replacing_node_parent);
+                        replacing_node_sibling = replacing_node_parent->right;
+                    }
+                    if (replacing_node_sibling->is_left_child_black_or_null() && replacing_node_sibling->is_right_child_black_or_null())
+                    {
+                        replacing_node_sibling->color = NodeColor::RED;
+                        replacing_node = replacing_node_parent;
+                    }
+                    else
+                    {
+                        if (replacing_node_sibling->is_right_child_black_or_null())
+                        {
+                            if (replacing_node_sibling->left != nullptr)
+                            {
+                                replacing_node_sibling->left->color = NodeColor::BLACK;
+                            }
+                            replacing_node_sibling->color = NodeColor::RED;
+                            this->right_rotate(replacing_node_sibling);
+                            replacing_node_sibling = replacing_node_parent->right;
+                        }
+                        replacing_node_sibling->color = replacing_node_parent->color;
+                        replacing_node_parent->color = NodeColor::BLACK;
+                        replacing_node_sibling->right->color = NodeColor::BLACK;
+                        this->left_rotate(replacing_node_parent);
+                        replacing_node = this->root;
+                    }
+                }
+                else
+                {
+                    if (replacing_node_sibling->color == NodeColor::RED)
+                    {
+                        replacing_node_sibling->color = NodeColor::BLACK;
+                        replacing_node_parent->color = NodeColor::RED;
+                        this->right_rotate(replacing_node_parent);
+                        replacing_node_sibling = replacing_node_parent->left;
+                    }
+                    if (replacing_node_sibling->is_left_child_black_or_null() && replacing_node_sibling->is_right_child_black_or_null())
+                    {
+                        replacing_node_sibling->color = NodeColor::RED;
+                        replacing_node = replacing_node_parent;
+                    }
+                    else
+                    {
+                        if (replacing_node_sibling->is_left_child_black_or_null())
+                        {
+                            if (replacing_node_sibling->right != nullptr)
+                            {
+                                replacing_node_sibling->right->color = NodeColor::BLACK;
+                            }
+                            replacing_node_sibling->color = NodeColor::RED;
+                            this->left_rotate(replacing_node_sibling);
+                            replacing_node_sibling = replacing_node_parent->left;
+                        }
+                        replacing_node_sibling->color = replacing_node_parent->color;
+                        replacing_node_parent->color = NodeColor::BLACK;
+
+                        if (replacing_node_sibling->left != nullptr)
+                        {
+                            replacing_node_sibling->left->color = NodeColor::BLACK;
+                        }
+                        this->right_rotate(replacing_node_parent);
+                        replacing_node = this->root;
+                    }
+                }
+            }
+            replacing_node->color = NodeColor::BLACK;
+        }
+
         IndividualNode<T> *root;
         uint32_t num_nodes;
         RedBlackTree() : root(nullptr), num_nodes(0) {}
         std::string bfsPrint()
         {
+            if (this->root == nullptr)
+                return "NULL TREE\n";
+
             std::string result = "";
             std::queue<IndividualNode<T> *> queue;
 
@@ -338,180 +393,113 @@ namespace RedBlackTree
             this->num_nodes++;
         }
 
-        /// @brief
-        /// @param node
-        /// @param parent
-        /// @return if a node is deleted
-        bool _delete_smallest_node_or_backoff(IndividualNode<T> *node, IndividualNode<T> *parent)
+        /// @brief Transplant subtree v into u position
+        /// @param transplant_position
+        /// @param subtree
+        void subtreeTransplant(IndividualNode<T> *transplant_position, IndividualNode<T> *subtree)
         {
-            // node is root
-            if (node->parent == nullptr)
+            if (this->root == transplant_position)
+                this->root = subtree;
+            else if (transplant_position->is_left_child())
+                transplant_position->parent->left = subtree;
+            else
+                transplant_position->parent->right = subtree;
+
+            if (subtree != nullptr)
+                subtree->parent = transplant_position->parent;
+        }
+
+        /*
+            Reference: https://www.programiz.com/dsa/deletion-from-a-red-black-tree
+            Correspond symbol to the reference:
+                - node_to_be_deleted: z
+                - replacing_node: x
+                - intermediate_node: y
+        */
+        void remove(IndividualNode<T> *node_to_be_deleted)
+        {
+            std::lock_guard<std::mutex> lock(this->lock);
+            assert(node_to_be_deleted != nullptr && "Invalid node to delete");
+            if (node_to_be_deleted == this->root && this->num_nodes == 1)
             {
-                this->root = node->right;
-                if (node->right) node->right->parent = nullptr;   
-            }
-            else if (node->color == NodeColor::RED)
-            {
-                // simple case, no violation will be created
-                // detach the node from the tree
-                parent->left = node->right;
+                this->root = nullptr;
             }
             else
             {
-                /*
-                    In this case, the node is black then there must be a
-                    sibling whose subtree contain at least  one black node
-                */
+                IndividualNode<T> *intermediate_node = nullptr, *replacing_node = nullptr, *replacing_node_parent = nullptr;
+                bool is_replacing_node_left_child;
+                intermediate_node = node_to_be_deleted;
+                NodeColor y_originalColor = intermediate_node->color;
 
-                assert(parent->right != nullptr && "Invalid deletion, no sibling found!!");
-                auto sibling = parent->right;
-
-                // Case A: The sibling is Black
-                if (sibling->color == NodeColor::BLACK)
+                // if the node has only one or no children
+                if (node_to_be_deleted->left == nullptr)
                 {
-
-                    // skip impossible local maninpulations
-                    if (parent->color == NodeColor::BLACK)
-                    {
-                        if (sibling->right && sibling->left)
-                            return false;
-                        if ((!sibling->right) && (!sibling->left))
-                            return false;
-                    }
-                    else
-                    {
-                        if (sibling->right && sibling->left)
-                            return false;
-                    }
-
-                    // detach the node from the tree
-                    parent->left = node->right;
-
-                    /* The mission is now to increase the number of black nodes of the local subtree
-                       with the root is the parent left child to increase by one
-                    */
-
-                    // Case 1: The node had a right child, which now will be the left child of the parent
-                    if (parent->left != nullptr)
-                    {
-                        parent->left->parent = parent;
-                        // Since the node is black and the smallest node in the subtree and had no left child, the right child of the node must be red.
-                        // recoloring it to black must do the trick
-                        parent->left->color = NodeColor::BLACK;
-                    }
-
-                    // Case 2: The node had no right child, so the sibling must not have any black child
-                    else
-                    {
-                        // Case 2.1. The parent is black
-                        if (parent->color == NodeColor::BLACK)
-                        {
-                            // in this case, the black length of the parent was 2
-                            // we MUST maintain the black length of 2 while keeping the parent's position black
-
-                            // if the sibling has no child, it is impossible to maintain the black length
-                            // if the sibling has two red children, it is impossible to maintain the black lenght and the parent's is black
-
-                            assert(sibling->right || sibling->left && "The sibling has no children");
-                            assert(!(sibling->right && sibling->left) && "The sibling has two children");
-
-                            // Case 2.1.1. The sibling's left child is missing
-                            if (sibling->left == nullptr)
-                            {
-                                this->left_rotate(parent);
-                                sibling->right->color = NodeColor::BLACK;
-                            }
-                            // Case 2.1.2. The sibling's right child is missing
-                            else
-                            {
-                                this->right_rotate(sibling);
-                                parent->right->color = NodeColor::BLACK;
-                                this->left_rotate(parent);
-                            }
-                        }
-                        // Case 2.2. The parent is red
-                        else
-                        {
-                            // In this case, we must MAINTAIN the black length of the parent to 1
-                            // So if the sibling has two children, it is impossible to maintain the black length
-                            assert(!(sibling->right && sibling->left) && "The sibling has two children");
-
-                            // Case 2.2.1. The sibling has a right child
-                            if (sibling->right)
-                            {
-                                this->left_rotate(parent);
-                            }
-                            // Case 2.2.2. The sibling has a left child
-                            else if (sibling->left)
-                            {
-                                this->right_rotate(sibling);
-                                parent->right->color = NodeColor::BLACK;
-                                this->left_rotate(parent);
-                                sibling->color = NodeColor::RED;
-                            }
-                            // Case 2.2.3. The sibling has no children
-                            else
-                            {
-                                parent->color = NodeColor::BLACK;
-                                sibling->color = NodeColor::RED;
-                            }
-                        }
-                    }
+                    replacing_node = node_to_be_deleted->right;
+                    replacing_node_parent = node_to_be_deleted->parent;
+                    is_replacing_node_left_child = node_to_be_deleted->is_left_child();
+                    this->subtreeTransplant(node_to_be_deleted, replacing_node);
                 }
-                // Case B: the sibling is red
+                else if (node_to_be_deleted->right == nullptr)
+                {
+                    replacing_node = node_to_be_deleted->left;
+                    replacing_node_parent = node_to_be_deleted->parent;
+                    is_replacing_node_left_child = node_to_be_deleted->is_left_child();
+                    this->subtreeTransplant(node_to_be_deleted, replacing_node);
+                }
+
+                // the node has two children
                 else
                 {
-                    // In this case, the parent must be black
+                    // find smallest node in the right subtree
+                    intermediate_node = node_to_be_deleted->right;
+                    while (intermediate_node->left != nullptr)
+                        intermediate_node = intermediate_node->left;
 
-                    // detach the node from the tree
-                    parent->left = node->right;
+                    y_originalColor = intermediate_node->color;
+                    replacing_node = intermediate_node->right;
+                    replacing_node_parent = intermediate_node;
+                    is_replacing_node_left_child = false;
 
-                    this->left_rotate(parent);
-                    parent->right->color = NodeColor::RED;
-                    parent->color = NodeColor::BLACK;
-                    parent->parent->color = NodeColor::BLACK;
+                    if (intermediate_node->parent != node_to_be_deleted)
+                    {
+                        is_replacing_node_left_child = intermediate_node->is_left_child();
+                        replacing_node_parent = intermediate_node->parent;
+                        this->subtreeTransplant(intermediate_node, replacing_node);
+
+                        intermediate_node->right = node_to_be_deleted->right;
+                        intermediate_node->right->parent = intermediate_node;
+                    }
+                    this->subtreeTransplant(node_to_be_deleted, intermediate_node);
+                    intermediate_node->left = node_to_be_deleted->left;
+                    intermediate_node->left->parent = intermediate_node;
+                    intermediate_node->color = node_to_be_deleted->color;
                 }
+
+                if (y_originalColor == NodeColor::BLACK)
+                    this->fixup_delete_violations(replacing_node, replacing_node_parent, is_replacing_node_left_child);
             }
-            delete node;
+
+            delete node_to_be_deleted;
             this->num_nodes--;
-            return true;
-        }
-
-        IndividualNode<T> *get_smallest_node(IndividualNode<T> **parent = nullptr)
-        {
-            if (root == nullptr)
-            {
-                if (parent)
-                    *parent = nullptr;
-                return nullptr;
-            }
-
-            IndividualNode<T> *node = root;
-            IndividualNode<T> *tmp;
-
-            while (node->left != nullptr)
-            {
-                tmp = node;
-                node = node->left;
-            }
-            if (parent)
-                *parent = tmp;
-            return node;
         }
 
         // Function to remove the smallest node
-        bool remove_smallest_node()
+        void remove_smallest_node()
         {
             std::lock_guard<std::mutex> lock(this->lock);
+            if (root == nullptr)
+                return;
 
-            // find the smallest node and its parent
-            IndividualNode<T> *parent;
-            IndividualNode<T> *node = this->get_smallest_node(&parent);
-
-            if (node == nullptr)
-                return false;
-
-            return this->_delete_smallest_node_or_backoff(node, parent);
+            IndividualNode<T> *node = root;
+            IndividualNode<T> *p;
+            while (node->left != nullptr)
+            {
+                p = node;
+                node = node->left;
+            }
+            p->left = node->right;
+            delete node;
+            this->num_nodes--;
         }
 
         // Function to get the largest node
@@ -532,10 +520,10 @@ namespace RedBlackTree
         // NOTE: may implement a different logic to handle different height of the tree
         IndividualNode<T> *get_random_node()
         {
-            if (root == nullptr)
+            if (this->root == nullptr)
                 return nullptr;
 
-            IndividualNode<T> *node = root;
+            IndividualNode<T> *node = this->root;
             int direction;
 
             while (true)
@@ -543,14 +531,14 @@ namespace RedBlackTree
             { // probability of choosing the left child, current node or the right child
                 std::vector<float> direction_probs;
 
-                if (node->left)
+                if (node->left != nullptr)
                     direction_probs.push_back(1);
                 else
                     direction_probs.push_back(0);
 
                 direction_probs.push_back(4);
 
-                if (node->right)
+                if (node->right != nullptr)
                     direction_probs.push_back(10);
                 else
                     direction_probs.push_back(0);
@@ -568,6 +556,7 @@ namespace RedBlackTree
             return node;
         }
     };
+
 }
 
 #endif // SYMMFEA_RED_BLACK_TREE_H

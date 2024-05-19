@@ -102,9 +102,16 @@ protected:
 
         // since the value is float, equal is not deterministic
         if (node->left != nullptr)
+        {
             ASSERT_GE(node->value, node->left->value);
+            ASSERT_EQ(node->left->parent, node);
+        }
+
         if (node->right != nullptr)
+        {
             ASSERT_GE(node->right->value, node->value);
+            ASSERT_EQ(node->right->parent, node);
+        }
 
         checkIsBinarySeachTree(node->right);
     }
@@ -166,6 +173,9 @@ TEST_F(RedBlackTreeTest, RotateLeft)
     tree->root->left->right->right = tmp_node;
     tmp_node->parent = tree->root->left->right;
 
+    this->checkParent(tree->root);
+    this->checkIsBinarySeachTree(tree->root);
+
     tree->left_rotate(rotate_point);
 
     ASSERT_TRUE(tree->root->left == right_child_of_rotate_point) << "Left of root value: " << tree->root->left->value << "; which is should be: " << right_child_of_rotate_point->value;
@@ -191,7 +201,7 @@ TEST_F(RedBlackTreeTest, RotateRight)
         *  /    / \
         * 3    12  20
         *     / \
-        *    6   8
+        *    6   13
         *
         * After rotate right
         *       10
@@ -200,7 +210,7 @@ TEST_F(RedBlackTreeTest, RotateRight)
         *    /   / \
         *   3   6  15
         *         / \
-        *        8  20
+        *        13  20
 
     */
 
@@ -232,7 +242,7 @@ TEST_F(RedBlackTreeTest, RotateRight)
     tree->root->right->left->left = tmp_node;
     tmp_node->parent = tree->root->right->left;
 
-    create_node(8);
+    create_node(13);
     tree->root->right->left->right = tmp_node;
     tmp_node->parent = tree->root->right->left;
     right_child_of_left_child_of_rotate_point = tmp_node;
@@ -240,6 +250,9 @@ TEST_F(RedBlackTreeTest, RotateRight)
     create_node(20);
     tree->root->right->right = tmp_node;
     tmp_node->parent = tree->root->right;
+
+    this->checkParent(tree->root);
+    this->checkIsBinarySeachTree(tree->root);
 
     tree->right_rotate(rotate_point);
 
@@ -269,9 +282,11 @@ TEST_F(RedBlackTreeTest, InsertTest)
     }
 }
 
-TEST_F(RedBlackTreeTest, RemoveSmallestTest)
+
+TEST_F(RedBlackTreeTest, DeleteTest)
 {
-    for (int i = 0; i < 100; ++i)
+
+    for (int i = 0; i < 50; ++i)
     {
         int randomValue = rand() % 100;
         create_node(randomValue);
@@ -281,40 +296,18 @@ TEST_F(RedBlackTreeTest, RemoveSmallestTest)
         this->checkIsBinarySeachTree(tree->root);
     }
 
-    int num_nodes;
-    for (int i = 0; i < 100; ++i)
+    std::cout << "Original tree: " << tree->bfsPrint() << "\n";
+
+    // now actually test the deletion
+    for (int i = 0; i < 50; ++i)
     {
-
-        std::cout << "Deleting node: " << i << " th\n";
-        num_nodes = tree->num_nodes;
-
-        auto smallest_node = tree->get_smallest_node();
-
-        std::cout<<"Before deleting\n";
-        std::cout<<tree->bfsPrint()<<std::endl;
-        if (tree->remove_smallest_node())
-        {
-            ASSERT_EQ(num_nodes - 1, tree->num_nodes);
-            std::cout << "Deleted a node\n";
-            std::cout<<tree->bfsPrint()<<std::endl;
-        }
-        else
-        {
-            ASSERT_EQ(smallest_node->value, tree->get_smallest_node()->value);
-            // ASSERT_EQ(smallest_node, tree->get_smallest_node());
-            ASSERT_EQ(num_nodes, tree->num_nodes);
-            std::cout << "Cannot delete a node;\n";
-            std::cout<<tree->bfsPrint()<<std::endl;
-
-
-            int randomValue = rand() % 100;
-            create_node(randomValue);
-            tree->insert(tmp_node);
-            this->checkRedNodeNotHaveRedChild(tree->root);
-            this->checkBlackPathLength();
-            this->checkIsBinarySeachTree(tree->root);
-        }
-
+        std::cout << "Deleting node number: " << i << " th\n";
+        auto node = tree->get_random_node();
+        std::cout << "Node: " << node->value << " Root: " << tree->root->value << "\n";
+        tree->remove(node);
+        std::cout << "After remove node tree: " << tree->bfsPrint() << "\n";
+        this->checkIsBinarySeachTree(tree->root);
+        this->checkBlackPathLength();
         this->checkRedNodeNotHaveRedChild(tree->root);
         this->checkBlackPathLength();
         this->checkIsBinarySeachTree(tree->root);
