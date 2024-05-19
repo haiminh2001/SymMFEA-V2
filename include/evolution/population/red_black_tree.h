@@ -96,7 +96,6 @@ namespace RedBlackTree
         std::mutex lock;
 
     public:
-       
         // Function performing right rotation of the subtree with the root node is passed
         void right_rotate(IndividualNode<T> *rotation_point)
         {
@@ -415,10 +414,11 @@ namespace RedBlackTree
                 - node_to_be_deleted: z
                 - replacing_node: x
                 - intermediate_node: y
+            NOTE: no lock acquired in this function
         */
-        void remove(IndividualNode<T> *node_to_be_deleted)
+        void _remove(IndividualNode<T> *node_to_be_deleted)
         {
-            std::lock_guard<std::mutex> lock(this->lock);
+            
             assert(node_to_be_deleted != nullptr && "Invalid node to delete");
             if (node_to_be_deleted == this->root && this->num_nodes == 1)
             {
@@ -490,16 +490,27 @@ namespace RedBlackTree
             if (root == nullptr)
                 return;
 
+            auto smallest = this->get_smallest_node();
+
+            if (smallest != nullptr)
+            {
+                this->_remove(smallest);
+            }
+        }
+
+        // Function to get the smallest node
+        IndividualNode<T> *get_smallest_node()
+        {
+            if (root == nullptr)
+                return nullptr;
+
             IndividualNode<T> *node = root;
-            IndividualNode<T> *p;
+
             while (node->left != nullptr)
             {
-                p = node;
-                node = node->left;
+                node = node->right;
             }
-            p->left = node->right;
-            delete node;
-            this->num_nodes--;
+            return node;
         }
 
         // Function to get the largest node
@@ -520,6 +531,7 @@ namespace RedBlackTree
         // NOTE: may implement a different logic to handle different height of the tree
         IndividualNode<T> *get_random_node()
         {
+            std::lock_guard<std::mutex> lock(this->lock);
             if (this->root == nullptr)
                 return nullptr;
 

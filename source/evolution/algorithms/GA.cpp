@@ -53,10 +53,8 @@ void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
     std::vector<std::thread> threads;
     for (int i = 0; i < num_threads; ++i)
     {
-        Worker *worker = new Worker();
         threads.push_back(std::thread([](Worker *worker, GA *ga, Population *population)
-                                      { worker->run(ga, population); },
-                                      worker, this, population));
+                                      { worker->run(ga, population); }, new Worker(i), this, population));
     }
     for (auto &thread : threads)
     {

@@ -7,8 +7,10 @@ class Worker
 {
 private:
     int64_t variation(GA* ga, Population *population);
+    int id;
 
 public:
+    Worker(int id) : id(id) {};
     void run(GA* ga, Population *population);
 };
 #endif // SYMMFEA_WORKER_H

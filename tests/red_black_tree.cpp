@@ -304,7 +304,7 @@ TEST_F(RedBlackTreeTest, DeleteTest)
         std::cout << "Deleting node number: " << i << " th\n";
         auto node = tree->get_random_node();
         std::cout << "Node: " << node->value << " Root: " << tree->root->value << "\n";
-        tree->remove(node);
+        tree->_remove(node);
         std::cout << "After remove node tree: " << tree->bfsPrint() << "\n";
         this->checkIsBinarySeachTree(tree->root);
         this->checkBlackPathLength();
