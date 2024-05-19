@@ -4,10 +4,20 @@
 		{
 			"type": "shell",
 			"label": "build",
-			"command": "${workspaceFolder}/build.sh",
+			"command": "${workspaceFolder}/run.sh",
 			"group": {
 				"isDefault": true
-			}
+			},
+			"args": ["false"]
+		},
+		{
+			"type": "shell",
+			"label": "run",
+			"command": "${workspaceFolder}/run.sh",
+			"group": {
+				"isDefault": true
+			},
+			"args": ["true"]
 		},
 		{
 			"type": "shell",
