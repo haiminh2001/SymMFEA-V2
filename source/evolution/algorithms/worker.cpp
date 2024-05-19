@@ -17,7 +17,7 @@ void Worker::run(GA *ga, Population *population)
         }
         
         (*ga->quota)-=offsprings.size();
-
+        ga->progress_bar->update(offsprings.size(), population);
     }
 }
 

@@ -12,8 +12,9 @@ include_directories(source)
 include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+#NOTE: Fix CMAKE
 # Test
-if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+# if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
     enable_testing()
     find_package(GTest REQUIRED)
@@ -30,11 +31,11 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}")
     set_target_properties(${TEST_NAME} PROPERTIES FOLDER tests)
 
-else()
+# else()
     # Main
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math -O3")
-    # add_compile_options("-ffast-math")
-endif()
+    add_compile_options("-ffast-math")
+# endif()
 
 file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "source/*.cpp" "include/*.h")
 

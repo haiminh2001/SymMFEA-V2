@@ -38,7 +38,7 @@ public:
           current(0),
           barWidth(barWidth),
           last_metric_string("") {}
-    void updateProgress(int num_steps, Population *population);
+    void update(int num_steps, Population *population);
 };
 
 #endif // SYMMFEA_PROGRESS_BAR_H

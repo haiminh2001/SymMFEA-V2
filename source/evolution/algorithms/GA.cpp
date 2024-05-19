@@ -25,7 +25,7 @@ GA::GA(int64_t num_solutions,
        int early_stoppoing,
        int batch_size)
     : trainer(new Trainer(metric, loss, new GradientOptimizer(learning_rate), epochs, early_stoppoing, batch_size)),
-      progress_bar(new ProgressBar(num_concurrent_inviduals_per_tasks, 80)),
+      progress_bar(new ProgressBar(num_solutions, 80)),
       num_tasks(num_tasks),
       max_length(max_length),
       max_depth(max_depth),
@@ -63,23 +63,3 @@ void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
 
     Timer::printTime();
 }
-
-// void GA::exec_one_generation(uint32_t generation, Population *population)
-// {
-//     Timer::startTimer();
-//     this->variant->call(population);
-//     Timer::logTime("Variation");
-
-//     Timer::startTimer();
-//     population->evaluate(this->trainer);
-//     Timer::logTime("Evaluation");
-
-//     Timer::startTimer();
-//     for (auto subpop : population->sub_populations)
-//     {
-//         // get the position of the best individuals
-//         auto argpos = this->ranker->call(subpop);
-//         this->selector->call(subpop, argpos, generation);
-//     }
-//     Timer::logTime("Selection");
-// }

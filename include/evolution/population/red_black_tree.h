@@ -93,7 +93,7 @@ namespace RedBlackTree
     class RedBlackTree
     {
     private:
-        std::mutex lock;
+        std::recursive_mutex lock;
 
     public:
         // Function performing right rotation of the subtree with the root node is passed
@@ -174,6 +174,7 @@ namespace RedBlackTree
         // reference: https://www.programiz.com/dsa/insertion-in-a-red-black-tree
         void fixup_insert_violations(IndividualNode<T> *new_node)
         {
+            std::lock_guard<std::recursive_mutex> lock(this->lock);
             IndividualNode<T> *parent = nullptr;
             IndividualNode<T> *grandparent = nullptr;
             IndividualNode<T> *uncle = nullptr;
@@ -255,6 +256,7 @@ namespace RedBlackTree
 
         void fixup_delete_violations(IndividualNode<T> *replacing_node, IndividualNode<T> *replacing_node_parent, bool is_replacing_node_left_child)
         {
+            std::lock_guard<std::recursive_mutex> lock(this->lock);
             IndividualNode<T> *replacing_node_sibling = nullptr;
 
             while ((replacing_node == nullptr) || (replacing_node != this->root && replacing_node->color == NodeColor::BLACK))
@@ -386,7 +388,7 @@ namespace RedBlackTree
         // Function to insert a node into the Red-Black Tree
         void insert(IndividualNode<T> *node)
         {
-            std::lock_guard<std::mutex> lock(this->lock);
+            std::lock_guard<std::recursive_mutex> lock(this->lock);
             this->root = binary_search_tree_insert(root, node);
             this->fixup_insert_violations(node);
             this->num_nodes++;
@@ -414,11 +416,10 @@ namespace RedBlackTree
                 - node_to_be_deleted: z
                 - replacing_node: x
                 - intermediate_node: y
-            NOTE: no lock acquired in this function
         */
         void _remove(IndividualNode<T> *node_to_be_deleted)
         {
-            
+            std::lock_guard<std::recursive_mutex> lock(this->lock);            
             assert(node_to_be_deleted != nullptr && "Invalid node to delete");
             if (node_to_be_deleted == this->root && this->num_nodes == 1)
             {
@@ -486,7 +487,7 @@ namespace RedBlackTree
         // Function to remove the smallest node
         void remove_smallest_node()
         {
-            std::lock_guard<std::mutex> lock(this->lock);
+            std::lock_guard<std::recursive_mutex> lock(this->lock);
             if (root == nullptr)
                 return;
 
@@ -501,14 +502,15 @@ namespace RedBlackTree
         // Function to get the smallest node
         IndividualNode<T> *get_smallest_node()
         {
-            if (root == nullptr)
+            std::lock_guard<std::recursive_mutex> lock(this->lock);
+            if (this->root == nullptr)
                 return nullptr;
 
-            IndividualNode<T> *node = root;
+            IndividualNode<T> *node = this->root;
 
             while (node->left != nullptr)
             {
-                node = node->right;
+                node = node->left;
             }
             return node;
         }
@@ -516,6 +518,7 @@ namespace RedBlackTree
         // Function to get the largest node
         IndividualNode<T> *get_largest_node()
         {
+            std::lock_guard<std::recursive_mutex> lock(this->lock);
             if (root == nullptr)
                 return nullptr;
 
@@ -531,7 +534,7 @@ namespace RedBlackTree
         // NOTE: may implement a different logic to handle different height of the tree
         IndividualNode<T> *get_random_node()
         {
-            std::lock_guard<std::mutex> lock(this->lock);
+            std::lock_guard<std::recursive_mutex> lock(this->lock);
             if (this->root == nullptr)
                 return nullptr;
 

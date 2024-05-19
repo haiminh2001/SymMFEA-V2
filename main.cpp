@@ -21,11 +21,11 @@ int main()
 
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
-    GA algo(30000, // num_solutions
+    GA algo(300000, // num_solutions
             60,  // num_concurrent_inviduals_per_tasks
             1,   // num_tasks
             2,   // num_objectives
-            30,  // max_length
+            50,  // max_length
             6,   // max_depth
             new R2(),
             new MSELoss(),

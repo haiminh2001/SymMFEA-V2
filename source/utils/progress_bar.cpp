@@ -10,7 +10,7 @@
 #define ANSI_COLOR_ORANGE "\033[38;5;208m" // 256-color code for orange
 #define ANSI_COLOR_RESET "\033[0m"
 
-void ProgressBar::updateProgress(int num_steps, Population *population)
+void ProgressBar::update(int num_steps, Population *population)
 {
     std::lock_guard<std::mutex> lock(this->lock);
     if (this->current == 0)
@@ -51,6 +51,7 @@ void ProgressBar::updateProgress(int num_steps, Population *population)
 
     int percent = static_cast<int>(std::floor(this->current * 100.0 / this->num_iterations));
 
+    std::string idcator_string = "";
     std::string metric_string = "";
     if (percent > this->last_percent_checkpoint)
     {
@@ -65,17 +66,17 @@ void ProgressBar::updateProgress(int num_steps, Population *population)
         }
 
         // Print current generation in grey
-        metric_string += ANSI_COLOR_RED + std::to_string(this->current) + " / " + std::to_string(this->num_iterations) + " (" + std::to_string(percent) + "%)" + ANSI_COLOR_RESET;
+        idcator_string += ANSI_COLOR_RED + std::to_string(this->current) + " / " + std::to_string(this->num_iterations) + " (" + std::to_string(percent) + "%)" + ANSI_COLOR_RESET;
 
         // Print metric in green
-        metric_string += ANSI_COLOR_GREY + std::string(" Metric: ") + ANSI_COLOR_RESET + ANSI_COLOR_GREEN + metric_string + ANSI_COLOR_RESET;
+        idcator_string += ANSI_COLOR_GREY + std::string(" Metric: ") + ANSI_COLOR_RESET + ANSI_COLOR_GREEN + metric_string + ANSI_COLOR_RESET;
 
-        last_metric_string = metric_string;
+        last_metric_string = idcator_string;
     }
     else{
-        metric_string = last_metric_string;
+        idcator_string = last_metric_string;
     }
-    std::cout << metric_string;
+    std::cout << idcator_string;
     std::cout << "\r";
     std::cout.flush();
     
