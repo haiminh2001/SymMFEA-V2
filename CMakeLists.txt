@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(SymMFEA)
 
-option(BUILD_TESTS "Build all tests." OFF) # Turn off by default
-
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Eigen3 REQUIRED)
@@ -12,9 +10,9 @@ include_directories(source)
 include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-#NOTE: Fix CMAKE
 # Test
-# if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+if(${CMAKE_BUILD_TYPE} STREQUAL "Test")
+    message("Test mode, enabling tests")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
     enable_testing()
     find_package(GTest REQUIRED)
@@ -31,18 +29,23 @@ include_directories(${EIGEN3_INCLUDE_DIR})
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}")
     set_target_properties(${TEST_NAME} PROPERTIES FOLDER tests)
 
-# else()
+else()
     # Main
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math -O3")
-    add_compile_options("-ffast-math")
-# endif()
+    if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+        message("Release mode, applying optimizations")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math -O3")
 
-file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "source/*.cpp" "include/*.h")
+    else()
+        message("Debug mode, disabling optimizations")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+    endif()
 
+    file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "source/*.cpp" "include/*.h")
 
-add_executable(SymMFEA main.cpp ${APP_SOURCES})
+    add_executable(SymMFEA main.cpp ${APP_SOURCES})
 
-target_link_libraries(SymMFEA
-    PUBLIC
-    ${CMAKE_THREAD_LIBS_INIT}
-)
+    target_link_libraries(SymMFEA
+        PUBLIC
+        ${CMAKE_THREAD_LIBS_INIT}
+    )
+endif()

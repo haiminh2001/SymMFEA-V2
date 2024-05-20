@@ -1,7 +1,54 @@
 #!/bin/bash
-cmake -S . source -B cmake-build-debug 
-cd cmake-build-debug && make 
-echo "Build succeeded"
-if $1; then
+ARGS=""
+# Argument parsing
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+    case $key in
+        -h|--help)
+        echo "Usage: ./run.sh [options]"
+        echo "Options:"
+        echo "-h, --help                Show help"
+        echo "-d, --debug               Enable debug mode"
+        echo "-o, --output <file>       Specify output file"
+        exit 0
+        ;;
+        -d|--debug)
+        DEBUG=true
+        shift
+        ;;
+        --build-only)
+        BUILD_ONLY=true
+        shift
+        ;;
+        -o|--output)
+        OUTPUT_FOLDER="$2"
+        shift
+        shift
+        ;;
+        *)
+        echo "Add ${1} to cmake's arguments"
+        ARGS=$ARGS" "$1
+        shift
+        ;;
+    esac
+done
+
+if [ -z $OUTPUT_FOLDER ]; then
+    echo "Output folder not specified"
+    exit 1
+fi
+
+cmake -S . source -B $OUTPUT_FOLDER $ARGS
+cd $OUTPUT_FOLDER && make 
+
+if [ $? -ne 0 ]; then
+    echo "Build failed"
+    exit 1;
+else
+    echo "Build succeeded"
+fi
+
+if [ -z $BUILD_ONLY ]; then
     ./SymMFEA
 fi

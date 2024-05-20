@@ -22,15 +22,15 @@ int main()
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
     GA algo(300000, // num_solutions
-            60,  // num_concurrent_inviduals_per_tasks
+            100,  // num_concurrent_inviduals_per_tasks
             1,   // num_tasks
             2,   // num_objectives
-            50,  // max_length
+            30,  // max_length
             6,   // max_depth
             new R2(),
             new MSELoss(),
             20,   // epochs
-            0.05 // learning_rate
+            0.1 // learning_rate
     );
 
     algo.fit(X, ground_truth);

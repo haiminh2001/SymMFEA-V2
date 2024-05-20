@@ -3,12 +3,31 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "build",
+			"label": "build-debug",
 			"command": "${workspaceFolder}/run.sh",
 			"group": {
 				"isDefault": true
 			},
-			"args": ["false"]
+			"args": [
+				"--build-only",
+				"-o",
+				"cmake-build-debug",
+				"-DCMAKE_BUILD_TYPE=Debug"
+			]
+		},
+		{
+			"type": "shell",
+			"label": "build-test",
+			"command": "${workspaceFolder}/run.sh",
+			"group": {
+				"isDefault": true
+			},
+			"args": [
+				"--build-only",
+				"-o",
+				"cmake-build-debug",
+				"-DCMAKE_BUILD_TYPE=Test"
+			]
 		},
 		{
 			"type": "shell",
@@ -17,27 +36,25 @@
 			"group": {
 				"isDefault": true
 			},
-			"args": ["true"]
+			"args": [
+				"-o",
+				"cmake-build-debug",
+				"-DCMAKE_BUILD_TYPE=Release"
+			]
 		},
 		{
 			"type": "shell",
 			"label": "run_test",
-			"command": "${workspaceFolder}/test.sh",
+			"command": "${workspaceFolder}/run.sh",
 			"group": {
 				"kind": "test",
 				"isDefault": true
-			}
-		},
-		{
-			"type": "cmake",
-			"label": "CMake: build",
-			"command": "build",
-			"targets": [
-				"all"
-			],
-			"group": "build",
-			"problemMatcher": [],
-			"detail": "CMake template build task"
+			},
+			"args": [
+				"-o",
+				"cmake-build-debug",
+				"-DCMAKE_BUILD_TYPE=Test"
+			]
 		}
 	]
 }
