@@ -8,12 +8,13 @@ void IndividualInfos::init(int max_num_individuals, int num_objectives, int max_
 {
 
     // init with normal distribution
-
     IndividualInfos::weight = ArrayXXf::Random((uint32_t)max_num_individuals + 1, (uint32_t)max_length);
     auto mean = IndividualInfos::weight.mean();
-    float std = 1 / static_cast<float>(max_length);
+
+    float std_dev = std::sqrt((IndividualInfos::weight - mean).square().rowwise().sum().mean() / (max_length));
+
     weight -= mean;
-    weight *= std;
+    weight *= std_dev;
 
 
     IndividualInfos::weightCheckpoint = ArrayXXf((uint32_t)max_num_individuals + 1, (uint32_t)max_length);
