@@ -8,7 +8,7 @@ find_package(Threads REQUIRED)
 
 include_directories(source)
 include_directories(include)
-include_directories(${EIGEN3_INCLUDE_DIR})
+
 
 # Test
 if(${CMAKE_BUILD_TYPE} STREQUAL "Test")
@@ -47,5 +47,6 @@ else()
     target_link_libraries(SymMFEA
         PUBLIC
         ${CMAKE_THREAD_LIBS_INIT}
+        Eigen3::Eigen
     )
 endif()

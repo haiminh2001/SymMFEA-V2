@@ -33,7 +33,7 @@ GA::GA(int64_t num_solutions,
       num_concurrent_inviduals_per_tasks(num_concurrent_inviduals_per_tasks),
       quota(new MutexUtils::MutexObject<int64_t>(num_solutions))
 {
-    uint64_t max_num_concurrent_num_individuals = num_concurrent_inviduals_per_tasks * num_tasks * 5;
+    uint64_t max_num_concurrent_num_individuals = num_concurrent_inviduals_per_tasks * num_tasks * 2;
     IdAllocator::init(max_num_concurrent_num_individuals);
     IndividualInfos::init(max_num_concurrent_num_individuals, num_objectives, max_length);
 }

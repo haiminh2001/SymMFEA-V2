@@ -39,7 +39,8 @@ if [ -z $OUTPUT_FOLDER ]; then
     exit 1
 fi
 
-cmake -S . source -B $OUTPUT_FOLDER $ARGS
+conan install . --output-folder=${OUTPUT_FOLDER} --build=missing
+cmake  -DCMAKE_TOOLCHAIN_FILE=${OUTPUT_FOLDER}/build/Release/generators/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW  -S . source -B $OUTPUT_FOLDER $ARGS
 cd $OUTPUT_FOLDER && make 
 
 if [ $? -ne 0 ]; then
