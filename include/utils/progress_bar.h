@@ -1,11 +1,15 @@
 #ifndef SYMMFEA_PROGRESS_BAR_H
 #define SYMMFEA_PROGRESS_BAR_H
 
+
+#include "evolution/population/population.h"
+
 #include <iostream>
 #include <chrono>
 #include <iomanip>
-#include <evolution/population/population.h>
 #include <mutex>
+
+
 
 class ProgressBar
 {

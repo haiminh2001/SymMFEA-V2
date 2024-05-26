@@ -1,9 +1,7 @@
 #include "evolution/algorithms/worker.h"
-#include <iostream>
 
 void Worker::run(GA *ga, Population *population)
 {
-    std::cout << "Worker " << this->id << " is running\n";
     while (ga->quota->get_data() > 0)
     {
         int reproducing_operator_index;

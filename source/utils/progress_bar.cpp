@@ -26,58 +26,48 @@ void ProgressBar::update(int num_steps, Population *population)
     auto elapsedTimeSec = std::chrono::duration_cast<std::chrono::seconds>(elapsedTime).count();
     auto etaSec = elapsedTimeSec * (this->num_iterations - this->current) / (this->current + 1);
 
-    std::cout << ANSI_COLOR_GREY << "Elapsed: " << ANSI_COLOR_RESET << ANSI_COLOR_GREEN << formatTime(elapsedTimeSec) << ANSI_COLOR_RESET << ANSI_COLOR_GREY << " ETA: " << ANSI_COLOR_RESET << ANSI_COLOR_GREEN << formatTime(etaSec) << ANSI_COLOR_RESET;
-
-    std::cout << ANSI_COLOR_ORANGE << " [" << ANSI_COLOR_RESET << ANSI_COLOR_YELLOW;
-
-    // Print completed part of the progress bar in orange
-    for (int i = 0; i < barWidth; ++i)
-    {
-        if (i < completedWidth)
-        {
-            std::cout << "=";
-        }
-        else if (i == completedWidth)
-        {
-            std::cout << ">";
-        }
-        else
-        {
-            std::cout << " ";
-        }
-    }
-
-    std::cout << ANSI_COLOR_RESET << ANSI_COLOR_ORANGE << "]; " << std::setw(3) << ANSI_COLOR_RESET;
-
     int percent = static_cast<int>(std::floor(this->current * 100.0 / this->num_iterations));
 
-    std::string idcator_string = "";
-    std::string metric_string = "";
     if (percent > this->last_percent_checkpoint)
     {
 
-        
+        std::cout.flush();
+
+        std::cout << ANSI_COLOR_GREY << "Elapsed: " << ANSI_COLOR_RESET << ANSI_COLOR_GREEN << formatTime(elapsedTimeSec) << ANSI_COLOR_RESET << ANSI_COLOR_GREY << " ETA: " << ANSI_COLOR_RESET << ANSI_COLOR_GREEN << formatTime(etaSec) << ANSI_COLOR_RESET;
+
+        std::cout << ANSI_COLOR_ORANGE << " [" << ANSI_COLOR_RESET << ANSI_COLOR_YELLOW;
+
+        // Print completed part of the progress bar in orange
+        for (int i = 0; i < barWidth; ++i)
+        {
+            if (i < completedWidth)
+            {
+                std::cout << "=";
+            }
+            else if (i == completedWidth)
+            {
+                std::cout << ">";
+            }
+            else
+            {
+                std::cout << " ";
+            }
+        }
+
+        std::cout << ANSI_COLOR_RESET << ANSI_COLOR_ORANGE << "]; " << std::setw(3) << ANSI_COLOR_RESET;
+
+        std::cout << ANSI_COLOR_RED + std::to_string(this->current) + " / " + std::to_string(this->num_iterations) + " (" + std::to_string(percent) + "%)" + ANSI_COLOR_RESET;
+        std::cout << ANSI_COLOR_GREY + std::string(" Metric: ") + ANSI_COLOR_RESET + ANSI_COLOR_GREEN;
+
         std::vector<std::vector<float>> return_objectives;
         population->find_best_fitted_individual(&return_objectives);
         for (auto met : return_objectives)
         {
-            metric_string += std::to_string(met[0]);
-            metric_string += " ";
+            std::cout <<std::scientific << std::setprecision(3) << met[0] << " ";
         }
 
-        // Print current generation in grey
-        idcator_string += ANSI_COLOR_RED + std::to_string(this->current) + " / " + std::to_string(this->num_iterations) + " (" + std::to_string(percent) + "%)" + ANSI_COLOR_RESET;
+        std::cout << ANSI_COLOR_RESET << "\r";
 
-        // Print metric in green
-        idcator_string += ANSI_COLOR_GREY + std::string(" Metric: ") + ANSI_COLOR_RESET + ANSI_COLOR_GREEN + metric_string + ANSI_COLOR_RESET;
-
-        last_metric_string = idcator_string;
+        this->last_percent_checkpoint = percent;
     }
-    else{
-        idcator_string = last_metric_string;
-    }
-    std::cout << idcator_string;
-    std::cout << "\r";
-    std::cout.flush();
-    
 }
