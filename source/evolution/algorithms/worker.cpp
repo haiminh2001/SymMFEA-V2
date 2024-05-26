@@ -18,12 +18,15 @@ void Worker::run(GA *ga, Population *population)
         {
             auto subpop = population->sub_populations[offspring->skill_factor];
             offspring.get()->set_fitness_score(ga->trainer->fit(offspring, subpop->dataview));
-            subpop->insert_individual(offspring);
-            ga->reproducing_controller->get_feedback(offspring,
-                                                     father_subpop->skill_factor,
-                                                     mother_subpop->skill_factor,
-                                                     reproducing_operator_index);
-            subpop->remove_worst();
+
+            if (ga->reproducing_controller->get_feedback(offspring,
+                                                         father_subpop->skill_factor,
+                                                         mother_subpop->skill_factor,
+                                                         reproducing_operator_index))
+            {
+                subpop->insert_individual(offspring);
+                subpop->remove_worst();
+            }
         }
 
         (*ga->quota) -= offsprings.size();

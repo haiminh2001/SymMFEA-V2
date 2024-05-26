@@ -54,22 +54,19 @@ std::vector<IndividualPtr> ReproducingController::call(SubPopulation *father_sub
     return offsprings;
 }
 
-void ReproducingController::get_feedback(IndividualPtr offspring_,
+bool ReproducingController::get_feedback(IndividualPtr offspring_,
                                          int father_subpop_index,
                                          int mother_subpop_index,
                                          int reproducing_operator_index)
 {
     auto offspring = offspring_.get();
 
-    float offspring_fitness = offspring->father_fitness_score;
-    auto father_fitness = offspring->fitness_score;
+    auto father_fitness_diff = offspring->fitness_score - offspring->father_fitness_score;
 
-    auto father_fitness_diff = offspring_fitness - father_fitness;
-
+    bool is_positive_feedback = father_fitness_diff > 0;
     std::lock_guard<std::recursive_mutex> lock(this->lock);
-    if (father_fitness_diff > 0) // offspring is better than father
+    if (is_positive_feedback) 
     {
-
         this->SMP(father_subpop_index, mother_subpop_index, reproducing_operator_index) = 5;
     }
     else
@@ -79,4 +76,5 @@ void ReproducingController::get_feedback(IndividualPtr offspring_,
             this->SMP(father_subpop_index, mother_subpop_index, reproducing_operator_index) -= 0.1;
         }
     }
+    return is_positive_feedback;
 }

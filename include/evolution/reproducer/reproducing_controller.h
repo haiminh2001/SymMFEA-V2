@@ -67,8 +67,9 @@ public:
      * @param father_subpop_index Index of the father subpopulation.
      * @param mother_subpop_index Index of the mother subpopulation.
      * @param reproducing_operator_index Index of the reproducing operator used for the offspring.
+     * @return True if the reproducing procedure that created the offspring was positive
      */
-    void get_feedback(IndividualPtr offspring,
+    bool get_feedback(IndividualPtr offspring,
                       int father_subpop_index,
                       int mother_subpop_index,
                       int reproducing_operator_index);
