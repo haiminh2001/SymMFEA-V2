@@ -66,9 +66,17 @@ void ReproducingController::get_feedback(IndividualPtr offspring_,
 
     auto father_fitness_diff = offspring_fitness - father_fitness;
 
+    std::lock_guard<std::recursive_mutex> lock(this->lock);
     if (father_fitness_diff > 0) // offspring is better than father
-    {   
-        std::lock_guard<std::recursive_mutex> lock(this->lock);
-        this->SMP(father_subpop_index, mother_subpop_index, reproducing_operator_index) += 0.1;
+    {
+
+        this->SMP(father_subpop_index, mother_subpop_index, reproducing_operator_index) = 5;
+    }
+    else
+    {
+        if (this->SMP(father_subpop_index, mother_subpop_index, reproducing_operator_index) > 1)
+        {
+            this->SMP(father_subpop_index, mother_subpop_index, reproducing_operator_index) -= 0.1;
+        }
     }
 }
