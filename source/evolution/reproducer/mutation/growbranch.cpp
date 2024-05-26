@@ -3,10 +3,10 @@
 #include "utils/random_utils.h"
 #include "vector"
 
-std::vector<std::shared_ptr<Individual>> GrowBranchMutation::call(std::shared_ptr<Individual> parent_)
+std::vector<IndividualPtr> GrowBranchMutation::call(IndividualPtr parent_)
 {
     auto parent = parent_.get();
-    std::vector<std::shared_ptr<Individual>> children;
+    std::vector<IndividualPtr> children;
 
     // exclude the last node because if replcae the last node then the tree will be replaced entirely
     if (parent->genes->length() <= 2)
@@ -41,7 +41,7 @@ std::vector<std::shared_ptr<Individual>> GrowBranchMutation::call(std::shared_pt
 
     auto child = new Individual(child_nodes, parent->skill_factor);
     child->genes->setWeight(child_weight);
-    children.push_back(std::shared_ptr<Individual>(child));
+    children.push_back(IndividualPtr(child));
     // NOTE: add tree's size verification here
     return children;
 }

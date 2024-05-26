@@ -8,7 +8,7 @@ GradientOptimizer::GradientOptimizer(float learning_rate)
     this->learning_rate = learning_rate;
 }
 /// return if deltaW is nan or not
-bool GradientOptimizer::backprop(std::shared_ptr<Individual> individual, ArrayXf deltaY)
+bool GradientOptimizer::backprop(IndividualPtr individual, ArrayXf deltaY)
 {
     
     auto tree = individual.get()->genes;
@@ -49,7 +49,7 @@ bool GradientOptimizer::backprop(std::shared_ptr<Individual> individual, ArrayXf
     return false;
 }
 
-ArrayXf GradientOptimizer::compute_gradient(std::shared_ptr<Individual> individual)
+ArrayXf GradientOptimizer::compute_gradient(IndividualPtr individual)
 {
     
     auto weightDelta = IndividualInfos::weightDelta.row(individual.get()->central_id);

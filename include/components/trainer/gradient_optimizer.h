@@ -12,6 +12,6 @@ private:
 public:
     GradientOptimizer(float learning_rate);
     bool backprop(IndividualPtr individual, ArrayXf deltaY);
-    ArrayXf compute_gradient(std::shared_ptr<Individual> individual);
+    ArrayXf compute_gradient(IndividualPtr individual);
 };
 #endif // SYMMFEA_GRADIENT_OPTIMIZER_H

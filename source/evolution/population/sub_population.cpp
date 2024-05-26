@@ -9,9 +9,9 @@
 
 /// @brief create a node on the red black tree and insert the individual
 /// @param individual
-void SubPopulation::insert_individual(std::shared_ptr<Individual> individual, std::vector<float> objectives)
+void SubPopulation::insert_individual(IndividualPtr individual, std::vector<float> objectives)
 {
-    auto node = new RedBlackTree::IndividualNode<std::shared_ptr<Individual>>(individual);
+    auto node = new RedBlackTree::IndividualNode<IndividualPtr>(individual);
     // NOTE: may reimplement the value of the individual
     node->value = objectives[0];
     this->individuals->insert(node);
@@ -25,7 +25,7 @@ void SubPopulation::insert_individual(std::shared_ptr<Individual> individual, st
 SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView *dataview, TreeSpec *tree_spec)
     : tree_spec(tree_spec), dataview(dataview), skill_factor(skill_factor)
 {
-    this->individuals = new RedBlackTree::RedBlackTree<std::shared_ptr<Individual>>();
+    this->individuals = new RedBlackTree::RedBlackTree<IndividualPtr>();
 
     for (int i = 0; i < num_individual; i++)
     {
@@ -36,12 +36,12 @@ SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView *dat
     }
 }
 
-std::shared_ptr<Individual> SubPopulation::get_random()
+IndividualPtr SubPopulation::get_random()
 {
     return this->individuals->get_random_node()->data;
 }
 
-RedBlackTree::IndividualNode<std::shared_ptr<Individual>> *SubPopulation::find_best_fitted_individual()
+RedBlackTree::IndividualNode<IndividualPtr> *SubPopulation::find_best_fitted_individual()
 {
     return this->individuals->get_largest_node();
 }

@@ -22,6 +22,6 @@ private:
 public:
     ReproducingController(Population *population, std::vector<Mutation *> mutations, std::vector<Crossover *> crossovers);
     
-    std::vector<std::shared_ptr<Individual>> call();
+    std::vector<IndividualPtr> call();
 };
 #endif // SYMMFEA_REPRODUCING_CONTROLLER_H

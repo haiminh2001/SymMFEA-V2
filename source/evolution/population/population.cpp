@@ -12,9 +12,9 @@ Population::Population(int num_tasks, int num_individuals_per_tasks, DataPool *d
 }
 
 
-std::vector<std::shared_ptr<Individual>> Population::find_best_fitted_individual(std::vector<std::vector<float>> *return_objectives)
+std::vector<IndividualPtr> Population::find_best_fitted_individual(std::vector<std::vector<float>> *return_objectives)
 {
-    std::vector<std::shared_ptr<Individual>> bests;
+    std::vector<IndividualPtr> bests;
     
     for (auto subpop : this->sub_populations)
     {

@@ -3,7 +3,7 @@
 #include "components/data_utils/data_loader.h"
 #include "central_units/individual_infos.h"
 
-float Trainer::fit(std::shared_ptr<Individual> individual, DataView *data)
+float Trainer::fit(IndividualPtr individual, DataView *data)
 {
     auto train_dataloader = DataLoader(data->X_train(), data->y_train(), this->batch_size);
 

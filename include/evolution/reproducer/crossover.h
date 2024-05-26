@@ -13,6 +13,6 @@ class Crossover
 public:
     Crossover(TreeSpec *tree_spec) : tree_spec(tree_spec){};
     TreeSpec *tree_spec;
-    virtual std::vector<std::shared_ptr<Individual>> call(std::shared_ptr<Individual> pa, std::shared_ptr<Individual> pb) = 0;
+    virtual std::vector<IndividualPtr> call(IndividualPtr pa, IndividualPtr pb) = 0;
 };
 #endif // SYMMFEA_CROSSOVER_H
