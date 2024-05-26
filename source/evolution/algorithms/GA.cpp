@@ -42,12 +42,17 @@ void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
 {
     TreeSpec *tree_spec = new TreeSpec(X.cols(), this->max_length, this->max_depth);
 
-    auto crossover = new SubTreeCrossover(tree_spec);
-    auto mutation = new GrowBranchMutation(tree_spec);
-    this->variant = new Variant(mutation, crossover);
-
     Population *population = new Population(this->num_tasks, this->num_concurrent_inviduals_per_tasks, new DataPool(X, y, 0.2), tree_spec);
 
+    // NOTE: hardcoded crossover and mutation
+    auto crossover = new SubTreeCrossover(tree_spec);
+    auto mutation = new GrowBranchMutation(tree_spec);
+
+    std::vector<Mutation *> mutations = {mutation};
+    std::vector<Crossover *> crossovers = {crossover};
+    this->reproducing_controller = new ReproducingController(population, mutations, crossovers);
+
+    
     int num_threads = std::thread::hardware_concurrency();
 
     std::vector<std::thread> threads;

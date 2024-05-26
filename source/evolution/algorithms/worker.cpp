@@ -6,7 +6,7 @@ void Worker::run(GA *ga, Population *population)
     std::cout<<"Worker "<<this->id<<" is running\n";
     while (ga->quota->get_data() > 0)
     {
-        auto offsprings = ga->variant->call(population);
+        auto offsprings = ga->reproducing_controller->call();
 
         for (auto offspring : offsprings)
         {

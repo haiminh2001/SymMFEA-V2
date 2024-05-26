@@ -1,7 +1,7 @@
 #ifndef SYMMFEA_GA_H
 #define SYMMFEA_GA_H
 #include "Eigen/Dense"
-#include "evolution/reproducer/variant.h"
+#include "evolution/reproducer/reproducing_controller.h"
 #include "utils/progress_bar.h"
 #include "utils/mutex.h"
 #include "components/trainer/gradient_optimizer.h"
@@ -21,7 +21,7 @@ private:
 public:
     MutexUtils::MutexObject<int64_t> *quota;
     ProgressBar *progress_bar;
-    Variant *variant;
+    ReproducingController *reproducing_controller;
     Trainer *trainer;
 
     GA(int64_t num_solutions,

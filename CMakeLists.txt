@@ -2,12 +2,14 @@ cmake_minimum_required(VERSION 3.16)
 project(SymMFEA)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$HOME/.conan2/p")
 
 find_package(Eigen3 REQUIRED)
 find_package(Threads REQUIRED)
 
 include_directories(source)
 include_directories(include)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 
 # Test
@@ -38,6 +40,9 @@ else()
     else()
         message("Debug mode, disabling optimizations")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+
+        # Trick to link with Eigen in debug mode
+        set(CMAKE_BUILD_TYPE "Release")
     endif()
 
     file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS RELATIVE ${CMAKE_SOURCE_DIR} "source/*.cpp" "include/*.h")

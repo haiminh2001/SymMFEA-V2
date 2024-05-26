@@ -9,13 +9,8 @@ do
         echo "Usage: ./run.sh [options]"
         echo "Options:"
         echo "-h, --help                Show help"
-        echo "-d, --debug               Enable debug mode"
         echo "-o, --output <file>       Specify output file"
         exit 0
-        ;;
-        -d|--debug)
-        DEBUG=true
-        shift
         ;;
         --build-only)
         BUILD_ONLY=true

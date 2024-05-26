@@ -38,7 +38,7 @@
 			},
 			"args": [
 				"-o",
-				"cmake-build-debug",
+				"cmake-build",
 				"-DCMAKE_BUILD_TYPE=Release"
 			]
 		},
