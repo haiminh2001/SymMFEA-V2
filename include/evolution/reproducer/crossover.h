@@ -10,9 +10,16 @@
 
 class Crossover
 {
-public:
-    Crossover(TreeSpec *tree_spec) : tree_spec(tree_spec){};
-    TreeSpec *tree_spec;
-    virtual std::vector<IndividualPtr> call(IndividualPtr pa, IndividualPtr pb) = 0;
+public: 
+  
+    /**
+     * Performs crossover operation between two parent individuals.
+     * 
+     * @param pa The first parent individual.
+     * @param pb The second parent individual.
+     * @param tree_spec The tree specifications of the offsprings.
+     * @return A vector of offspring individuals resulting from the crossover operation.
+     */
+    virtual std::vector<IndividualPtr> call(IndividualPtr pa, IndividualPtr pb, TreeSpec *tree_spec) = 0;
 };
 #endif // SYMMFEA_CROSSOVER_H

@@ -14,16 +14,18 @@ class SubPopulation
 {
 private:
     Metric *metric;
-    TreeSpec *tree_spec;
-
     RedBlackTree::RedBlackTree<IndividualPtr> *individuals;
 
 public:
+    TreeSpec *tree_spec;
     DataView *dataview;
     int skill_factor;
     void insert_individual(IndividualPtr, std::vector<float> objectives);
     uint32_t current_num_individuals();
-    SubPopulation(int num_individual, int skill_factor, DataView *dataview, TreeSpec *tree_spec);
+    SubPopulation(int num_individual,
+                  int skill_factor,
+                  DataView *dataview,
+                  TreeSpec *tree_spec);
     IndividualPtr get_random();
     RedBlackTree::IndividualNode<IndividualPtr> *find_best_fitted_individual();
     void remove_worst();

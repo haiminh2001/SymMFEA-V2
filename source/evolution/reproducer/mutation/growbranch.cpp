@@ -3,7 +3,7 @@
 #include "utils/random_utils.h"
 #include "vector"
 
-std::vector<IndividualPtr> GrowBranchMutation::call(IndividualPtr parent_)
+std::vector<IndividualPtr> GrowBranchMutation::call(IndividualPtr parent_, TreeSpec *tree_spec)
 {
     auto parent = parent_.get();
     std::vector<IndividualPtr> children;
@@ -15,11 +15,15 @@ std::vector<IndividualPtr> GrowBranchMutation::call(IndividualPtr parent_)
     }
     auto grow_point = Random::randint<int>(0, parent->genes->length() - 2);
 
-    auto max_sizes = TreeHandler::get_possible_range(parent->genes, grow_point, this->tree_spec->max_depth, this->tree_spec->max_length);
+    auto max_sizes = TreeHandler::get_possible_range(parent->genes,
+                                                     grow_point,
+                                                     tree_spec->max_depth,
+                                                     tree_spec->max_length);
     int max_length = std::get<0>(max_sizes);
     int max_depth = std::get<1>(max_sizes);
 
-    auto branch_spec = new TreeSpec(this->tree_spec);
+    // copy the tree spec
+    auto branch_spec = new TreeSpec(tree_spec);
     branch_spec->max_length = max_length;
     branch_spec->max_depth = max_depth;
 

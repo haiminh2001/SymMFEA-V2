@@ -4,8 +4,7 @@
 class SubTreeCrossover : public Crossover
 {
 public:
-    SubTreeCrossover(TreeSpec *tree_spec) : Crossover(tree_spec){};
-    std::vector<IndividualPtr> call(IndividualPtr pa, IndividualPtr pb) override;
+    std::vector<IndividualPtr> call(IndividualPtr pa, IndividualPtr pb, TreeSpec* tree_spec) override;
 };
 
 #endif // SYMMFEA_SUBTREE_H

@@ -10,14 +10,17 @@
 #include "utils/timer.h"
 #include "utils/mutex.h"
 
-#include "thread"
+#include <thread>
 #include <math.h>
+#include <vector>
+#include <algorithm>
+
 GA::GA(int64_t num_solutions,
        uint64_t num_concurrent_inviduals_per_tasks,
        int num_tasks,
        int num_objectives,
-       int max_length,
-       int max_depth,
+       std::vector<int> max_length,
+       std::vector<int> max_depth,
        Metric *metric,
        Loss *loss,
        int epochs,
@@ -35,24 +38,31 @@ GA::GA(int64_t num_solutions,
 {
     uint64_t max_num_concurrent_num_individuals = num_concurrent_inviduals_per_tasks * num_tasks * 2;
     IdAllocator::init(max_num_concurrent_num_individuals);
-    IndividualInfos::init(max_num_concurrent_num_individuals, num_objectives, max_length);
+    IndividualInfos::init(max_num_concurrent_num_individuals, num_objectives, *std::max_element(max_length.begin(), max_length.end()));
 }
 
 void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
 {
-    TreeSpec *tree_spec = new TreeSpec(X.cols(), this->max_length, this->max_depth);
+    std::vector<TreeSpec *> tree_specs;
 
-    Population *population = new Population(this->num_tasks, this->num_concurrent_inviduals_per_tasks, new DataPool(X, y, 0.2), tree_spec);
+    for (int i = 0; i < this->num_tasks; ++i)
+    {
+        tree_specs.push_back(new TreeSpec(X.cols(), this->max_length[i], this->max_depth[i]));
+    }
+
+    Population *population = new Population(this->num_tasks,
+                                            this->num_concurrent_inviduals_per_tasks,
+                                            new DataPool(X, y, 0.2),
+                                            tree_specs);
 
     // NOTE: hardcoded crossover and mutation
-    auto crossover = new SubTreeCrossover(tree_spec);
-    auto mutation = new GrowBranchMutation(tree_spec);
+    auto crossover = new SubTreeCrossover();
+    auto mutation = new GrowBranchMutation();
 
     std::vector<Mutation *> mutations = {mutation};
     std::vector<Crossover *> crossovers = {crossover};
     this->reproducing_controller = new ReproducingController(population, mutations, crossovers);
 
-    
     int num_threads = std::thread::hardware_concurrency();
 
     std::vector<std::thread> threads;

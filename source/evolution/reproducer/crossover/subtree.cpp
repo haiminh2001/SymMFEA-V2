@@ -1,7 +1,7 @@
 #include "evolution/reproducer/crossover/subtree.h"
 #include "utils/random_utils.h"
 #include "components/tree/tree_handler.h"
-std::vector<IndividualPtr> SubTreeCrossover::call(IndividualPtr pa_, IndividualPtr pb_)
+std::vector<IndividualPtr> SubTreeCrossover::call(IndividualPtr pa_, IndividualPtr pb_, TreeSpec *tree_spec)
 {
     auto pa = pa_.get();
     auto pb = pb_.get();
@@ -19,7 +19,10 @@ std::vector<IndividualPtr> SubTreeCrossover::call(IndividualPtr pa_, IndividualP
     else
         tar_point = Random::randint<int>(1, pa->genes->length() - 2);
 
-    auto max_sizes = TreeHandler::get_possible_range(pa->genes, tar_point, this->tree_spec->max_depth, this->tree_spec->max_length);
+    auto max_sizes = TreeHandler::get_possible_range(pa->genes,
+                                                     tar_point,
+                                                     tree_spec->max_depth,
+                                                     tree_spec->max_length);
     int max_length = std::get<0>(max_sizes);
     int max_depth = std::get<1>(max_sizes);
 

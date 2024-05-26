@@ -21,15 +21,15 @@ int main()
 
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
-    GA algo(50000, // num_solutions
-            100,  // num_concurrent_inviduals_per_tasks
-            1,   // num_tasks
-            2,   // num_objectives
-            30,  // max_length
-            6,   // max_depth
+    GA algo(100000,                       // num_solutions
+            40,                           // num_concurrent_inviduals_per_tasks
+            3,                            // num_tasks
+            2,                            // num_objectives
+            std::vector<int>{50, 30, 10}, // max_length
+            std::vector<int>{6, 4, 3},    // max_depth
             new R2(),
             new MSELoss(),
-            20,   // epochs
+            20, // epochs
             0.1 // learning_rate
     );
 

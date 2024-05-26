@@ -9,8 +9,13 @@
 class Mutation
 {
 public:
-    Mutation(TreeSpec* tree_spec) : tree_spec(tree_spec) {}; 
-    TreeSpec* tree_spec;
-    virtual std::vector<IndividualPtr> call(IndividualPtr parent) = 0;
+    /**
+     * Performs a mutation operation on the parent individual.
+     * 
+     * @param parent The parent individual to mutate.
+     * @param tree_spec The tree specification for the mutation operation.
+     * @return A vector of mutated individuals.
+     */
+    virtual std::vector<IndividualPtr> call(IndividualPtr parent, TreeSpec *tree_spec) = 0;
 };
 #endif // SYMMFEA_MUTATION_H

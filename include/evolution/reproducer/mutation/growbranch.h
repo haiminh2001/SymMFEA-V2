@@ -4,8 +4,7 @@
 class GrowBranchMutation : public Mutation
 {
 public:
-    GrowBranchMutation(TreeSpec* tree_spec) : Mutation(tree_spec) {};
-    std::vector<IndividualPtr> call(IndividualPtr parent) override;
+    std::vector<IndividualPtr> call(IndividualPtr parent, TreeSpec* tree_spec) override;
 };
 
 #endif // SYMMFEA_GROWBRANCH_H

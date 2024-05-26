@@ -1,6 +1,6 @@
 #ifndef SYMMFEA_GA_H
 #define SYMMFEA_GA_H
-#include "Eigen/Dense"
+
 #include "evolution/reproducer/reproducing_controller.h"
 #include "utils/progress_bar.h"
 #include "utils/mutex.h"
@@ -8,14 +8,18 @@
 #include "components/trainer/loss/loss.h"
 #include "components/trainer/trainer.h"
 
+#include "Eigen/Dense"
+
+#include <vector>
+
 class GA
 {
 private:
     uint64_t num_concurrent_inviduals_per_tasks;
     int num_objectives;
     int num_tasks;
-    int max_length;
-    int max_depth;
+    std::vector<int> max_length;
+    std::vector<int> max_depth;
     uint32_t num_generations;
 
 public:
@@ -28,8 +32,8 @@ public:
        uint64_t num_concurrent_inviduals_per_tasks,
        int num_tasks,
        int num_objectives,
-       int max_length,
-       int max_depth,
+       std::vector<int> max_length,
+       std::vector<int> max_depth,
        Metric *metric,
        Loss *loss,
        int epochs = 2,

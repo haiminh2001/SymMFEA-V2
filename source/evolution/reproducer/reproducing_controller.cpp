@@ -1,19 +1,17 @@
 #include "evolution/reproducer/reproducing_controller.h"
 #include <vector>
 
-
 ReproducingController::ReproducingController(Population *population, std::vector<Mutation *> mutations, std::vector<Crossover *> crossovers)
     : population(population), mutations(mutations), crossovers(crossovers)
 {
-    
+
     auto num_subpopulations = population->sub_populations.size();
     auto num_operators = mutations.size() + crossovers.size();
     this->SMP = Eigen::Tensor<float, 3>(num_subpopulations, num_subpopulations, num_operators);
     this->SMP.setConstant(1.0);
 }
 
-
-void ReproducingController::_get_reproducing_context(SubPopulation **father_subpop, SubPopulation **mother_subpop, int* reproducing_operator_index)
+void ReproducingController::_get_reproducing_context(SubPopulation **father_subpop, SubPopulation **mother_subpop, int *reproducing_operator_index)
 {
     auto probs = this->SMP.data();
     std::vector<float> vec_probs = std::vector<float>(probs, probs + this->SMP.size());
@@ -42,14 +40,15 @@ std::vector<IndividualPtr> ReproducingController::call()
     std::vector<IndividualPtr> offsprings;
     if (reproducing_operator_index < this->crossovers.size())
     {
-         offsprings = this->crossovers[reproducing_operator_index]->call(father, mother);
-        
+        offsprings = this->crossovers[reproducing_operator_index]->call(father,
+                                                                        mother,
+                                                                        father_subpop->tree_spec);
     }
     else
     {
         auto mutation_operator_index = reproducing_operator_index - this->crossovers.size();
-        auto mutation_offsprings_father = this->mutations[mutation_operator_index]->call(father);
-        auto mutation_offsprings_mother = this->mutations[mutation_operator_index]->call(mother);
+        auto mutation_offsprings_father = this->mutations[mutation_operator_index]->call(father, father_subpop->tree_spec);
+        auto mutation_offsprings_mother = this->mutations[mutation_operator_index]->call(mother, mother_subpop->tree_spec);
         offsprings.insert(offsprings.end(), mutation_offsprings_father.begin(), mutation_offsprings_father.end());
         offsprings.insert(offsprings.end(), mutation_offsprings_mother.begin(), mutation_offsprings_mother.end());
     }

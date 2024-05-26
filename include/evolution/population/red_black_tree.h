@@ -547,10 +547,10 @@ namespace RedBlackTree
                 else
                     direction_probs.push_back(0);
 
-                direction_probs.push_back(4);
+                direction_probs.push_back(1);
 
                 if (node->right != nullptr)
-                    direction_probs.push_back(10);
+                    direction_probs.push_back(5);
                 else
                     direction_probs.push_back(0);
 
