@@ -43,7 +43,7 @@ std::vector<IndividualPtr> GrowBranchMutation::call(IndividualPtr parent_, TreeS
 
     TreeHandler::copy_nodes_with_weight(&child_nodes, &child_weight);
 
-    auto child = new Individual(child_nodes, parent->skill_factor);
+    auto child = new Individual(child_nodes, parent->skill_factor, parent->fitness_score);
     child->genes->setWeight(child_weight);
     children.push_back(IndividualPtr(child));
     // NOTE: add tree's size verification here

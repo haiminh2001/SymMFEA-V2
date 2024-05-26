@@ -4,7 +4,7 @@ ArrayXXf IndividualInfos::weight = ArrayXXf();
 ArrayXXf IndividualInfos::weightCheckpoint = ArrayXXf();
 ArrayXXf IndividualInfos::weightDelta = ArrayXXf();
 
-void IndividualInfos::init(int max_num_individuals, int num_objectives, int max_length)
+void IndividualInfos::init(int max_num_individuals, int max_length)
 {
 
     // init with normal distribution

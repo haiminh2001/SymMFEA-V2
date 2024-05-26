@@ -18,7 +18,6 @@
 GA::GA(int64_t num_solutions,
        uint64_t num_concurrent_inviduals_per_tasks,
        int num_tasks,
-       int num_objectives,
        std::vector<int> max_length,
        std::vector<int> max_depth,
        Metric *metric,
@@ -32,13 +31,12 @@ GA::GA(int64_t num_solutions,
       num_tasks(num_tasks),
       max_length(max_length),
       max_depth(max_depth),
-      num_objectives(num_objectives),
       num_concurrent_inviduals_per_tasks(num_concurrent_inviduals_per_tasks),
       quota(new MutexUtils::MutexObject<int64_t>(num_solutions))
 {
     uint64_t max_num_concurrent_num_individuals = num_concurrent_inviduals_per_tasks * num_tasks * 2;
     IdAllocator::init(max_num_concurrent_num_individuals);
-    IndividualInfos::init(max_num_concurrent_num_individuals, num_objectives, *std::max_element(max_length.begin(), max_length.end()));
+    IndividualInfos::init(max_num_concurrent_num_individuals, *std::max_element(max_length.begin(), max_length.end()));
 }
 
 void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)

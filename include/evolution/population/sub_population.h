@@ -7,7 +7,6 @@
 #include "evolution/reproducer/tree_spec.h"
 #include "evolution/population/red_black_tree.h"
 
-#include <vector>
 #include "Eigen/Dense"
 
 class SubPopulation
@@ -20,7 +19,7 @@ public:
     TreeSpec *tree_spec;
     DataView *dataview;
     int skill_factor;
-    void insert_individual(IndividualPtr, std::vector<float> objectives);
+    void insert_individual(IndividualPtr);
     uint32_t current_num_individuals();
     SubPopulation(int num_individual,
                   int skill_factor,

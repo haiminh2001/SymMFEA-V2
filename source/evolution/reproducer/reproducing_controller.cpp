@@ -11,8 +11,10 @@ ReproducingController::ReproducingController(Population *population, std::vector
     this->SMP.setConstant(1.0);
 }
 
-void ReproducingController::_get_reproducing_context(SubPopulation **father_subpop, SubPopulation **mother_subpop, int *reproducing_operator_index)
+void ReproducingController::get_reproducing_context(SubPopulation **father_subpop, SubPopulation **mother_subpop, int *reproducing_operator_index)
 {
+    std::lock_guard<std::recursive_mutex> lock(this->lock);
+
     auto probs = this->SMP.data();
     std::vector<float> vec_probs = std::vector<float>(probs, probs + this->SMP.size());
     int reproduce_type = Random::random_choice<int>(vec_probs);
@@ -25,14 +27,10 @@ void ReproducingController::_get_reproducing_context(SubPopulation **father_subp
     *mother_subpop = this->population->sub_populations[mother_subpop_index];
 }
 
-std::vector<IndividualPtr> ReproducingController::call()
+std::vector<IndividualPtr> ReproducingController::call(SubPopulation *father_subpop,
+                                                       SubPopulation *mother_subpop,
+                                                       int reproducing_operator_index)
 {
-
-    SubPopulation *father_subpop;
-    SubPopulation *mother_subpop;
-    int reproducing_operator_index;
-
-    this->_get_reproducing_context(&father_subpop, &mother_subpop, &reproducing_operator_index);
 
     auto father = father_subpop->get_random();
     auto mother = mother_subpop->get_random();
@@ -54,4 +52,23 @@ std::vector<IndividualPtr> ReproducingController::call()
     }
 
     return offsprings;
+}
+
+void ReproducingController::get_feedback(IndividualPtr offspring_,
+                                         int father_subpop_index,
+                                         int mother_subpop_index,
+                                         int reproducing_operator_index)
+{
+    auto offspring = offspring_.get();
+
+    float offspring_fitness = offspring->father_fitness_score;
+    auto father_fitness = offspring->fitness_score;
+
+    auto father_fitness_diff = offspring_fitness - father_fitness;
+
+    if (father_fitness_diff > 0) // offspring is better than father
+    {   
+        std::lock_guard<std::recursive_mutex> lock(this->lock);
+        this->SMP(father_subpop_index, mother_subpop_index, reproducing_operator_index) += 0.1;
+    }
 }

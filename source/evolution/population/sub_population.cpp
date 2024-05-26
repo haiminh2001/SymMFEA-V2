@@ -4,16 +4,19 @@
 #include "components/tree/tree_handler.h"
 #include "central_units/individual_infos.h"
 
-#include <limits>
 #include <vector>
 
 /// @brief create a node on the red black tree and insert the individual
 /// @param individual
-void SubPopulation::insert_individual(IndividualPtr individual, std::vector<float> objectives)
+/**
+ * Inserts an individual into the subpopulation.
+ *
+ * @param individual The individual to be inserted.
+ */
+void SubPopulation::insert_individual(IndividualPtr individual)
 {
     auto node = new RedBlackTree::IndividualNode<IndividualPtr>(individual);
-    // NOTE: may reimplement the value of the individual
-    node->value = objectives[0];
+    node->value = individual.get()->fitness_score;
     this->individuals->insert(node);
 };
 
@@ -31,8 +34,7 @@ SubPopulation::SubPopulation(int num_individual, int skill_factor, DataView *dat
     {
         // without training, set the objective to -inf
         // may change this behaviour
-        this->insert_individual(std::make_shared<Individual>(skill_factor, tree_spec),
-                                {-std::numeric_limits<float>::max()});
+        this->insert_individual(std::make_shared<Individual>(skill_factor, tree_spec));
     }
 }
 

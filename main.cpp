@@ -24,7 +24,6 @@ int main()
     GA algo(100000,                       // num_solutions
             40,                           // num_concurrent_inviduals_per_tasks
             3,                            // num_tasks
-            2,                            // num_objectives
             std::vector<int>{50, 30, 10}, // max_length
             std::vector<int>{6, 4, 3},    // max_depth
             new R2(),

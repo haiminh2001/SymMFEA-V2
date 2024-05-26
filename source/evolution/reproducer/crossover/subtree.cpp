@@ -60,7 +60,7 @@ std::vector<IndividualPtr> SubTreeCrossover::call(IndividualPtr pa_, IndividualP
 
     TreeHandler::copy_nodes_with_weight(&child_nodes, &child_weight);
 
-    IndividualPtr child = std::make_shared<Individual>(child_nodes, pa->skill_factor);
+    IndividualPtr child = std::make_shared<Individual>(child_nodes, pa->skill_factor, pa->fitness_score);
     child->genes->setWeight(child_weight);
     children.push_back(child);
 

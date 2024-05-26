@@ -16,7 +16,6 @@ class GA
 {
 private:
     uint64_t num_concurrent_inviduals_per_tasks;
-    int num_objectives;
     int num_tasks;
     std::vector<int> max_length;
     std::vector<int> max_depth;
@@ -31,7 +30,6 @@ public:
     GA(int64_t num_solutions,
        uint64_t num_concurrent_inviduals_per_tasks,
        int num_tasks,
-       int num_objectives,
        std::vector<int> max_length,
        std::vector<int> max_depth,
        Metric *metric,
