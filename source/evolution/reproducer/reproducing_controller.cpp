@@ -1,6 +1,6 @@
 #include "evolution/reproducer/reproducing_controller.h"
 #include <vector>
-
+#include <iostream>
 ReproducingController::ReproducingController(Population *population, std::vector<Mutation *> mutations, std::vector<Crossover *> crossovers)
     : population(population), mutations(mutations), crossovers(crossovers)
 {
@@ -9,6 +9,21 @@ ReproducingController::ReproducingController(Population *population, std::vector
     auto num_operators = mutations.size() + crossovers.size();
     this->SMP = Eigen::Tensor<float, 3>(num_subpopulations, num_subpopulations, num_operators);
     this->SMP.setConstant(1.0);
+
+    for (int i = 0; i < num_subpopulations; ++i)
+    {
+        for (int j = 0; j < num_subpopulations; ++j)
+        {
+            // prevent subpopulation from different inits to mate
+            if ((i / population->num_inits) != (j / population->num_inits))
+            {
+                for (int k = 0; k < num_operators; ++k)
+                {
+                    this->SMP(i, j, k) = 0;
+                }
+            }
+        }
+    }
 }
 
 void ReproducingController::get_reproducing_context(SubPopulation **father_subpop, SubPopulation **mother_subpop, int *reproducing_operator_index)
@@ -21,7 +36,10 @@ void ReproducingController::get_reproducing_context(SubPopulation **father_subpo
 
     int parent_subpop_index = reproduce_type % this->SMP.dimension(0);
     int mother_subpop_index = (reproduce_type / this->SMP.dimension(0)) % this->SMP.dimension(1);
+
     *reproducing_operator_index = reproduce_type / (this->SMP.dimension(0) * this->SMP.dimension(1));
+
+    assert (parent_subpop_index / this->population->num_inits == mother_subpop_index / this->population->num_inits);
 
     *father_subpop = this->population->sub_populations[parent_subpop_index];
     *mother_subpop = this->population->sub_populations[mother_subpop_index];
@@ -65,7 +83,7 @@ bool ReproducingController::get_feedback(IndividualPtr offspring_,
 
     bool is_positive_feedback = father_fitness_diff > 0;
     std::lock_guard<std::recursive_mutex> lock(this->lock);
-    if (is_positive_feedback) 
+    if (is_positive_feedback)
     {
         this->SMP(father_subpop_index, mother_subpop_index, reproducing_operator_index) = 5;
     }

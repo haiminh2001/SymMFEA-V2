@@ -10,12 +10,14 @@
 class Population
 {
 public:
+    int num_tasks;
+    int num_inits;
     std::vector<SubPopulation *> sub_populations;
     Population(int num_tasks,
+               int num_inits,
                int num_inviduals_per_tasks,
                DataPool *datapool,
                std::vector<TreeSpec *> tree_specs);
     std::vector<IndividualPtr> find_best_fitted_individual(std::vector<std::vector<float>> *return_objectives);
-    void get_random_subpopulations(SubPopulation **subpop_a, SubPopulation **subpop_b);
 };
 #endif // SYMMFEA_POPULATION_H

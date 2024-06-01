@@ -1,15 +1,12 @@
 #ifndef SYMMFEA_PROGRESS_BAR_H
 #define SYMMFEA_PROGRESS_BAR_H
 
-
 #include "evolution/population/population.h"
 
 #include <iostream>
 #include <chrono>
 #include <iomanip>
 #include <mutex>
-
-
 
 class ProgressBar
 {
@@ -23,12 +20,10 @@ private:
     std::chrono::time_point<std::chrono::steady_clock> start_time;
     std::string formatTime(int seconds)
     {
-        int hours = seconds / 3600;
-        int minutes = (seconds % 3600) / 60;
+        int minutes = seconds / 60;
         seconds = seconds % 60;
 
         std::ostringstream oss;
-        oss << std::setfill('0') << std::setw(2) << hours << ":";
         oss << std::setfill('0') << std::setw(2) << minutes << ":";
         oss << std::setfill('0') << std::setw(2) << seconds;
 

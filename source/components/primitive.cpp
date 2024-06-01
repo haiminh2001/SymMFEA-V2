@@ -8,6 +8,8 @@
 #include "components/functions/operand.h"
 #include "components/functions/relu.h"
 #include "components/functions/aq.h"
+#include "components/functions/cosine.h"
+
 
 Node *createOperand(int index, int arity)
 {
@@ -27,6 +29,11 @@ Node *createTanh(int index, int arity)
 Node *createRelu(int index, int arity)
 {
     return new Relu();
+}
+
+Node *createCosine(int index, int arity)
+{
+    return new Cosine();
 }
 
 Node *createProduct(int index, int arity)
@@ -59,6 +66,7 @@ Primitive::Primitive()
     this->addNodeFactory(createAq, 2);
     this->addNodeFactory(createTanh, 1);
     this->addNodeFactory(createRelu, 1);
+    this->addNodeFactory(createCosine, 1);
     this->removeDuplicatePossibleNumArites();
 }
 

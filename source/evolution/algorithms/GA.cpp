@@ -22,19 +22,21 @@ GA::GA(int64_t num_solutions,
        std::vector<int> max_depth,
        Metric *metric,
        Loss *loss,
+       int num_inits,
        int epochs,
        float learning_rate,
        int early_stoppoing,
        int batch_size)
     : trainer(new Trainer(metric, loss, new GradientOptimizer(learning_rate), epochs, early_stoppoing, batch_size)),
-      progress_bar(new ProgressBar(num_solutions, 80)),
+      progress_bar(new ProgressBar(num_solutions * num_inits, 80)),
       num_tasks(num_tasks),
       max_length(max_length),
       max_depth(max_depth),
       num_concurrent_inviduals_per_tasks(num_concurrent_inviduals_per_tasks),
-      quota(new MutexUtils::MutexObject<int64_t>(num_solutions))
+      num_inits(num_inits),
+      quota(new MutexUtils::MutexObject<int64_t>(num_solutions * num_inits))
 {
-    uint64_t max_num_concurrent_num_individuals = num_concurrent_inviduals_per_tasks * num_tasks * 2;
+    uint64_t max_num_concurrent_num_individuals = num_concurrent_inviduals_per_tasks * num_tasks * num_inits * 2;
     IdAllocator::init(max_num_concurrent_num_individuals);
     IndividualInfos::init(max_num_concurrent_num_individuals, *std::max_element(max_length.begin(), max_length.end()));
 }
@@ -49,6 +51,7 @@ void GA::fit(Eigen::ArrayXXf X, Eigen::ArrayXf y)
     }
 
     Population *population = new Population(this->num_tasks,
+                                            this->num_inits,
                                             this->num_concurrent_inviduals_per_tasks,
                                             new DataPool(X, y, 0.2),
                                             tree_specs);

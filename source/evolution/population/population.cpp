@@ -2,18 +2,22 @@
 #include "components/data_utils/data_view.h"
 #include "components/data_utils/data_pool.h"
 
+#include "iostream"
 Population::Population(int num_tasks,
+                       int num_inits,
                        int num_individuals_per_tasks,
                        DataPool *datapool,
-                       std::vector<TreeSpec *> tree_specs)
+                       std::vector<TreeSpec *> tree_specs) : num_inits(num_inits), num_tasks(num_tasks)
 {
-    for (int i = 0; i < num_tasks; ++i)
+    for (int j = 0; j < num_inits; ++j)
     {
-        DataView *dv = new DataView(datapool, 1);
-        this->sub_populations.push_back(new SubPopulation(num_individuals_per_tasks,
-                                                          i,
-                                                          dv,
-                                                          tree_specs[i]));
+        for (int i = 0; i < num_tasks; ++i)
+        {
+            this->sub_populations.push_back(new SubPopulation(num_individuals_per_tasks,
+                                                              j * num_tasks + i,
+                                                              new DataView(datapool, 1),
+                                                              tree_specs[i]));
+        }
     }
 }
 
@@ -28,11 +32,4 @@ std::vector<IndividualPtr> Population::find_best_fitted_individual(std::vector<s
         bests.push_back(node->data);
     }
     return bests;
-}
-
-void Population::get_random_subpopulations(SubPopulation **subpop_a, SubPopulation **subpop_b)
-{
-    // NOTE: implement this function
-    *subpop_a = this->sub_populations[0];
-    *subpop_b = this->sub_populations[0];
 }

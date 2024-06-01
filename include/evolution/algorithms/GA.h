@@ -20,6 +20,7 @@ private:
     std::vector<int> max_length;
     std::vector<int> max_depth;
     uint32_t num_generations;
+    int num_inits;
 
 public:
     MutexUtils::MutexObject<int64_t> *quota;
@@ -34,6 +35,7 @@ public:
        std::vector<int> max_depth,
        Metric *metric,
        Loss *loss,
+       int num_inits = 1,
        int epochs = 2,
        float learning_rate = 0.1,
        int early_stopping = 3,
