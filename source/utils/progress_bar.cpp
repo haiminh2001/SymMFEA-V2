@@ -64,7 +64,7 @@ void ProgressBar::update(int num_steps, Population *population)
         for (int i = 0; i < return_objectives.size(); ++i)
         {
             if (i % population->num_tasks == 0) std::cout << ANSI_COLOR_GREY << "\n\r\033[KInit "<< i / population->num_tasks<<": "<<ANSI_COLOR_RESET;
-            std::cout << std::scientific << std::setprecision(3) << return_objectives[i][0] << " ";
+            std::cout << std::setprecision(3) << return_objectives[i][0] << " ";
         }
         // move the cursor up num inits + 2 lines
         std::cout << ANSI_COLOR_RESET << "\033["<< population->num_inits + 1 <<"A";
