@@ -24,16 +24,16 @@ int main()
 
     Eigen::ArrayXXf X = data(Eigen::all, Eigen::seq(0, data.cols() - 2));
 
-    GA algo = GA(30000,                       // num_solutions
+    GA algo = GA(100000,                       // num_solutions
             32,                           // num_concurrent_inviduals_per_tasks
             5,                            // num_tasks
             std::vector<int>{50, 30, 10, 10, 10}, // max_length
             std::vector<int>{6, 4, 3, 3, 3},    // max_depth
             new R2(),
             new MSELoss(),
-            3, // num_inits
+            1, // num_inits
             20, // epochs
-            0.1 // learning_rate
+            0.05 // learning_rate
     );
 
     algo.fit(X, ground_truth);

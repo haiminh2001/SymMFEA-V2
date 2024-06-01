@@ -1,15 +1,15 @@
-#ifndef SYMMFEA_COSINE_H
-#define SYMMFEA_COSINE_H
+#ifndef SYMMFEA_SILU_H
+#define SYMMFEA_SILU_H
 
 #include "node.h"
 
-class Cosine : public Node
+class Silu : public Node
 {
 private:
     ArrayXf _forward(std::stack<ArrayXf> &X, bool record_gradient) override;
 
 public:
-    explicit Cosine();
+    explicit Silu();
     Node *clone() override;
 };
-#endif // SYMMFEA_COSINE_H
+#endif // SYMMFEA_SILU_H

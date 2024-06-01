@@ -7,6 +7,11 @@
 
 namespace Random
 {
+    /// @brief random an interger, in range [min, max]
+    /// @tparam T 
+    /// @param min 
+    /// @param max 
+    /// @return 
     template <typename T>
     T randint(T min, T max)
     {

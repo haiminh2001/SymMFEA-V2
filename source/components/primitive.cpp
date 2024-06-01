@@ -3,12 +3,9 @@
 #include "utils/random_utils.h"
 #include "components/primitive.h"
 #include "components/functions/sum.h"
-#include "components/functions/product.h"
-#include "components/functions/tanh.h"
 #include "components/functions/operand.h"
-#include "components/functions/relu.h"
-#include "components/functions/aq.h"
-#include "components/functions/cosine.h"
+#include "components/functions/silu.h"
+#include "components/functions/polynominal.h"
 
 
 Node *createOperand(int index, int arity)
@@ -21,29 +18,15 @@ Node *createSum(int index, int arity)
     return new Sum(arity);
 }
 
-Node *createTanh(int index, int arity)
+
+Node *createSilu(int index, int arity)
 {
-    return new Tanh();
+    return new Silu();
 }
 
-Node *createRelu(int index, int arity)
+Node *createPolynominal(int index, int arity)
 {
-    return new Relu();
-}
-
-Node *createCosine(int index, int arity)
-{
-    return new Cosine();
-}
-
-Node *createProduct(int index, int arity)
-{
-    return new Product();
-}
-
-Node *createAq(int index, int arity)
-{
-    return new Aq();
+    return new Polynominal();
 }
 
 void Primitive::addNodeFactory(NodeFactory nf, int arity)
@@ -62,11 +45,8 @@ Primitive::Primitive()
 {
     this->addNodeFactory(createOperand, 0);
     this->addNodeFactory(createSum, -1);
-    this->addNodeFactory(createProduct, 2);
-    this->addNodeFactory(createAq, 2);
-    this->addNodeFactory(createTanh, 1);
-    this->addNodeFactory(createRelu, 1);
-    this->addNodeFactory(createCosine, 1);
+    this->addNodeFactory(createSilu, 1);
+    this->addNodeFactory(createPolynominal, 1);
     this->removeDuplicatePossibleNumArites();
 }
 
@@ -124,16 +104,8 @@ Node *Primitive::sampleNode(int arity_min, int arity_max)
         arity = actual_arity;
     }
 
-    else if (actual_arity == 2)
-    {
-        auto dynamic = Random::randint<int>(0, 1);
-
-        // if dynamic
-        if (dynamic == 1)
-            arity = -1;
-        else
-            arity = 2;
-    }
+    // 
+    
     else
     {
         // actual_arity > 2 means dynamic
